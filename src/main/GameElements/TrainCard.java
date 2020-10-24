@@ -1,3 +1,6 @@
+package GameElements;
+import Enum.*;
+
 public class TrainCard {
     private Color color;
 
@@ -17,6 +20,6 @@ public class TrainCard {
      */
     @Override
     public String toString() {
-        return color.toString()+"\n";
+        return "    "+color.toString()+"\n";
     }
 }

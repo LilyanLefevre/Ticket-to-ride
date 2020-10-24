@@ -1,3 +1,6 @@
+package GameElements;
+import Enum.*;
+
 public class DestinationCard {
     private final Destination from;
     private final Destination to;
@@ -29,6 +32,6 @@ public class DestinationCard {
      */
     @Override
     public String toString() {
-        return "From "+from+" to "+to+". It worth "+points+" points.\n";
+        return "    From "+from+" to "+to+". It worth "+points+" points.\n";
     }
 }

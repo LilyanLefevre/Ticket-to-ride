@@ -1,3 +1,6 @@
+package GameElements;
+import Enum.*;
+
 public class Route {
     private final Destination from;
     private final Destination to;
@@ -49,6 +52,6 @@ public class Route {
      */
     @Override
     public String toString() {
-        return "From "+from+" to "+to+ " with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
+        return "    From "+from+" to "+to+ " with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
     }
 }

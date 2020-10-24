@@ -1,3 +1,6 @@
+package GameElements;
+import Enum.*;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,6 +19,8 @@ public class Player {
         points = 0;
         wagons = 45;
         trainStation = 3;
+        tCards = new ArrayList<>();
+        dCards = new ArrayList<>();
 
         // tire 4 cartes destination au hasard
         for(int i = 0 ; i < 4; i++){
@@ -57,6 +62,6 @@ public class Player {
         for(int i = 0; i < tCards.size(); i++){
             tc += tCards.get(i).toString();
         }
-        return "Player "+name+".\nDestination cards :"+dc+"\nTrain cards :"+tc+"\n Points = "+points+", wagons = "+wagons+" and train stations = "+trainStation+"\n";
+        return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Points = "+points+", wagons = "+wagons+" and train stations = "+trainStation+"\n";
     }
 }

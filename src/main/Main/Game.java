@@ -1,9 +1,11 @@
+package Main;
+
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import GameElements.*;
+import Enum.*;
 
 public class Game {
     private ArrayList<Player> players;
@@ -36,7 +38,7 @@ public class Game {
         // initialisation des joueurs
         players = new ArrayList<>();
         for(int i = 0; i < 4; i++){
-            players.add(i,new Player(names.get(i),Color.values()[i], drawDestinationCards, drawTrainCards));
+            players.add(i,new Player(names.get(i), Color.values()[i], drawDestinationCards, drawTrainCards));
         }
 
     }
@@ -47,15 +49,27 @@ public class Game {
      */
     private void readDestinationFromFile(String typeOfFile){
         // ouvre le fichier et le lit
-        try(BufferedReader br = new BufferedReader(new FileReader(destination_file_path))) {
-            String line = br.readLine();
-            while (line != null && !line.equals("%")) {
-                processLine(line, typeOfFile);
-                line = br.readLine();
+        if(typeOfFile.equals("destination")){
+            try(BufferedReader br = new BufferedReader(new FileReader(destination_file_path))) {
+                String line = br.readLine();
+                while (line != null && !line.equals("%")) {
+                    processLine(line, typeOfFile);
+                    line = br.readLine();
+                }
             }
-        }
-        catch(Exception e){
-            e.printStackTrace();
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }else if(typeOfFile.equals("route")) {
+            try (BufferedReader br = new BufferedReader(new FileReader(route_file_path))) {
+                String line = br.readLine();
+                while (line != null && !line.equals("%")) {
+                    processLine(line, typeOfFile);
+                    line = br.readLine();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -90,14 +104,14 @@ public class Game {
      */
     @Override
     public String toString() {
-        String str = "PLAYERS :";
+        String str = "PLAYERS :\n";
         for(int i = 0; i < players.size(); i++){
             str += players.get(i).toString();
         }
-        str += "ROUTES : ";
+        str += "\nROUTES : \n";
         for(int i = 0; i < routes.size(); i++){
             str += routes.get(i).toString();
         }
-        return super.toString();
+        return str;
     }
 }
