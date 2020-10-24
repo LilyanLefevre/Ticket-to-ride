@@ -16,7 +16,7 @@ public class AppTest {
     @Test
     public void mainTest(){
         ArrayList<String> names = new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "test"));
-        Game g = new Game(names,"/home/lilyan/Bureau/Ticket-to-Ride/destinations.txt","/home/lilyan/Bureau/Ticket-to-Ride/routes.txt");
+        Game g = new Game(names,"./destinations.txt","./routes.txt");
         System.out.println(g.toString());
     }
 }
