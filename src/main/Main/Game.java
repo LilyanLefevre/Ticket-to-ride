@@ -18,7 +18,7 @@ public class Game {
     public Game(ArrayList<String> names, String destination_file_path, String route_file_path) {
 
         // initialisation des cartes colorées
-        drawTrainCards = new ArrayList<>();
+        drawTrainCards = new ArrayList<>(Color.values().length*14);
         for(int i = 0; i < Color.values().length; i++){
             for( int j = 0; j < 14; j++){
                 drawTrainCards.add(new TrainCard( Color.values()[i]));
@@ -104,7 +104,11 @@ public class Game {
      */
     @Override
     public String toString() {
-        String str = "PLAYERS :\n";
+        String str = "DRAW TRAIN CARDS : \n";
+        //for(int i = 0; i < drawTrainCards.size(); i++){
+          //  str += drawTrainCards.get(i).toString();
+        //}
+        str += "PLAYERS :\n";
         for(int i = 0; i < players.size(); i++){
             str += players.get(i).toString();
         }

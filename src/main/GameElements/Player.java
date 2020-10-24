@@ -24,23 +24,21 @@ public class Player {
 
         // tire 4 cartes destination au hasard
         for(int i = 0 ; i < 4; i++){
-            Random rand = new Random();
-            int nCard;
-            nCard = 0 + rand.nextInt((dc.size()-1)-0);
+            int nCard = (int)(Math.random() * (dc.size()));
 
             // on ajoute la carte tirée dans le jeu du joueur
-            dCards.add(dc.get(i));
+            dCards.add(dc.get(nCard));
+
             // et on la retire de la pioche
             dc.remove(i);
         }
         // tire 4 cartes colorées au hasard
         for(int i = 0 ; i < 4; i++){
-            Random rand = new Random();
-            int nCard;
-            nCard = 0 + rand.nextInt((tc.size()-1)-0);
+            int nCard = (int)(Math.random() * (tc.size()));
 
             // on ajoute la carte tirée dans le jeu du joueur
-            tCards.add(tc.get(i));
+            tCards.add(tc.get(nCard));
+
             // et on la retire de la pioche
             tc.remove(i);
         }
@@ -62,6 +60,6 @@ public class Player {
         for(int i = 0; i < tCards.size(); i++){
             tc += tCards.get(i).toString();
         }
-        return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Points = "+points+", wagons = "+wagons+" and train stations = "+trainStation+"\n";
+        return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+" and train stations = "+trainStation+"\n";
     }
 }
