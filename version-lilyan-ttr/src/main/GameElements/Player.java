@@ -72,22 +72,36 @@ public class Player {
         return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+" and train stations = "+nbTrainStation+"\n";
     }
 
-    public void drawTrainCard(ArrayList<TrainCard> tc){
+    public TrainCard drawTrainCard(ArrayList<TrainCard> tc){
         int nCard = (int)(Math.random() * (tc.size()));
 
+        TrainCard tmp = tc.get(nCard);
         // on ajoute la carte tirée dans le jeu du joueur
         tCards.add(tc.get(nCard));
 
         // et on la retire de la pioche
         tc.remove(nCard);
+
+        return tmp;
     }
-    public void drawDestinationCard(ArrayList<DestinationCard> dc){
+
+    public DestinationCard drawDestinationCard(ArrayList<DestinationCard> dc){
         int nCard = (int)(Math.random() * (dc.size()));
+
+        DestinationCard tmp = dc.get(nCard);
 
         // on ajoute la carte tirée dans le jeu du joueur
         dCards.add(dc.get(nCard));
 
         // et on la retire de la pioche
         dc.remove(nCard);
+        return tmp;
+    }
+
+    public void addTrainCard(TrainCard tc){
+        tCards.add(tc);
+    }
+    public void addDestinationCard(DestinationCard dc){
+        dCards.add(dc);
     }
 }

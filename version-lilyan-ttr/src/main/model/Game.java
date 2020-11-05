@@ -53,7 +53,7 @@ public class Game {
             drawVisibleTrainCards.add(drawTrainCards.get(nCard));
 
             // et on la retire de la pioche
-            drawTrainCards.remove(i);
+            drawTrainCards.remove(nCard);
         }
 
         // initialisation des cartes destinations
@@ -159,31 +159,62 @@ public class Game {
     }
 
     public void playTurn(Player p){
-        int choix = -1;
-        Scanner entree =   new Scanner(System.in);
-        boolean err = false;
+        int choix;
 
         //on récupère le choix du joueur
         System.out.println("Choisissez une option:\n  1 - Prendre des cartes Wagon\n  2 - Prendre possession des routes\n  3 - Prendre des cartes Destination\n  4 - Bâtir une gare");
-        try{
-            choix = entree.nextInt();
-        }catch (InputMismatchException e){
-            entree.next();
-        }
-        //verif de la saisie
-        while(choix < 1 || choix > 4){
-            System.out.println("Erreur : le numéro que vous avez entré est incorrect. Veuillez réessayer : ");
-            try{
-                choix = entree.nextInt();
-            }catch (InputMismatchException e){
-                entree.next();
-            }
-        }
+        choix = saisieValidIntBornes(1,4);
 
         switch (choix) {
             //si on pioche des cartes wagons
             case 1:
-                System.out.println("Vous avez pioché deux cartes Wagon");
+                int c;
+                System.out.println("/////////Vous souhaitez piocher des cartes Wagon./////////");
+                //on itère deux fois car on peut tirer deux cartes sauf si on prend une locomotive délibérément
+                for(int j = 0; j < 2; j++) {
+                    //on présente les cartes dispos
+                    System.out.println("Voici les cartes retournées actuellement : ");
+                    for (int i = 0; i < drawVisibleTrainCards.size(); i++) {
+                        System.out.print("  " + (i + 1) + " -" + drawVisibleTrainCards.get(i).toString());
+                    }
+
+                    //on fait choisir une carte au joueur
+                    System.out.println("  6 -    Piocher une carte au hasard\nSaisissez un numéro : ");
+                    c = saisieValidIntBornes(1, 6);
+
+                    //s'il tente de prendre une carte loco et qu'il a déjà pris une autre carte -> erreur
+                    while(c != 6 && drawVisibleTrainCards.get(c - 1).getColor() == Color.RAINBOW && j > 0 ){
+                        System.out.println("Si vous prenez une carte locomotive visible lors d'un tour, vous ne pouvez pas piocher d'autre carte ! Veuillez saisir un autre nombre : ");
+                        c = saisieValidIntBornes(1, 6);
+                    }
+
+                    //si il choisit une carte au hasard
+                    if (c == 6) {
+                        TrainCard tmp = p.drawTrainCard(drawTrainCards);
+                        System.out.println("Vous avez pioché la carte " + tmp);
+                    }
+
+                    //si il prend une carte de la pioche visible
+                    else {
+                        //on retire la carte de la pioche de cartes visibles
+                        TrainCard tmp = drawVisibleTrainCards.get(c - 1);
+                        drawVisibleTrainCards.remove(tmp);
+
+                        //on remet une nouvelle carte tiree au hasard dans la pioche
+                        int nCard = (int) (Math.random() * (drawTrainCards.size()));
+                        drawVisibleTrainCards.add(drawTrainCards.get(nCard));
+                        drawTrainCards.remove(nCard);
+
+                        //on l'ajoute dans les cartes du joueur
+                        p.addTrainCard(tmp);
+                        System.out.println("Vous avez pioché la carte " + tmp);
+
+                        //si il a pris une carte locomotive on arrête
+                        if (tmp.getColor() == Color.RAINBOW) {
+                            j = 2;
+                        }
+                    }
+                }
                 break;
 
             //si on pose des wagons sur une route
@@ -229,5 +260,26 @@ public class Game {
                 playTurn(p);
             }
         }
+    }
+
+    public int saisieValidIntBornes(int borneInf,int borneSup){
+        int choix = -1;
+        Scanner entree =   new Scanner(System.in);
+
+        try{
+            choix = entree.nextInt();
+        }catch (InputMismatchException e){
+            entree.next();
+        }
+        //verif de la saisie
+        while(choix < borneInf || choix > borneSup){
+            System.out.println("Erreur : le numéro que vous avez entré est incorrect. Veuillez réessayer : ");
+            try{
+                choix = entree.nextInt();
+            }catch (InputMismatchException e){
+                entree.next();
+            }
+        }
+        return choix;
     }
 }
