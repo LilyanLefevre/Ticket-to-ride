@@ -61,13 +61,13 @@ public class Player {
      */
     @Override
     public String toString() {
-        String dc = "";
-        for(int i = 0; i < dCards.size(); i++){
-            dc += dCards.get(i).toString();
+        StringBuilder dc = new StringBuilder();
+        for (DestinationCard dCard : dCards) {
+            dc.append(dCard.toString());
         }
-        String tc = "";
-        for(int i = 0; i < tCards.size(); i++){
-            tc += tCards.get(i).toString();
+        StringBuilder tc = new StringBuilder();
+        for (TrainCard tCard : tCards) {
+            tc.append(tCard.toString());
         }
         return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+" and train stations = "+nbTrainStation+"\n";
     }
@@ -103,5 +103,29 @@ public class Player {
     }
     public void addDestinationCard(DestinationCard dc){
         dCards.add(dc);
+    }
+
+    public int countOccurencesOf(Color c){
+        int i = 0;
+        for(TrainCard t : tCards){
+            if(t.getColor() == c){
+                i++;
+            }
+        }
+        return i;
+    }
+
+    public void removeColoredCards(Color c, int nb){
+        int i = 0;
+        ArrayList<TrainCard> toRemove = new ArrayList<>();
+        for(TrainCard t : tCards){
+            if(i < nb) {
+                if (t.getColor() == c) {
+                    toRemove.add(t);
+                    i++;
+                }
+            }
+        }
+        tCards.removeAll(toRemove);
     }
 }

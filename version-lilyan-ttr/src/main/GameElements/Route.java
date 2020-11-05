@@ -28,7 +28,7 @@ public class Route {
         this.color = color;
         this.isTunel = isTunel;
         this.locomotive = locomotive;
-        hasPlayerOn = null;
+        this.hasPlayerOn = null;
     }
 
     public Destination getFrom() {

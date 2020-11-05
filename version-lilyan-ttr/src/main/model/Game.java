@@ -123,7 +123,7 @@ public class Game {
         }else if (typeOfFile.equals("route")){
             Color color = Color.valueOf(tokenizer.nextToken());
             int points = Integer.parseInt(tokenizer.nextToken());
-            Boolean isTunel = Boolean.parseBoolean(tokenizer.nextToken());
+            boolean isTunel = Boolean.parseBoolean(tokenizer.nextToken());
             int locomotive = Integer.parseInt(tokenizer.nextToken());
             this.routes.add(new Route(dest1, dest2, points, color, isTunel, locomotive));
         }
@@ -138,24 +138,24 @@ public class Game {
     @Override
     public String toString() {
         //on affiche les cartes retournées
-        String str = "DRAW VISIBLE TRAIN CARDS : \n";
-        for(int i = 0; i < drawVisibleTrainCards.size(); i++){
-            str += drawVisibleTrainCards.get(i).toString();
+        StringBuilder str = new StringBuilder("DRAW VISIBLE TRAIN CARDS : \n");
+        for (TrainCard drawVisibleTrainCard : drawVisibleTrainCards) {
+            str.append(drawVisibleTrainCard.toString());
         }
 
 
         //on affiche les joueurs
-        str += "PLAYERS :\n";
-        for(int i = 0; i < players.size(); i++){
-            str += players.get(i).toString();
+        str.append("PLAYERS :\n");
+        for (Player player : players) {
+            str.append(player.toString());
         }
 
         //on affiche l'ensemble des routes qui relient les villes
-        str += "\nROUTES : \n";
-        for(int i = 0; i < routes.size(); i++){
-            str += routes.get(i).toString();
+        str.append("\nROUTES : \n");
+        for (Route route : routes) {
+            str.append(route.toString());
         }
-        return str;
+        return str.toString();
     }
 
     public void playTurn(Player p){
@@ -219,7 +219,45 @@ public class Game {
 
             //si on pose des wagons sur une route
             case 2:
-                System.out.println("Vous avez posé des wagons");
+
+                //on affiche les routes possibles
+                System.out.println("Voici les routes disponibles:");
+                for(int i = 0; i < routes.size(); i++){
+                    if(routes.get(i).isAlreadyTakenRoute()){
+                        System.out.println("DÉJÀ PRISE "+(i+1)+" - "+routes.get(i));
+                    }else {
+                        System.out.println((i + 1) + " - " + routes.get(i));
+                    }
+                }
+
+                //on fait choisir une route au joueur
+                System.out.println("Saisissez un numéro : ");
+                c = saisieValidIntBornes(1, routes.size());
+
+                //on vérifie que la route est libre et qu'il a assez de cartes et assez de wagons pour prendre cette route
+                while(routes.get(c-1).isAlreadyTakenRoute() || p.getWagons() < routes.get(c-1).getRequire() || p.countOccurencesOf(routes.get(c-1).getColor()) < routes.get(c-1).getRequire()) {
+                    if(routes.get(c - 1).isAlreadyTakenRoute()){
+                        System.out.println("Erreur : la route est déjà prise ! ");
+                    }
+                    //on vérifie qu'il a le bon nombre de trains dispo
+                    if (p.getWagons() < routes.get(c - 1).getRequire()) {
+                        System.out.println("Erreur : vous n'avez pas assez de wagons pour prendre cette route ! ");
+                    }
+
+                    //on vérifie qu'il a le bon nombre de cartes de la bonne couleur
+                    int nbCards = p.countOccurencesOf(routes.get(c - 1).getColor());
+                    if (nbCards < routes.get(c - 1).getRequire()) {
+                        System.out.println("Erreur : vous n'avez pas assez de cartes " + routes.get(c - 1).getColor() + " pour prendre cette route ! ");
+                    }
+
+                    //il resaisit un numero de route
+                    c = saisieValidIntBornes(1, routes.size());
+                }
+
+                routes.get(c - 1).setPlayer(p);
+                p.removeColoredCards(routes.get(c - 1).getColor(), routes.get(c - 1).getRequire());
+                System.out.println("Vous avez pris la route : "+routes.get(c-1));
+
                 break;
 
             //si on pioche des cartes destination
