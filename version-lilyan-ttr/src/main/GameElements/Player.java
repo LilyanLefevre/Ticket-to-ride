@@ -11,36 +11,45 @@ public class Player {
     private int points;
     private int wagons;
     private Color color;
-    private int trainStation;
+    private int nbTrainStation;
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public int getWagons() {
+        return wagons;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public int getNbTrainStation() {
+        return nbTrainStation;
+    }
 
     public Player(String name, Color color, ArrayList<DestinationCard> dc, ArrayList<TrainCard> tc) {
         this.name = name;
         this.color = color;
         points = 0;
         wagons = 45;
-        trainStation = 3;
+        nbTrainStation = 3;
         tCards = new ArrayList<>();
         dCards = new ArrayList<>();
 
         // tire 4 cartes destination au hasard
         for(int i = 0 ; i < 4; i++){
-            int nCard = (int)(Math.random() * (dc.size()));
-
-            // on ajoute la carte tirée dans le jeu du joueur
-            dCards.add(dc.get(nCard));
-
-            // et on la retire de la pioche
-            dc.remove(i);
+            drawTrainCard(tc);
         }
+
         // tire 4 cartes colorées au hasard
         for(int i = 0 ; i < 4; i++){
-            int nCard = (int)(Math.random() * (tc.size()));
-
-            // on ajoute la carte tirée dans le jeu du joueur
-            tCards.add(tc.get(nCard));
-
-            // et on la retire de la pioche
-            tc.remove(i);
+            drawDestinationCard(dc);
         }
     }
 
@@ -60,6 +69,25 @@ public class Player {
         for(int i = 0; i < tCards.size(); i++){
             tc += tCards.get(i).toString();
         }
-        return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+" and train stations = "+trainStation+"\n";
+        return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+" and train stations = "+nbTrainStation+"\n";
+    }
+
+    public void drawTrainCard(ArrayList<TrainCard> tc){
+        int nCard = (int)(Math.random() * (tc.size()));
+
+        // on ajoute la carte tirée dans le jeu du joueur
+        tCards.add(tc.get(nCard));
+
+        // et on la retire de la pioche
+        tc.remove(nCard);
+    }
+    public void drawDestinationCard(ArrayList<DestinationCard> dc){
+        int nCard = (int)(Math.random() * (dc.size()));
+
+        // on ajoute la carte tirée dans le jeu du joueur
+        dCards.add(dc.get(nCard));
+
+        // et on la retire de la pioche
+        dc.remove(nCard);
     }
 }

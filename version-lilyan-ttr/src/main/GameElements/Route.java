@@ -9,6 +9,7 @@ public class Route {
     private final boolean isTunel;
     private final int locomotive;
     private int state;
+    private Player hasPlayerOn;
 
     public Route(Destination from, Destination to, int require, Color color, boolean isTunel, int locomotive) {
         this.from = from;
@@ -18,6 +19,7 @@ public class Route {
         this.state = 0;
         this.isTunel = isTunel;
         this.locomotive = locomotive;
+        hasPlayerOn = null;
     }
 
     public Destination getFrom() {
@@ -38,6 +40,18 @@ public class Route {
 
     public int getState() {
         return state;
+    }
+
+    /**
+     * tells if there is somebody on this route
+     *
+     * @return true if there is somebody on, false otherwise
+     */
+    public boolean isAlreadyTakenRoute(){
+        if (hasPlayerOn != null){
+            return true;
+        }
+        return false;
     }
 
     public void setState(int state) {
