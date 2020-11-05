@@ -2,32 +2,41 @@ package GameElements;
 import Enum.*;
 
 public class Route {
-    private final Destination from;
-    private final Destination to;
+    //représentent les deux destination réliées par cette route
+    private final Destination dest1;
+    private final Destination dest2;
+
+    //représente le nombre de wagons que nécessite cette route pour poser ses wagons dessus
     private final int require;
+
+    //représente la couleur des wagons nécessaire pour poser ses wagons dessus
     private final Color color;
+
+    //booleen pour dire si cette route est un tunel
     private final boolean isTunel;
+
+    //booleen pour dire si cette route necessite des locomotives dans le cas des routes ferries
     private final int locomotive;
-    private int state;
+
+    //enregistre le joueur qui a éventuellement posé ses wagons dessus
     private Player hasPlayerOn;
 
     public Route(Destination from, Destination to, int require, Color color, boolean isTunel, int locomotive) {
-        this.from = from;
-        this.to = to;
+        this.dest1 = from;
+        this.dest2 = to;
         this.require = require;
         this.color = color;
-        this.state = 0;
         this.isTunel = isTunel;
         this.locomotive = locomotive;
         hasPlayerOn = null;
     }
 
     public Destination getFrom() {
-        return from;
+        return dest1;
     }
 
     public Destination getTo() {
-        return to;
+        return dest2;
     }
 
     public int getRequire() {
@@ -38,24 +47,17 @@ public class Route {
         return color;
     }
 
-    public int getState() {
-        return state;
-    }
-
     /**
      * tells if there is somebody on this route
      *
      * @return true if there is somebody on, false otherwise
      */
     public boolean isAlreadyTakenRoute(){
-        if (hasPlayerOn != null){
-            return true;
-        }
-        return false;
+        return hasPlayerOn != null;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setPlayer(Player p) {
+        this.hasPlayerOn = p;
     }
 
     /**
@@ -66,6 +68,6 @@ public class Route {
      */
     @Override
     public String toString() {
-        return "    From "+from+" to "+to+ " with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
+        return "    From "+dest1+" to "+dest2+ " with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
     }
 }
