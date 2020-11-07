@@ -1,5 +1,10 @@
 package GameElements;
 import Enum.*;
+import model.*;
+
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class Route {
     //représentent les deux destination réliées par cette route
@@ -47,6 +52,14 @@ public class Route {
         return color;
     }
 
+    public boolean isTunel() {
+        return isTunel;
+    }
+
+    public int getLocomotive() {
+        return locomotive;
+    }
+
     /**
      * tells if there is somebody on this route
      *
@@ -69,5 +82,147 @@ public class Route {
     @Override
     public String toString() {
         return "    From "+dest1+" to "+dest2+ " with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
+    }
+
+    public int getTunnel(Player p, Color c, Game g){
+        //on tire trois cartes de la pioche
+        ArrayList<TrainCard> tctmp = new ArrayList<>();
+        int k = 0;
+        for( int i = 0; i < 3; i++){
+            TrainCard tmp = g.drawTrainCard();
+            System.out.println(tmp);
+            if(tmp.getColor() == c || tmp.getColor() == Color.RAINBOW){
+                k++;
+            }
+            tctmp.add(tmp);
+        }
+
+        if( k > 0){
+            //si le joueur n'a pas assez de cartes on s'arrete la
+            if(p.countOccurencesOf(c) < this.getRequire()+k){
+                System.out.println("Vous devez rajouter "+k+" carte(s) mais vous n'en avez pas assez. Raté !");
+                return 0;
+            }else{
+                System.out.println("Vous devez rajouter "+k+" carte(s). Acceptez-vous ? (O/N)");
+                boolean accept = saisieOuiNon();
+
+                if(accept){
+                    //on enregistre le joueur sur la route
+                    this.setPlayer(p);
+
+                    //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
+                    int nbRemovedCard = p.removeTrainCards(c, this.getRequire()+k, g);
+                    if(nbRemovedCard < this.getRequire()+k){
+                        p.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, g);
+                    }
+                    System.out.println("Vous possédez désormais la route "+this);
+                    return 0;
+                }
+                return -1;
+            }
+
+        }else{
+            //on enregistre le joueur sur la route
+            this.setPlayer(p);
+
+            //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
+            System.out.println("////////////////////////////////////////////////test taille pioche avant "+g.getDrawTrainCards().size());
+            int nbRemovedCard = p.removeTrainCards(c, this.getRequire()+k, g);
+            if(nbRemovedCard < this.getRequire()+k){
+                p.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, g);
+            }
+            System.out.println("////////////////////////////////////////////////test taille pioche apres "+g.getDrawTrainCards().size());
+
+            System.out.println("Vous n'avez pas besoin de rajouter de cartes, bravo!\nVous possédez désormais la route "+this);
+            return 0;
+        }
+    }
+
+    public int getRoute(Player p, Color c, Game g){
+        //si le joueur n'a pas assez de cartes on s'arrete la
+        if(p.countOccurencesOf(c) < this.getRequire()){
+            System.out.println("Vous n'avez pas assez de cartes pour posséder cette route.");
+            return -1;
+        }else {
+            //on enregistre le joueur sur la route
+            this.setPlayer(p);
+
+            //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
+            System.out.println("////////////////////////////////////////////////test taille pioche avant "+g.getDrawTrainCards().size());
+            int nbRemovedCard = p.removeTrainCards(c, this.getRequire(), g);
+            if (nbRemovedCard < this.getRequire()) {
+                p.removeTrainCards(Color.RAINBOW, (this.getRequire()) - nbRemovedCard, g);
+            }
+            System.out.println("////////////////////////////////////////////////test taille pioche apres "+g.getDrawTrainCards().size());
+            System.out.println("Vous possédez désormais la route " + this);
+            return 0;
+        }
+    }
+    public int getFerrie(Player p, Color c, Game g){
+        Player tmp = p;
+
+        //on verifie qu'on a assez de locomotives
+        int nbLocos = p.countOccurencesOf(Color.RAINBOW);
+        if(getLocomotive() > 0) {
+            if (nbLocos < this.getLocomotive()) {
+                System.out.println("Vous n'avez pas assez de locomotive pour posséder ce ferrie.");
+                return -1;
+            }
+        }
+        //on verifie qu'on peut poser assez de cartes autres que les locos obligatoires
+        if(p.countOccurencesOf(c) < getRequire()-getLocomotive()){
+            System.out.println("Vous n'avez pas assez de cartes de couleur "+c+"  pour posséder ce ferrie.");
+            return -1;
+        }else {
+            //on vérifie si les locos a poser obligatoirement ne font pas partie des cartes pour
+            //poser le reste du chemin
+            int nbCard = p.countWithoutRainbowOccurencesOf(c);
+            nbCard +=nbLocos;
+
+            //si on a assez de cartes loco plus d'autres cartes de couleur alors on peut prendre la route
+            if (nbCard >= getRequire()) {
+                this.setPlayer(p);
+
+                //on retire les cartes de couleur c et les eventuelles cartes loco. qui ont completé le nombre de carte a avoir
+                int nbRemovedCard = p.removeTrainCards(c, this.getRequire() - getLocomotive(), g);
+                if (nbRemovedCard < this.getRequire() - getLocomotive()) {
+                    p.removeTrainCards(Color.RAINBOW, (this.getRequire() - getLocomotive()) - nbRemovedCard, g);
+                }
+
+                //on retire le nombre de carte loco qu'on devait avoir pour prendre cette route
+                p.removeTrainCards(Color.RAINBOW, getLocomotive(), g);
+                System.out.println("Vous possédez désormais la route " + this);
+                return 0;
+            } else {
+                System.out.println("Vous n'avez pas assez de Locomotives pour prendre cette route.");
+                return -1;
+            }
+        }
+    }
+
+    public boolean saisieOuiNon(){
+        String choix = "";
+        Scanner entree =   new Scanner(System.in);
+
+        try{
+            choix = entree.next();
+        }catch (InputMismatchException e){
+            entree.next();
+        }
+
+        //verif de la saisie
+        while(!choix.equals("O") && !choix.equals("o") && !choix.equals("N") && !choix.equals("n")) {
+            System.out.println("Erreur : veuilez entrer soit oui (O), soit non (N).");
+            try {
+                choix = entree.next();
+            } catch (InputMismatchException e) {
+                entree.next();
+            }
+        }
+        if( choix.equals("o") || choix.equals("O")){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

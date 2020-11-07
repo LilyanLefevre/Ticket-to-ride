@@ -32,6 +32,10 @@ public class Game {
     //fichier contenant les routes
     private String route_file_path;
 
+    public ArrayList<TrainCard> getDrawTrainCards() {
+        return drawTrainCards;
+    }
+
     public Game(ArrayList<String> names, String destination_file_path, String route_file_path) {
 
         // initialisation des cartes colorées
@@ -107,8 +111,9 @@ public class Game {
     }
 
     /**
-     * fonction qui va découper une ligne du fichier et creer la carte destination correspondante
-     * et l'ajoute à la pioche
+     * fonction qui va découper une ligne du fichier et creer la carte destination ou la route correspondante
+     * et l'ajoute à la pioche ou au jeu
+     *
      * @param line ligne du fichier à découper
      */
     private void processLine(String line, String typeOfFile){
@@ -234,8 +239,8 @@ public class Game {
                 System.out.println("Saisissez un numéro : ");
                 c = saisieValidIntBornes(1, routes.size());
 
-                //on vérifie que la route est libre et qu'il a assez de cartes et assez de wagons pour prendre cette route
-                while(routes.get(c-1).isAlreadyTakenRoute() || p.getWagons() < routes.get(c-1).getRequire() || p.countOccurencesOf(routes.get(c-1).getColor()) < routes.get(c-1).getRequire()) {
+                //on vérifie que la route est libre et qu'il a assez de wagons pour prendre cette route
+                while(routes.get(c-1).isAlreadyTakenRoute() || p.getWagons() < routes.get(c-1).getRequire()) {
                     if(routes.get(c - 1).isAlreadyTakenRoute()){
                         System.out.println("Erreur : la route est déjà prise ! ");
                     }
@@ -244,21 +249,43 @@ public class Game {
                         System.out.println("Erreur : vous n'avez pas assez de wagons pour prendre cette route ! ");
                     }
 
-                    //on vérifie qu'il a le bon nombre de cartes de la bonne couleur
-                    int nbCards = p.countOccurencesOf(routes.get(c - 1).getColor());
-                    if (nbCards < routes.get(c - 1).getRequire()) {
-                        System.out.println("Erreur : vous n'avez pas assez de cartes " + routes.get(c - 1).getColor() + " pour prendre cette route ! ");
-                    }
-
                     //il resaisit un numero de route
                     c = saisieValidIntBornes(1, routes.size());
                 }
 
-                routes.get(c - 1).setPlayer(p);
-                p.removeColoredCards(routes.get(c - 1).getColor(), routes.get(c - 1).getRequire());
-                System.out.println("Vous avez pris la route : "+routes.get(c-1));
+                //si la route est un tunnel
+                if(routes.get(c - 1).isTunel()){
+                    //si la route n'a pas de couleur
+                    if(routes.get(c - 1).getColor() == Color.GREY){
+                        System.out.println("Saisissez une couleur de carte Wagon pour tenter de prendre le tunnel :");
+                        Color couleur = Color.valueOf(p.saisieOwnedColor());
+                        routes.get(c - 1).getTunnel(p,couleur, this);
+                    }
+                    //si la route a une couleur
+                    else{
+                        routes.get(c - 1).getTunnel(p,routes.get(c - 1).getColor(),this);
+                    }
+                }
+                //si c'est pas un tunnel
+                else{
+                    //si c'est un ferrie
+                    if(routes.get(c - 1).getColor() == Color.GREY){
+                        System.out.println("Saisissez une couleur de carte Wagon pour prendre le ferrie :");
+                        Color couleur = Color.valueOf(p.saisieOwnedColor());
+                        routes.get(c - 1).getFerrie(p,couleur,this);
+                    }else{
+                        routes.get(c - 1).getRoute(p,routes.get(c - 1).getColor(), this);
+                    }
+                }
 
                 break;
+
+
+
+
+
+
+
 
             //si on pioche des cartes destination
             case 3:
@@ -319,5 +346,16 @@ public class Game {
             }
         }
         return choix;
+    }
+
+    public TrainCard drawTrainCard(){
+        int nCard = (int)(Math.random() * (drawTrainCards.size()));
+
+        TrainCard tmp = drawTrainCards.get(nCard);
+
+        // et on la retire de la pioche
+        drawTrainCards.remove(nCard);
+
+        return tmp;
     }
 }

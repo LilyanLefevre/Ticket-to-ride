@@ -1,8 +1,11 @@
 package GameElements;
 import Enum.*;
+import model.*;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Player {
     private String name;
@@ -61,13 +64,15 @@ public class Player {
      */
     @Override
     public String toString() {
-        StringBuilder dc = new StringBuilder();
-        for (DestinationCard dCard : dCards) {
-            dc.append(dCard.toString());
+        String dc = new String();
+        dc = "";
+        for (int i =0; i < dCards.size(); i++) {
+            dc += /*" "+(i+1) + " - "+ */dCards.get(i).toString();
         }
-        StringBuilder tc = new StringBuilder();
-        for (TrainCard tCard : tCards) {
-            tc.append(tCard.toString());
+        String tc = new String();
+        tc = "";
+        for (int i =0; i < tCards.size(); i++) {
+            tc += /*" "+(i+1) + " - "+ */tCards.get(i).toString();
         }
         return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+" and train stations = "+nbTrainStation+"\n";
     }
@@ -105,8 +110,33 @@ public class Player {
         dCards.add(dc);
     }
 
+    /**
+     * fonction qui permet de compter le nombre de carte d'une certaine couleur
+     * en incluant les locos.
+     * @param c la couleur voulue
+     * @return un entier représentant le nombre de carte de la bonne couleur
+     */
     public int countOccurencesOf(Color c){
         int i = 0;
+
+        //compte le nombre de carte de la couleur donnée et locomotives
+        for(TrainCard t : tCards){
+            if(t.getColor() == c || t.getColor() == Color.RAINBOW){
+                i++;
+            }
+        }
+        return i;
+    }
+    /**
+     * fonction qui permet de compter le nombre de carte d'une certaine couleur
+     * en incluant les locos.
+     * @param c la couleur voulue
+     * @return un entier représentant le nombre de carte de la bonne couleur
+     */
+    public int countWithoutRainbowOccurencesOf(Color c ){
+        int i = 0;
+
+        //compte le nombre de carte de la couleur donnée et locomotives
         for(TrainCard t : tCards){
             if(t.getColor() == c){
                 i++;
@@ -115,7 +145,15 @@ public class Player {
         return i;
     }
 
-    public void removeColoredCards(Color c, int nb){
+    /**
+     * fonction qui supprime nb carte de couleur c dans les cartes Wagon du joueur
+     * et les replace dans la pioche
+     *
+     * @param c la couleur des cartes a retirer
+     * @param nb le nombre de carte a retirer
+     * @return le nombre de carte retiré
+     */
+    public int removeTrainCards(Color c, int nb, Game g){
         int i = 0;
         ArrayList<TrainCard> toRemove = new ArrayList<>();
         for(TrainCard t : tCards){
@@ -126,6 +164,52 @@ public class Player {
                 }
             }
         }
+
+        int ret = toRemove.size();
         tCards.removeAll(toRemove);
+
+        //on les replace dans la pioche
+        for(TrainCard t : toRemove){
+            int nCard = (int)(Math.random() * (g.getDrawTrainCards().size()));
+            g.getDrawTrainCards().add(nCard,t);
+        }
+
+        return ret;
+    }
+
+    public String saisieOwnedColor(){
+        String choix = "";
+        Scanner entree =   new Scanner(System.in);
+
+        try{
+            choix = entree.next();
+        }catch (InputMismatchException e){
+            entree.next();
+        }
+        //verif de la saisie
+        int exist = 0;
+        for(Color c : Color.values()) {
+            try {
+                if (c.toString().equals(choix)) {
+                    exist = 1;
+                }
+            }catch(IllegalArgumentException e){};
+        }
+        while(exist != 1 || this.countOccurencesOf(Color.valueOf(choix)) == 0) {
+            System.out.println("Erreur : vous ne possédez pas de carte de cette couleur. Veuillez réessayer : ");
+            try {
+                choix = entree.next();
+            } catch (InputMismatchException e) {
+                entree.next();
+            }
+            for(Color c : Color.values()) {
+                try {
+                    if (c.toString().equals(choix)) {
+                        exist = 1;
+                    }
+                }catch(IllegalArgumentException e){};
+            }
+        }
+        return choix;
     }
 }
