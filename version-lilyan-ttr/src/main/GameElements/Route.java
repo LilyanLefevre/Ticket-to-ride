@@ -104,7 +104,7 @@ public class Route {
                 return 0;
             }else{
                 System.out.println("Vous devez rajouter "+k+" carte(s). Acceptez-vous ? (O/N)");
-                boolean accept = saisieOuiNon();
+                boolean accept = g.saisieOuiNon();
 
                 if(accept){
                     //on enregistre le joueur sur la route
@@ -116,6 +116,8 @@ public class Route {
                         p.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, g);
                     }
                     System.out.println("Vous possédez désormais la route "+this);
+                    p.setWagons(p.getWagons()-this.getRequire());
+                    p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
                     return 0;
                 }
                 return -1;
@@ -134,6 +136,8 @@ public class Route {
             System.out.println("////////////////////////////////////////////////test taille pioche apres "+g.getDrawTrainCards().size());
 
             System.out.println("Vous n'avez pas besoin de rajouter de cartes, bravo!\nVous possédez désormais la route "+this);
+            p.setWagons(p.getWagons()-this.getRequire());
+            p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
             return 0;
         }
     }
@@ -155,6 +159,8 @@ public class Route {
             }
             System.out.println("////////////////////////////////////////////////test taille pioche apres "+g.getDrawTrainCards().size());
             System.out.println("Vous possédez désormais la route " + this);
+            p.setWagons(p.getWagons()-this.getRequire());
+            p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
             return 0;
         }
     }
@@ -192,6 +198,8 @@ public class Route {
                 //on retire le nombre de carte loco qu'on devait avoir pour prendre cette route
                 p.removeTrainCards(Color.RAINBOW, getLocomotive(), g);
                 System.out.println("Vous possédez désormais la route " + this);
+                p.setWagons(p.getWagons()-this.getRequire());
+                p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
                 return 0;
             } else {
                 System.out.println("Vous n'avez pas assez de Locomotives pour prendre cette route.");
@@ -200,29 +208,28 @@ public class Route {
         }
     }
 
-    public boolean saisieOuiNon(){
-        String choix = "";
-        Scanner entree =   new Scanner(System.in);
-
-        try{
-            choix = entree.next();
-        }catch (InputMismatchException e){
-            entree.next();
-        }
-
-        //verif de la saisie
-        while(!choix.equals("O") && !choix.equals("o") && !choix.equals("N") && !choix.equals("n")) {
-            System.out.println("Erreur : veuilez entrer soit oui (O), soit non (N).");
-            try {
-                choix = entree.next();
-            } catch (InputMismatchException e) {
-                entree.next();
-            }
-        }
-        if( choix.equals("o") || choix.equals("O")){
-            return true;
-        }else{
-            return false;
+    /**
+     * convertit un nombre de wagons en nombre de points
+     * @param nb
+     * @return la valeur en points de nb wagons
+     */
+    public int howManyPointsFor(int nb){
+        switch(nb) {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return 4;
+            case 4:
+                return 7;
+            case 6:
+                return 15;
+            case 8:
+                return 21;
+            default:
+                throw new IllegalStateException("Unexpected value: " + nb);
         }
     }
+
 }

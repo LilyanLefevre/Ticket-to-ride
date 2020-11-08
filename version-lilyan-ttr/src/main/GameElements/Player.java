@@ -28,6 +28,18 @@ public class Player {
         return wagons;
     }
 
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setWagons(int wagons) {
+        this.wagons = wagons;
+    }
+
+    public void setNbTrainStation(int nbTrainStation) {
+        this.nbTrainStation = nbTrainStation;
+    }
+
     public Color getColor() {
         return color;
     }
@@ -175,41 +187,5 @@ public class Player {
         }
 
         return ret;
-    }
-
-    public String saisieOwnedColor(){
-        String choix = "";
-        Scanner entree =   new Scanner(System.in);
-
-        try{
-            choix = entree.next();
-        }catch (InputMismatchException e){
-            entree.next();
-        }
-        //verif de la saisie
-        int exist = 0;
-        for(Color c : Color.values()) {
-            try {
-                if (c.toString().equals(choix)) {
-                    exist = 1;
-                }
-            }catch(IllegalArgumentException e){};
-        }
-        while(exist != 1 || this.countOccurencesOf(Color.valueOf(choix)) == 0) {
-            System.out.println("Erreur : vous ne possédez pas de carte de cette couleur. Veuillez réessayer : ");
-            try {
-                choix = entree.next();
-            } catch (InputMismatchException e) {
-                entree.next();
-            }
-            for(Color c : Color.values()) {
-                try {
-                    if (c.toString().equals(choix)) {
-                        exist = 1;
-                    }
-                }catch(IllegalArgumentException e){};
-            }
-        }
-        return choix;
     }
 }

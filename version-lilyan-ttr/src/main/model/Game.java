@@ -21,16 +21,19 @@ public class Game {
     private ArrayList<DestinationCard> drawDestinationCards;
 
     // ensemble de routes du plateau
-    private ArrayList<Route> routes;
+    private Routes routes;
 
     // répertorie les gares qui ont été posées sur le plateau
-    private ArrayList<TrainStation> trainStations;
+    private TrainStations trainStations;
 
     // fichier contenant les cartes destination
     private String destination_file_path;
 
     //fichier contenant les routes
     private String route_file_path;
+
+    //variable qui sert dans le cas où on annule une action
+    private int alreadyCalled;
 
     public ArrayList<TrainCard> getDrawTrainCards() {
         return drawTrainCards;
@@ -67,7 +70,7 @@ public class Game {
 
         // initialisation des routes
         this.route_file_path = route_file_path;
-        routes = new ArrayList<>();
+        routes = new Routes();
         readDestinationFromFile("route");
 
         // initialisation des joueurs
@@ -77,7 +80,9 @@ public class Game {
         }
 
         // initialise le tableau de gares posées
-        trainStations = new ArrayList<>();
+        trainStations = new TrainStations();
+
+        alreadyCalled = 0;
     }
 
     /**
@@ -130,7 +135,7 @@ public class Game {
             int points = Integer.parseInt(tokenizer.nextToken());
             boolean isTunel = Boolean.parseBoolean(tokenizer.nextToken());
             int locomotive = Integer.parseInt(tokenizer.nextToken());
-            this.routes.add(new Route(dest1, dest2, points, color, isTunel, locomotive));
+            this.routes.addRoute(new Route(dest1, dest2, points, color, isTunel, locomotive));
         }
     }
 
@@ -157,17 +162,31 @@ public class Game {
 
         //on affiche l'ensemble des routes qui relient les villes
         str.append("\nROUTES : \n");
-        for (Route route : routes) {
+        for (Route route : routes.getRoutes()) {
             str.append(route.toString());
         }
         return str.toString();
     }
 
+    /**
+     * fonction permet à un joueur de jouer un tour
+     *
+     * @param p le joueur qui joue
+     */
     public void playTurn(Player p){
         int choix;
 
         //on récupère le choix du joueur
-        System.out.println("Choisissez une option:\n  1 - Prendre des cartes Wagon\n  2 - Prendre possession des routes\n  3 - Prendre des cartes Destination\n  4 - Bâtir une gare");
+        System.out.println("Choisissez une option:\n  1 - Prendre des cartes Wagon\n  2 - Prendre possession des routes");
+        //on affiche l'option s'il reste des cartes destination
+        if (drawDestinationCards.size() > 0) {
+            System.out.println("  3 - Prendre des cartes Destination");
+        }
+        //on affiche l'option s'il reste des gares au joueur
+        if (p.getNbTrainStation() > 0) {
+            System.out.println("  4 - Bâtir une gare");
+        }
+
         choix = saisieValidIntBornes(1,4);
 
         switch (choix) {
@@ -226,75 +245,154 @@ public class Game {
             case 2:
 
                 //on affiche les routes possibles
-                System.out.println("Voici les routes disponibles:");
-                for(int i = 0; i < routes.size(); i++){
-                    if(routes.get(i).isAlreadyTakenRoute()){
-                        System.out.println("DÉJÀ PRISE "+(i+1)+" - "+routes.get(i));
-                    }else {
-                        System.out.println((i + 1) + " - " + routes.get(i));
+                if(alreadyCalled == 0) {
+                    System.out.println("Voici les routes disponibles:");
+
+                    for (int i = 0; i < routes.howManyRoutes(); i++) {
+                        if (routes.getRoute(i).isAlreadyTakenRoute()) {
+                            System.out.println("DÉJÀ PRISE " + (i + 1) + " - " + routes.getRoute(i));
+                        } else {
+                            System.out.println((i + 1) + " - " + routes.getRoute(i));
+                        }
                     }
+                    System.out.println(routes.howManyRoutes() + 1 + " - Annuler\n");
                 }
+
 
                 //on fait choisir une route au joueur
-                System.out.println("Saisissez un numéro : ");
-                c = saisieValidIntBornes(1, routes.size());
+                System.out.println("Saisissez un numéro de route : ");
+                c = saisieValidIntBornes(1, routes.howManyRoutes()+1);
 
-                //on vérifie que la route est libre et qu'il a assez de wagons pour prendre cette route
-                while(routes.get(c-1).isAlreadyTakenRoute() || p.getWagons() < routes.get(c-1).getRequire()) {
-                    if(routes.get(c - 1).isAlreadyTakenRoute()){
-                        System.out.println("Erreur : la route est déjà prise ! ");
-                    }
-                    //on vérifie qu'il a le bon nombre de trains dispo
-                    if (p.getWagons() < routes.get(c - 1).getRequire()) {
-                        System.out.println("Erreur : vous n'avez pas assez de wagons pour prendre cette route ! ");
-                    }
-
-                    //il resaisit un numero de route
-                    c = saisieValidIntBornes(1, routes.size());
+                //si le joueur veut annuler
+                if(c == routes.howManyRoutes()+1){
+                    alreadyCalled++;
+                    playTurn(p);
                 }
-
-                //si la route est un tunnel
-                if(routes.get(c - 1).isTunel()){
-                    //si la route n'a pas de couleur
-                    if(routes.get(c - 1).getColor() == Color.GREY){
-                        System.out.println("Saisissez une couleur de carte Wagon pour tenter de prendre le tunnel :");
-                        Color couleur = Color.valueOf(p.saisieOwnedColor());
-                        routes.get(c - 1).getTunnel(p,couleur, this);
-                    }
-                    //si la route a une couleur
-                    else{
-                        routes.get(c - 1).getTunnel(p,routes.get(c - 1).getColor(),this);
-                    }
-                }
-                //si c'est pas un tunnel
+                //si le joueur ne veut pas annuler
                 else{
-                    //si c'est un ferrie
-                    if(routes.get(c - 1).getColor() == Color.GREY){
-                        System.out.println("Saisissez une couleur de carte Wagon pour prendre le ferrie :");
-                        Color couleur = Color.valueOf(p.saisieOwnedColor());
-                        routes.get(c - 1).getFerrie(p,couleur,this);
-                    }else{
-                        routes.get(c - 1).getRoute(p,routes.get(c - 1).getColor(), this);
+                    //on vérifie que la route est libre et qu'il a assez de wagons pour prendre cette route
+                    while (routes.getRoute(c - 1).isAlreadyTakenRoute() || p.getWagons() < routes.getRoute(c - 1).getRequire()) {
+                        if (routes.getRoute(c - 1).isAlreadyTakenRoute()) {
+                            System.out.println("Erreur : la route est déjà prise ! ");
+                        }
+                        //on vérifie qu'il a le bon nombre de trains dispo
+                        if (p.getWagons() < routes.getRoute(c - 1).getRequire()) {
+                            System.out.println("Erreur : vous n'avez pas assez de wagons pour prendre cette route ! ");
+                        }
+
+                        //il resaisit un numero de route
+                        c = saisieValidIntBornes(1, routes.howManyRoutes());
+                    }
+
+                    //si la route est un tunnel
+                    if (routes.getRoute(c - 1).isTunel()) {
+                        //si la route n'a pas de couleur
+                        if (routes.getRoute(c - 1).getColor() == Color.GREY) {
+                            System.out.println("Saisissez une couleur de carte Wagon pour tenter de prendre le tunnel :");
+                            Color couleur = Color.saisieColor();
+                            if (routes.getRoute(c - 1).getTunnel(p, couleur, this) == -1) {
+                                alreadyCalled++;
+                                playTurn(p);
+                            }
+                        }
+                        //si la route a une couleur
+                        else {
+                            if (routes.getRoute(c - 1).getTunnel(p, routes.getRoute(c - 1).getColor(), this) == -1) {
+                                alreadyCalled++;
+                                playTurn(p);
+                            }
+                        }
+                    }
+                    //si c'est pas un tunnel
+                    else {
+                        //si c'est un ferrie
+                        if (routes.getRoute(c - 1).getColor() == Color.GREY) {
+                            System.out.println("Saisissez une couleur de carte Wagon pour prendre le ferrie :");
+                            Color couleur = Color.saisieColor();
+                            if (routes.getRoute(c - 1).getFerrie(p, couleur, this) == -1) {
+                                alreadyCalled++;
+                                playTurn(p);
+                            }
+                        } else {
+                            if (routes.getRoute(c - 1).getRoute(p, routes.getRoute(c - 1).getColor(), this) == -1) {
+                                alreadyCalled++;
+                                playTurn(p);
+                            }
+                        }
                     }
                 }
 
                 break;
 
-
-
-
-
-
-
-
             //si on pioche des cartes destination
             case 3:
-                System.out.println("Vous avez pioché trois cartes Destination");
+                if(drawDestinationCards.size() > 0) {
+                    System.out.println("Vous avez pioché les trois cartes Destination suivantes: ");
+                    ArrayList<DestinationCard> dctmp = new ArrayList<>();
+                    for (int i = 0; i < 3; i++) {
+                        if (drawDestinationCards.size() > 0) {
+                            DestinationCard tmpd = drawDestinationCard();
+                            System.out.print("  " + (i + 1) + " - " + tmpd);
+                            dctmp.add(tmpd);
+                        }
+                    }
+                    System.out.println("Souhaitez- vous en retirer une ou plusieurs ?(O/N)");
+                    boolean removeDest = saisieOuiNon();
+                    if (removeDest) {
+                        int k = 0;
+                        boolean removeOther = true;
+                        while (k < 2 && removeOther) {
+                            System.out.println("Saisissez le numéro d'une carte à enlever :");
+                            if (k > 0) {
+                                for (int i = 0; i < dctmp.size(); i++) {
+                                    System.out.print("  " + (i + 1) + " - " + dctmp.get(i));
+                                }
+                            }
+                            int nb = saisieValidIntBornes(1, dctmp.size());
+                            //on remet dans la pioche la carte dont le joueur se débarasse
+                            drawDestinationCards.add(dctmp.get(nb - 1));
+                            dctmp.remove(nb - 1);
+                            k++;
+
+                            //demande si on en retire une autre
+                            if (k < 2) {
+                                System.out.println("Souhaitez-vous en retirer une autre ?(O/N)");
+                                removeOther = saisieOuiNon();
+                            }
+
+                        }
+                    }
+                    //on met les cartes dans le jeu du joueur
+                    System.out.println("Vous avez conservé les cartes suivantes :");
+                    for (int i = 0; i < dctmp.size(); i++) {
+                        System.out.print(dctmp.get(i));
+                        p.addDestinationCard(dctmp.get(i));
+                    }
+                }else{
+                    System.out.println("Désolé, il n'y a plus de cartes Destination disponibles.");
+                    alreadyCalled++;
+                    playTurn(p);
+                }
                 break;
 
             //si on construit une gare
             case 4:
-                System.out.println("Vous avez posé une gare");
+                if (p.getWagons() < 1){
+                    System.out.println("Erreur : vous n'avez plus de gare.");
+                }else{
+                    System.out.println("Où voulez vous poser une gare?");
+                    Destination dest = Destination.saisieDestination();
+                    if(trainStations.isAlreadyUsed(dest)){
+                        System.out.println("Cette gare est déjà prise.");
+                        alreadyCalled++;
+                        playTurn(p);
+                    }else{
+                        if(trainStations.addStation(dest, p, this) == -1){
+                            alreadyCalled++;
+                            playTurn(p);
+                        }
+                    }
+                }
                 break;
 
             default:
@@ -320,6 +418,7 @@ public class Game {
     public void runGame(){
         while(!gameIsOver()){
             for(Player p : players) {
+                alreadyCalled = 0;
                 System.out.println("\n\n////////////////////C'est au tour de " + p.getName()+" de jouer////////////////////");
                 System.out.println(p);
                 playTurn(p);
@@ -348,6 +447,37 @@ public class Game {
         return choix;
     }
 
+    public boolean saisieOuiNon(){
+        String choix = "";
+        Scanner entree = new Scanner(System.in);
+
+        try{
+            choix = entree.next();
+        }catch (InputMismatchException e){
+            entree.next();
+        }
+
+        //verif de la saisie
+        while(!choix.equals("O") && !choix.equals("o") && !choix.equals("N") && !choix.equals("n")) {
+            System.out.println("Erreur : veuilez entrer soit oui (O), soit non (N).");
+            try {
+                choix = entree.next();
+            } catch (InputMismatchException e) {
+                entree.next();
+            }
+        }
+        if( choix.equals("o") || choix.equals("O")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * fonction permettant de piocher une carte wagon et de la retirer de la pioche
+     *
+     * @return TrainCard la carte pioché
+     */
     public TrainCard drawTrainCard(){
         int nCard = (int)(Math.random() * (drawTrainCards.size()));
 
@@ -355,6 +485,22 @@ public class Game {
 
         // et on la retire de la pioche
         drawTrainCards.remove(nCard);
+
+        return tmp;
+    }
+
+    /**
+     * fonction permettant de piocher une carte destination et de la retirer de la pioche
+     *
+     * @return DestinationCard la carte pioché
+     */
+    public DestinationCard drawDestinationCard(){
+        int nCard = (int)(Math.random() * (drawDestinationCards.size()));
+
+        DestinationCard tmp = drawDestinationCards.get(nCard);
+
+        // et on la retire de la pioche
+        drawDestinationCards.remove(nCard);
 
         return tmp;
     }
