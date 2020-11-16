@@ -3,18 +3,14 @@ import Enum.*;
 import model.*;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Random;
-import java.util.Scanner;
 
 public class Player {
-    private String name;
+    private final String name;
     private ArrayList<TrainCard> tCards;
     private ArrayList<DestinationCard> dCards;
     private int points;
     private int wagons;
-    private Color color;
-    private int nbTrainStation;
+    private final Color color;
 
     public String getName() {
         return name;
@@ -36,24 +32,17 @@ public class Player {
         this.wagons = wagons;
     }
 
-    public void setNbTrainStation(int nbTrainStation) {
-        this.nbTrainStation = nbTrainStation;
-    }
 
     public Color getColor() {
         return color;
     }
 
-    public int getNbTrainStation() {
-        return nbTrainStation;
-    }
 
     public Player(String name, Color color, ArrayList<DestinationCard> dc, ArrayList<TrainCard> tc) {
         this.name = name;
         this.color = color;
         points = 0;
         wagons = 45;
-        nbTrainStation = 3;
         tCards = new ArrayList<>();
         dCards = new ArrayList<>();
 
@@ -86,7 +75,7 @@ public class Player {
         for (int i =0; i < tCards.size(); i++) {
             tc += /*" "+(i+1) + " - "+ */tCards.get(i).toString();
         }
-        return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+" and train stations = "+nbTrainStation+"\n";
+        return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+"\n";
     }
 
     public TrainCard drawTrainCard(ArrayList<TrainCard> tc){

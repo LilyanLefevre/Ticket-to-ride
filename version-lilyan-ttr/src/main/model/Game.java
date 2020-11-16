@@ -9,7 +9,7 @@ import Enum.*;
 
 public class Game {
     // l'ensemble des joueurs
-    private ArrayList<Player> players;
+    private final ArrayList<Player> players;
 
     // pioche de cartes de couleurs
     private ArrayList<TrainCard> drawTrainCards;
@@ -21,10 +21,7 @@ public class Game {
     private ArrayList<DestinationCard> drawDestinationCards;
 
     // ensemble de routes du plateau
-    private Routes routes;
-
-    // répertorie les gares qui ont été posées sur le plateau
-    private TrainStations trainStations;
+    private final Routes routes;
 
     // fichier contenant les cartes destination
     private String destination_file_path;
@@ -79,8 +76,6 @@ public class Game {
             players.add(i,new Player(names.get(i), Color.values()[i], drawDestinationCards, drawTrainCards));
         }
 
-        // initialise le tableau de gares posées
-        trainStations = new TrainStations();
 
         alreadyCalled = 0;
     }
@@ -182,12 +177,8 @@ public class Game {
         if (drawDestinationCards.size() > 0) {
             System.out.println("  3 - Prendre des cartes Destination");
         }
-        //on affiche l'option s'il reste des gares au joueur
-        if (p.getNbTrainStation() > 0) {
-            System.out.println("  4 - Bâtir une gare");
-        }
 
-        choix = saisieValidIntBornes(1,4);
+        choix = saisieValidIntBornes(1,3);
 
         switch (choix) {
             //si on pioche des cartes wagons
@@ -364,9 +355,9 @@ public class Game {
                     }
                     //on met les cartes dans le jeu du joueur
                     System.out.println("Vous avez conservé les cartes suivantes :");
-                    for (int i = 0; i < dctmp.size(); i++) {
-                        System.out.print(dctmp.get(i));
-                        p.addDestinationCard(dctmp.get(i));
+                    for (DestinationCard destinationCard : dctmp) {
+                        System.out.print(destinationCard);
+                        p.addDestinationCard(destinationCard);
                     }
                 }else{
                     System.out.println("Désolé, il n'y a plus de cartes Destination disponibles.");
@@ -374,27 +365,6 @@ public class Game {
                     playTurn(p);
                 }
                 break;
-
-            //si on construit une gare
-            case 4:
-                if (p.getWagons() < 1){
-                    System.out.println("Erreur : vous n'avez plus de gare.");
-                }else{
-                    System.out.println("Où voulez vous poser une gare?");
-                    Destination dest = Destination.saisieDestination();
-                    if(trainStations.isAlreadyUsed(dest)){
-                        System.out.println("Cette gare est déjà prise.");
-                        alreadyCalled++;
-                        playTurn(p);
-                    }else{
-                        if(trainStations.addStation(dest, p, this) == -1){
-                            alreadyCalled++;
-                            playTurn(p);
-                        }
-                    }
-                }
-                break;
-
             default:
                 throw new IllegalStateException("Unexpected value: " + choix);
         }
@@ -466,11 +436,7 @@ public class Game {
                 entree.next();
             }
         }
-        if( choix.equals("o") || choix.equals("O")){
-            return true;
-        }else{
-            return false;
-        }
+        return choix.equals("o") || choix.equals("O");
     }
 
     /**
@@ -503,5 +469,11 @@ public class Game {
         drawDestinationCards.remove(nCard);
 
         return tmp;
+    }
+
+    public void displayScore(){
+        for(Player p : players){
+            System.out.println(p);
+        }
     }
 }

@@ -3,8 +3,6 @@ import Enum.*;
 import model.*;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class Route {
     //représentent les deux destination réliées par cette route

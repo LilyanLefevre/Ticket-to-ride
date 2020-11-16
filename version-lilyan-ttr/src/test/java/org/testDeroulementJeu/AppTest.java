@@ -15,5 +15,7 @@ public class AppTest {
         Game g = new Game(names,"/home/lilyan/Bureau/TPL3/PROJET/ticket-to-ride/version-lilyan-ttr/destinations.txt","/home/lilyan/Bureau/TPL3/PROJET/ticket-to-ride/version-lilyan-ttr/routes.txt");
         System.out.println(g.toString());
         g.runGame();
+
+        g.displayScore();
     }
 }
