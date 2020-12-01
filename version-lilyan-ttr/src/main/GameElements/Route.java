@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Route {
     //représentent les deux destination réliées par cette route
-    private final Destination dest1;
-    private final Destination dest2;
+    /*private final Destination dest1;
+    private final Destination dest2;*/
 
     //représente le nombre de wagons que nécessite cette route pour poser ses wagons dessus
     private final int require;
@@ -24,23 +24,23 @@ public class Route {
     //enregistre le joueur qui a éventuellement posé ses wagons dessus
     private Player hasPlayerOn;
 
-    public Route(Destination from, Destination to, int require, Color color, boolean isTunel, int locomotive) {
-        this.dest1 = from;
-        this.dest2 = to;
+    public Route(/*Destination from, Destination to, */int require, Color color, boolean isTunel, int locomotive) {
+        /*this.dest1 = from;
+        this.dest2 = to;*/
         this.require = require;
         this.color = color;
         this.isTunel = isTunel;
         this.locomotive = locomotive;
         this.hasPlayerOn = null;
     }
-
+    /*
     public Destination getFrom() {
         return dest1;
     }
 
     public Destination getTo() {
         return dest2;
-    }
+    }*/
 
     public int getRequire() {
         return require;
@@ -79,7 +79,7 @@ public class Route {
      */
     @Override
     public String toString() {
-        return "    From "+dest1+" to "+dest2+ " with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
+        return "with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
     }
 
     public int getTunnel(Player p, Color c, Game g){

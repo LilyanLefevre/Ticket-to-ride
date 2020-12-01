@@ -20,25 +20,19 @@ public class Game {
     // pioche de cartes destination
     private ArrayList<DestinationCard> drawDestinationCards;
 
-    // ensemble de routes du plateau
-    private final Routes routes;
-
-    // fichier contenant les cartes destination
-    private String destination_file_path;
-
-    //fichier contenant les routes
-    private String route_file_path;
-
     //variable qui sert dans le cas où on annule une action
     private int alreadyCalled;
+
+    //variable qui représente l'ensemble des destinations du jeu
+    private Destinations d;
 
     public ArrayList<TrainCard> getDrawTrainCards() {
         return drawTrainCards;
     }
 
-    public Game(ArrayList<String> names, String destination_file_path, String route_file_path) {
+    public Game(ArrayList<String> names /*,String destination_file_path, String route_file_path*/) {
 
-        // initialisation des cartes colorées
+        // initialisation des cartes wagons
         drawTrainCards = new ArrayList<>(Color.values().length*14);
         for(int i = 0; i < Color.values().length; i++){
             if(Color.values()[i] != Color.GREY) {
@@ -48,7 +42,7 @@ public class Game {
             }
         }
 
-        //initialisation des cartes visibles
+        //initialisation des cartes wagons visibles
         drawVisibleTrainCards = new ArrayList<>(5);
         for(int i = 0; i < 5; i++){
             int nCard = (int)(Math.random() * (drawTrainCards.size()));
@@ -60,78 +54,18 @@ public class Game {
             drawTrainCards.remove(nCard);
         }
 
-        // initialisation des cartes destinations
-        this.destination_file_path = destination_file_path;
-        drawDestinationCards = new ArrayList<>();
-        readDestinationFromFile("destination");
+        //initialisation des destinations et des routes
+        d = new Destinations();
 
-        // initialisation des routes
-        this.route_file_path = route_file_path;
-        routes = new Routes();
-        readDestinationFromFile("route");
+        //initialisation des cartes destination
+        drawDestinationCards = DestinationCard.genererCarteDestination(d);
 
         // initialisation des joueurs
         players = new ArrayList<>();
         for(int i = 0; i < 4; i++){
             players.add(i,new Player(names.get(i), Color.values()[i], drawDestinationCards, drawTrainCards));
         }
-
-
         alreadyCalled = 0;
-    }
-
-    /**
-     * fonction qui lit les cartes destinations dans le fichier au chemin
-     * destination_file_path et les ajoute dans la pioche
-     */
-    private void readDestinationFromFile(String typeOfFile){
-        // ouvre le fichier et le lit
-        if(typeOfFile.equals("destination")){
-            try(BufferedReader br = new BufferedReader(new FileReader(destination_file_path))) {
-                String line = br.readLine();
-                while (line != null && !line.equals("%")) {
-                    processLine(line, typeOfFile);
-                    line = br.readLine();
-                }
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }else if(typeOfFile.equals("route")) {
-            try (BufferedReader br = new BufferedReader(new FileReader(route_file_path))) {
-                String line = br.readLine();
-                while (line != null && !line.equals("%")) {
-                    processLine(line, typeOfFile);
-                    line = br.readLine();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * fonction qui va découper une ligne du fichier et creer la carte destination ou la route correspondante
-     * et l'ajoute à la pioche ou au jeu
-     *
-     * @param line ligne du fichier à découper
-     */
-    private void processLine(String line, String typeOfFile){
-        StringTokenizer tokenizer = new StringTokenizer(line, " ");
-
-        Destination dest1 = Destination.valueOf(tokenizer.nextToken());
-        Destination dest2 = Destination.valueOf(tokenizer.nextToken());
-
-        if( typeOfFile.equals("destination")) {
-            int points = Integer.parseInt(tokenizer.nextToken());
-            this.drawDestinationCards.add(new DestinationCard(dest1, dest2, points));
-        }else if (typeOfFile.equals("route")){
-            Color color = Color.valueOf(tokenizer.nextToken());
-            int points = Integer.parseInt(tokenizer.nextToken());
-            boolean isTunel = Boolean.parseBoolean(tokenizer.nextToken());
-            int locomotive = Integer.parseInt(tokenizer.nextToken());
-            this.routes.addRoute(new Route(dest1, dest2, points, color, isTunel, locomotive));
-        }
     }
 
     /**
@@ -157,8 +91,8 @@ public class Game {
 
         //on affiche l'ensemble des routes qui relient les villes
         str.append("\nROUTES : \n");
-        for (Route route : routes.getRoutes()) {
-            str.append(route.toString());
+        for (Map.Entry dest : d.getDestinations().entrySet()){
+            str.append("Depuis "+dest.getKey()+" "+dest.getValue().toString() +"\n");
         }
         return str.toString();
     }
@@ -233,11 +167,12 @@ public class Game {
                 break;
 
             //si on pose des wagons sur une route
-            case 2:
+            /*case 2:
 
                 //on affiche les routes possibles
                 if(alreadyCalled == 0) {
                     System.out.println("Voici les routes disponibles:");
+
 
                     for (int i = 0; i < routes.howManyRoutes(); i++) {
                         if (routes.getRoute(i).isAlreadyTakenRoute()) {
@@ -364,7 +299,7 @@ public class Game {
                     alreadyCalled++;
                     playTurn(p);
                 }
-                break;
+                break;*/
             default:
                 throw new IllegalStateException("Unexpected value: " + choix);
         }

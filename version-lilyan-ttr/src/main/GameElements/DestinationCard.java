@@ -1,5 +1,7 @@
 package GameElements;
-import Enum.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DestinationCard {
     private final Destination from;
@@ -10,6 +12,27 @@ public class DestinationCard {
         this.from = from;
         this.to = to;
         this.points = points;
+    }
+
+    public static ArrayList genererCarteDestination(Destinations d){
+        ArrayList<DestinationCard> ret = new ArrayList<>();
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        ret.add(new DestinationCard(d.getDestinations().get("Paris"), d.getDestinations().get("Berlin"), 2));
+        return ret;
     }
 
     public Destination getFrom() {
