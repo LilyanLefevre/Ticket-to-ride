@@ -1,7 +1,5 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.*;
 
 import GameElements.*;
@@ -88,12 +86,6 @@ public class Game {
         for (Player player : players) {
             str.append(player.toString());
         }
-
-        //on affiche l'ensemble des routes qui relient les villes
-        str.append("\nROUTES : \n");
-        for (Map.Entry dest : d.getDestinations().entrySet()){
-            str.append("Depuis "+dest.getKey()+" "+dest.getValue().toString() +"\n");
-        }
         return str.toString();
     }
 
@@ -167,63 +159,64 @@ public class Game {
                 break;
 
             //si on pose des wagons sur une route
-            /*case 2:
-
+            case 2:
+                int nbVille = 0;
                 //on affiche les routes possibles
                 if(alreadyCalled == 0) {
-                    System.out.println("Voici les routes disponibles:");
+                    System.out.println("Available routes :");
 
-
-                    for (int i = 0; i < routes.howManyRoutes(); i++) {
-                        if (routes.getRoute(i).isAlreadyTakenRoute()) {
-                            System.out.println("DÉJÀ PRISE " + (i + 1) + " - " + routes.getRoute(i));
-                        } else {
-                            System.out.println((i + 1) + " - " + routes.getRoute(i));
-                        }
+                    for (Map.Entry city : d.getDestinations().entrySet()) {
+                        System.out.println("    "+nbVille+" - Routes from "+city.getKey()+" :\n"+((City)city.getValue()).routesFromToString());
+                        nbVille++;
                     }
-                    System.out.println(routes.howManyRoutes() + 1 + " - Annuler\n");
+                    //affiche l'option annuler
+                    System.out.println("    "+(nbVille + 1) + " - Cancel\n");
                 }
 
 
                 //on fait choisir une route au joueur
-                System.out.println("Saisissez un numéro de route : ");
-                c = saisieValidIntBornes(1, routes.howManyRoutes()+1);
+                System.out.println("Choose a route (\"from - to\") : ");
+                Scanner sc = new Scanner(System.in);
+                String str = sc.nextLine();
+                Route routeChoix = d.getRouteFromString(str);
 
                 //si le joueur veut annuler
-                if(c == routes.howManyRoutes()+1){
+                if(routeChoix == null){
                     alreadyCalled++;
                     playTurn(p);
                 }
                 //si le joueur ne veut pas annuler
                 else{
                     //on vérifie que la route est libre et qu'il a assez de wagons pour prendre cette route
-                    while (routes.getRoute(c - 1).isAlreadyTakenRoute() || p.getWagons() < routes.getRoute(c - 1).getRequire()) {
-                        if (routes.getRoute(c - 1).isAlreadyTakenRoute()) {
+                    while (routeChoix.isAlreadyTakenRoute() || p.getWagons() < routeChoix.getRequire()) {
+                        if (routeChoix.isAlreadyTakenRoute()) {
                             System.out.println("Erreur : la route est déjà prise ! ");
                         }
                         //on vérifie qu'il a le bon nombre de trains dispo
-                        if (p.getWagons() < routes.getRoute(c - 1).getRequire()) {
+                        if (p.getWagons() < routeChoix.getRequire()) {
                             System.out.println("Erreur : vous n'avez pas assez de wagons pour prendre cette route ! ");
                         }
 
-                        //il resaisit un numero de route
-                        c = saisieValidIntBornes(1, routes.howManyRoutes());
+                        //il resaisit une route8
+
+                        str = sc.nextLine();
+                        routeChoix = d.getRouteFromString(str);
                     }
 
                     //si la route est un tunnel
-                    if (routes.getRoute(c - 1).isTunel()) {
+                    if (routeChoix.isTunel()) {
                         //si la route n'a pas de couleur
-                        if (routes.getRoute(c - 1).getColor() == Color.GREY) {
+                        if (routeChoix.getColor() == Color.GREY) {
                             System.out.println("Saisissez une couleur de carte Wagon pour tenter de prendre le tunnel :");
                             Color couleur = Color.saisieColor();
-                            if (routes.getRoute(c - 1).getTunnel(p, couleur, this) == -1) {
+                            if (routeChoix.getTunnel(p, couleur, this) == -1) {
                                 alreadyCalled++;
                                 playTurn(p);
                             }
                         }
                         //si la route a une couleur
                         else {
-                            if (routes.getRoute(c - 1).getTunnel(p, routes.getRoute(c - 1).getColor(), this) == -1) {
+                            if (routeChoix.getTunnel(p, routeChoix.getColor(), this) == -1) {
                                 alreadyCalled++;
                                 playTurn(p);
                             }
@@ -232,15 +225,15 @@ public class Game {
                     //si c'est pas un tunnel
                     else {
                         //si c'est un ferrie
-                        if (routes.getRoute(c - 1).getColor() == Color.GREY) {
+                        if (routeChoix.getColor() == Color.GREY) {
                             System.out.println("Saisissez une couleur de carte Wagon pour prendre le ferrie :");
                             Color couleur = Color.saisieColor();
-                            if (routes.getRoute(c - 1).getFerrie(p, couleur, this) == -1) {
+                            if (routeChoix.getFerrie(p, couleur, this) == -1) {
                                 alreadyCalled++;
                                 playTurn(p);
                             }
                         } else {
-                            if (routes.getRoute(c - 1).getRoute(p, routes.getRoute(c - 1).getColor(), this) == -1) {
+                            if (routeChoix.getRoute(p, routeChoix.getColor(), this) == -1) {
                                 alreadyCalled++;
                                 playTurn(p);
                             }
@@ -299,7 +292,7 @@ public class Game {
                     alreadyCalled++;
                     playTurn(p);
                 }
-                break;*/
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + choix);
         }
@@ -331,7 +324,7 @@ public class Game {
         }
     }
 
-    public int saisieValidIntBornes(int borneInf,int borneSup){
+    public static int saisieValidIntBornes(int borneInf,int borneSup){
         int choix = -1;
         Scanner entree =   new Scanner(System.in);
 

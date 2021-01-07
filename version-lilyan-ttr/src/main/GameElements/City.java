@@ -1,14 +1,12 @@
 package GameElements;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
-public class Destination {
+public class City {
     private String name;
-    private HashMap<Destination, ArrayList<Route>> routesFrom;
+    private HashMap<City, ArrayList<Route>> routesFrom;
 
-    public Destination(String name){
+    public City(String name){
         this.name = name;
         this.routesFrom = new HashMap<>();
     }
@@ -17,11 +15,11 @@ public class Destination {
         return name;
     }
 
-    public HashMap<Destination, ArrayList<Route>> getRoutesFrom() {
+    public HashMap<City, ArrayList<Route>> getRoutesFrom() {
         return routesFrom;
     }
 
-    public void addRoute(Route r, Destination to){
+    public void addRoute(Route r, City to){
         //s'il n'y aucune route associée à cette destination
         //on initialise l'ensemble de routes
         if(routesFrom.get(to) == null){
@@ -42,7 +40,7 @@ public class Destination {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Destination that = (Destination) o;
+        City that = (City) o;
         return name.equals(that.name);
     }
 
@@ -51,49 +49,24 @@ public class Destination {
         return Objects.hash(name);
     }
 
-    /**
-     * saisie d'une destination existante
-     *
-     * @return String une destination existante
-     */
-    /*public static Destination saisieDestination(){
-        String choix = "";
-        Scanner entree =   new Scanner(System.in);
-
-        try{
-            choix = entree.next();
-        }catch (InputMismatchException e){
-            entree.next();
-        }
-        //verif de la saisie
-        int exist = 0;
-        for(Destination c : Destination.values()) {
-            try {
-                if (c.toString().equals(choix)) {
-                    exist = 1;
-                }
-            }catch(IllegalArgumentException e){};
-        }
-        while(exist != 1) {
-            System.out.println("Erreur : cette destination n'existe pas. Veuillez réessayer : ");
-            try {
-                choix = entree.next();
-            } catch (InputMismatchException e) {
-                entree.next();
-            }
-            for(Destination c : Destination.values()) {
-                try {
-                    if (c.toString().equals(choix)) {
-                        exist = 1;
-                    }
-                }catch(IllegalArgumentException e){};
-            }
-        }
-        return Destination.valueOf(choix);
-    }
-    */
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public String routesFromToString(){
+        String ret = "";
+        Iterator it = routesFrom.entrySet().iterator();
+
+        //on parcoure toutes les villes qui sont reliées à la ville courante
+        while(it.hasNext()){
+            Map.Entry city = (Map.Entry) it.next();
+            ret += "        to "+city.getKey()+" : \n";
+            //on affiche toutes les routes pour rejoindre les villes depuis la ville courante
+            for(int i = 0; i < ((ArrayList<Route>)city.getValue()).size(); i++){
+                ret += "            "+((ArrayList<Route>)city.getValue()).get(i).toString();
+            }
+        }
+        return ret;
     }
 }

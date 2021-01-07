@@ -1,14 +1,13 @@
 package GameElements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class DestinationCard {
-    private final Destination from;
-    private final Destination to;
+    private final City from;
+    private final City to;
     private final int points;
 
-    public DestinationCard(Destination from, Destination to, int points) {
+    public DestinationCard(City from, City to, int points) {
         this.from = from;
         this.to = to;
         this.points = points;
@@ -35,11 +34,11 @@ public class DestinationCard {
         return ret;
     }
 
-    public Destination getFrom() {
+    public City getFrom() {
         return from;
     }
 
-    public Destination getTo() {
+    public City getTo() {
         return to;
     }
 

@@ -126,12 +126,10 @@ public class Route {
             this.setPlayer(p);
 
             //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-            System.out.println("////////////////////////////////////////////////test taille pioche avant "+g.getDrawTrainCards().size());
             int nbRemovedCard = p.removeTrainCards(c, this.getRequire()+k, g);
             if(nbRemovedCard < this.getRequire()+k){
                 p.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, g);
             }
-            System.out.println("////////////////////////////////////////////////test taille pioche apres "+g.getDrawTrainCards().size());
 
             System.out.println("Vous n'avez pas besoin de rajouter de cartes, bravo!\nVous possédez désormais la route "+this);
             p.setWagons(p.getWagons()-this.getRequire());
@@ -150,12 +148,10 @@ public class Route {
             this.setPlayer(p);
 
             //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-            System.out.println("////////////////////////////////////////////////test taille pioche avant "+g.getDrawTrainCards().size());
             int nbRemovedCard = p.removeTrainCards(c, this.getRequire(), g);
             if (nbRemovedCard < this.getRequire()) {
                 p.removeTrainCards(Color.RAINBOW, (this.getRequire()) - nbRemovedCard, g);
             }
-            System.out.println("////////////////////////////////////////////////test taille pioche apres "+g.getDrawTrainCards().size());
             System.out.println("Vous possédez désormais la route " + this);
             p.setWagons(p.getWagons()-this.getRequire());
             p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
