@@ -34,7 +34,7 @@ public class View {
                 gbc.gridy = 0;
                 gbc.gridheight = 2;
                 gbc.insets = new Insets(0,0,0,0);
-                container.add(new BoardPane(g.getD()), gbc);
+                container.add(new BoardPane(g.getD(),g), gbc);
 
                 //score
                 gbc.gridx = 1;

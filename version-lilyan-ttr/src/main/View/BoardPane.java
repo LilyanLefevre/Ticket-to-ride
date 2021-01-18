@@ -1,20 +1,29 @@
 package View;
 
+import Model.Game;
 import Model.GameElements.City;
 import Model.GameElements.Coordonnees;
 import Model.GameElements.Destinations;
+import Model.GameElements.Route;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class BoardPane extends JPanel {
-    HashMap<String,Point> coordonneesVille;
+    HashMap<String,CityTile> coordonneesVille;
+    Game game;
+    boolean fini;
 
     /* initialise l'ensemble des tuiles */
-    public BoardPane(Destinations d) {
+    public BoardPane(Destinations d, Game g) {
+        fini = false;
+        this.game = g;
         coordonneesVille = new HashMap<>();
+
         setBorder(BorderFactory.createLineBorder(Color.black));
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200,900));
@@ -25,7 +34,7 @@ public class BoardPane extends JPanel {
         for (int y = 0; y < 20; y++) {
             gbc.gridy = y;
             for (int x = 0; x < 20; x++) {
-                String nomVille = "";
+                Coordonnees coordonnees = new Coordonnees(0,0);
                 gbc.gridx = x;
 
                 //on prepare l'affichage du nom (ou pas) de la ville (s'il y a)
@@ -40,41 +49,81 @@ public class BoardPane extends JPanel {
                     if (tmp.getX() == x && tmp.getY() == y) {
                         jl.setText(((String) city.getKey()));
                         gbc.gridwidth = 2;
-                        nomVille = ((City) city.getValue()).getName();
+                        coordonnees = tmp;
                     }
                 }
 
-                //si il n'y avait pas de ville alors on fait une tuile normale
-                if (jl.getText() == "") {
-                    Tile c = new Tile();
-                    jl.setVisible(true);
-                    c.add(jl);
-                    c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                    c.setBackground(Color.RED);
-                    add(c, gbc);
-                }
-                //sinon il y a une ville sur cette tuile
-                else{
+                //si il y a une ville
+                if (jl.getText() != "") {
                     CityTile c = new CityTile();
                     jl.setVisible(true);
                     c.add(jl);
                     c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                     c.setBackground(Color.GREEN);
                     add(c, gbc);
-                    coordonneesVille.put(jl.getText(),new Point(jl.getX(),jl.getY()));
+                    coordonneesVille.put(jl.getText(),c);
                 }
             }
         }
+        fini = true;
     }
     public void paintComponent (Graphics g) {
         super.paintComponent (g);
+        //on parcoure toutes les villes affichées
+        for (Map.Entry city : coordonneesVille.entrySet()) {
+            //on enregistre la position des villes
+            CityTile c1 = coordonneesVille.get(city.getKey());
+            Point p1 = c1.getLocation();
+            City ct1 = game.getD().getCity((String) city.getKey());
 
-        Point p1 = coordonneesVille.get("Paris");
-        Point p2 = coordonneesVille.get("Berlin");
+            //on parcoure les villes reliées à ct1
+            for (Map.Entry route : ct1.getRoutesFrom().entrySet()) {
+                City ct2 = game.getD().getCity(((City) route.getKey()).getName());
+                //!\debug/!\ verifie que la ville  bien été affichée car certaines ne s'affichent pas parfois
+                if(coordonneesVille.containsKey(ct2.getName())) {
+                    CityTile c2 = coordonneesVille.get(ct2.getName());
+                    Point p2 = c2.getLocation();
 
-        // Draw a line between paris and berlin
-        g.drawLine (p1.x, p1.y,p2.x,p2.y);
-        System.out.println("ptComponent"+p1.x +" "+ p1.y+" " + p2.x+" " + p2.y+" ");
+                    //on met la bonne couleur
+                    switch (((ArrayList<Route>)route.getValue()).get(0).getColor()){
+                        case RED:
+                            g.setColor(Color.red);
+                            break;
+                        case BLACK:
+                            g.setColor(Color.black);
+                            break;
+                        case BLUE:
+                            g.setColor(Color.blue);
+                            break;
+                        case GREEN:
+                            g.setColor(Color.green);
+                            break;
+                        case WHITE:
+                            g.setColor(Color.white);
+                            break;
+                        case ORANGE:
+                            g.setColor(Color.orange);
+                            break;
+                        case PURPLE:
+                            g.setColor(Color.MAGENTA);
+                            break;
+                        case YELLOW:
+                            g.setColor(Color.yellow);
+                            break;
+                        case GRAY:
+                            g.setColor(Color.lightGray);
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected color") ;
+                    }
+
+                    //on affiche une ligne entre ct1 et ct2
+                    ((Graphics2D)g).setStroke(new BasicStroke(5));
+                    g.drawLine(p1.x, p1.y, p2.x, p2.y);
+                }
+            }
+        }
+
 
     }
 

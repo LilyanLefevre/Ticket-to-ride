@@ -33,14 +33,6 @@ public class Route {
         this.locomotive = locomotive;
         this.hasPlayerOn = null;
     }
-    /*
-    public Destination getFrom() {
-        return dest1;
-    }
-
-    public Destination getTo() {
-        return dest2;
-    }*/
 
     public int getRequire() {
         return require;

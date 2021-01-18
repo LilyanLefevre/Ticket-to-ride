@@ -78,9 +78,9 @@ public class Destinations {
     }
     private void genererRoutes(){
         addRoute(new Route(3, Color.BLUE, false, 0),destinations.get("Paris"), destinations.get("Berlin"));
-        addRoute(new Route(1, Color.BLUE, false, 0),destinations.get("Paris"), destinations.get("Berlin"));
-        addRoute(new Route(1, Color.BLUE, false, 0),destinations.get("Madrid"), destinations.get("Berlin"));
-        addRoute(new Route(2, Color.BLUE, false, 0),destinations.get("Madrid"), destinations.get("Paris"));
+        addRoute(new Route(1, Color.ORANGE, false, 0),destinations.get("Paris"), destinations.get("Berlin"));
+        addRoute(new Route(1, Color.GRAY, false, 0),destinations.get("Madrid"), destinations.get("Berlin"));
+        addRoute(new Route(2, Color.RED, false, 0),destinations.get("Madrid"), destinations.get("Paris"));
         System.out.println("routes generated...");
     }
 
