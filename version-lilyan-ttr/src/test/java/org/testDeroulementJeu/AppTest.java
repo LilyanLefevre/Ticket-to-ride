@@ -1,7 +1,6 @@
 package org.testDeroulementJeu;
 
-import model.*;
-import org.junit.Test;
+import Model.Game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +10,8 @@ import java.util.Arrays;
  */
 public class AppTest {
     public static void main(String [] args){
-        ArrayList<String> names = new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "test"));
+
+        ArrayList<String> names = new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "View"));
         Game g = new Game(names);
         System.out.println(g.toString());
         g.runGame();
