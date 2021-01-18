@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class BoardPane extends JPanel {
@@ -23,10 +22,9 @@ public class BoardPane extends JPanel {
         fini = false;
         this.game = g;
         coordonneesVille = new HashMap<>();
-
         setBorder(BorderFactory.createLineBorder(Color.black));
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(1200,900));
+        setPreferredSize(new Dimension(1200,800));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1;
         gbc.weighty = 1;

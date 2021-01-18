@@ -5,6 +5,8 @@ import java.util.*;
 import Model.GameElements.*;
 import Model.Enum.*;
 
+import static java.lang.System.exit;
+
 public class Game {
     // l'ensemble des joueurs
     private final ArrayList<Player> players;
@@ -118,15 +120,23 @@ public class Game {
         int choix;
 
         //on récupère le choix du joueur
-        System.out.println("Choisissez une option:\n  1 - Prendre des cartes Wagon\n  2 - Prendre possession des routes");
+        System.out.println("Choisissez une option:\n  0 - Quitter\n  1 - Prendre des cartes Wagon\n  2 - Prendre possession des routes");
         //on affiche l'option s'il reste des cartes destination
         if (drawDestinationCards.size() > 0) {
             System.out.println("  3 - Prendre des cartes Destination");
         }
 
-        choix = saisieValidIntBornes(1,3);
+        choix = saisieValidIntBornes(0,3);
 
         switch (choix) {
+            case 0:
+                System.out.println("Are you sure ? (O/N)");
+                boolean quit = saisieOuiNon();
+                if (quit) {
+                    exit(0);
+                }
+                playTurn(p);
+                break;
             //si on pioche des cartes wagons
             case 1:
                 int c;
@@ -217,8 +227,7 @@ public class Game {
                             System.out.println("Erreur : vous n'avez pas assez de wagons pour prendre cette route ! ");
                         }
 
-                        //il resaisit une route8
-
+                        //il resaisit une route
                         str = sc.nextLine();
                         routeChoix = d.getRouteFromString(str);
                     }

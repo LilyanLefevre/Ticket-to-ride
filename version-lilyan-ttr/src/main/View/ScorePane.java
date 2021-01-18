@@ -11,7 +11,7 @@ public class ScorePane extends JPanel {
     public ScorePane(ArrayList<Player> pl) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createLineBorder(Color.black));
-        setPreferredSize(new Dimension(300,600));
+        setPreferredSize(new Dimension(300,400));
 
         JLabel sc = new JLabel("Scores :");
         add(sc);

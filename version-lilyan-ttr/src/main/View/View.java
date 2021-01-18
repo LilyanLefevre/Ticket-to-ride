@@ -48,7 +48,7 @@ public class View {
                 gbc.gridy = 2;
                 gbc.gridheight = 1;
                 gbc.insets = new Insets(0,0,0,0);
-                container.add(new DrawPane(g.getPlayers(), g.getPlayers().get(0)), gbc);
+                container.add(new DrawPane(g), gbc);
 
                 //carte du joueur actuel
                 gbc.gridx = 1;
