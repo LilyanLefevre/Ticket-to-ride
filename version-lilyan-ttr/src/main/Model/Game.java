@@ -12,10 +12,10 @@ public class Game {
     private final ArrayList<Player> players;
 
     // pioche de cartes de couleurs
-    private ArrayList<WagonCard> drawTrainCards;
+    private ArrayList<WagonCard> drawWagonCards;
 
     // 5 cartes de couleurs retournées
-    private ArrayList<WagonCard> drawVisibleTrainCards;
+    private ArrayList<WagonCard> drawVisibleWagonCards;
 
     // pioche de cartes destination
     private ArrayList<DestinationCard> drawDestinationCards;
@@ -27,7 +27,7 @@ public class Game {
     private Destinations d;
 
     public ArrayList<WagonCard> getDrawTrainCards() {
-        return drawTrainCards;
+        return drawWagonCards;
     }
 
     public ArrayList<Player> getPlayers() {
@@ -35,7 +35,7 @@ public class Game {
     }
 
     public ArrayList<WagonCard> getDrawVisibleTrainCards() {
-        return drawVisibleTrainCards;
+        return drawVisibleWagonCards;
     }
 
     public ArrayList<DestinationCard> getDrawDestinationCards() {
@@ -53,25 +53,25 @@ public class Game {
     public Game(ArrayList<String> names /*,String destination_file_path, String route_file_path*/) {
 
         // initialisation des cartes wagons
-        drawTrainCards = new ArrayList<>(Color.values().length*14);
+        drawWagonCards = new ArrayList<>(Color.values().length*14);
         for(int i = 0; i < Color.values().length; i++){
             if(Color.values()[i] != Color.GRAY) {
                 for (int j = 0; j < 14; j++) {
-                    drawTrainCards.add(new WagonCard(Color.values()[i]));
+                    drawWagonCards.add(new WagonCard(Color.values()[i]));
                 }
             }
         }
 
         //initialisation des cartes wagons visibles
-        drawVisibleTrainCards = new ArrayList<>(5);
+        drawVisibleWagonCards = new ArrayList<>(5);
         for(int i = 0; i < 5; i++){
-            int nCard = (int)(Math.random() * (drawTrainCards.size()));
+            int nCard = (int)(Math.random() * (drawWagonCards.size()));
 
             // on ajoute la carte tirée dans le jeu du joueur
-            drawVisibleTrainCards.add(drawTrainCards.get(nCard));
+            drawVisibleWagonCards.add(drawWagonCards.get(nCard));
 
             // et on la retire de la pioche
-            drawTrainCards.remove(nCard);
+            drawWagonCards.remove(nCard);
         }
 
         //initialisation des destinations et des routes
@@ -83,7 +83,7 @@ public class Game {
         // initialisation des joueurs
         players = new ArrayList<>();
         for(int i = 0; i < 4; i++){
-            players.add(i,new Player(names.get(i), Color.values()[i], drawDestinationCards, drawTrainCards));
+            players.add(i,new Player(names.get(i), Color.values()[i], drawDestinationCards, drawWagonCards));
         }
         alreadyCalled = 0;
     }
@@ -98,7 +98,7 @@ public class Game {
     public String toString() {
         //on affiche les cartes retournées
         StringBuilder str = new StringBuilder("DRAW VISIBLE TRAIN CARDS : \n");
-        for (WagonCard drawVisibleTrainCard : drawVisibleTrainCards) {
+        for (WagonCard drawVisibleTrainCard : drawVisibleWagonCards) {
             str.append(drawVisibleTrainCard.toString());
         }
 
@@ -145,8 +145,8 @@ public class Game {
                 for(int j = 0; j < 2; j++) {
                     //on présente les cartes dispos
                     System.out.println("Voici les cartes retournées actuellement : ");
-                    for (int i = 0; i < drawVisibleTrainCards.size(); i++) {
-                        System.out.print("  " + (i + 1) + " -" + drawVisibleTrainCards.get(i).toString());
+                    for (int i = 0; i < drawVisibleWagonCards.size(); i++) {
+                        System.out.print("  " + (i + 1) + " -" + drawVisibleWagonCards.get(i).toString());
                     }
 
                     //on fait choisir une carte au joueur
@@ -154,27 +154,27 @@ public class Game {
                     c = saisieValidIntBornes(1, 6);
 
                     //s'il tente de prendre une carte loco et qu'il a déjà pris une autre carte -> erreur
-                    while(c != 6 && drawVisibleTrainCards.get(c - 1).getColor() == Color.RAINBOW && j > 0 ){
+                    while(c != 6 && drawVisibleWagonCards.get(c - 1).getColor() == Color.RAINBOW && j > 0 ){
                         System.out.println("Si vous prenez une carte locomotive visible lors d'un tour, vous ne pouvez pas piocher d'autre carte ! Veuillez saisir un autre nombre : ");
                         c = saisieValidIntBornes(1, 6);
                     }
 
                     //si il choisit une carte au hasard
                     if (c == 6) {
-                        WagonCard tmp = p.drawTrainCard(drawTrainCards);
+                        WagonCard tmp = p.drawTrainCard(drawWagonCards);
                         System.out.println("Vous avez pioché la carte " + tmp);
                     }
 
                     //si il prend une carte de la pioche visible
                     else {
                         //on retire la carte de la pioche de cartes visibles
-                        WagonCard tmp = drawVisibleTrainCards.get(c - 1);
-                        drawVisibleTrainCards.remove(tmp);
+                        WagonCard tmp = drawVisibleWagonCards.get(c - 1);
+                        drawVisibleWagonCards.remove(tmp);
 
                         //on remet une nouvelle carte tiree au hasard dans la pioche
-                        int nCard = (int) (Math.random() * (drawTrainCards.size()));
-                        drawVisibleTrainCards.add(drawTrainCards.get(nCard));
-                        drawTrainCards.remove(nCard);
+                        int nCard = (int) (Math.random() * (drawWagonCards.size()));
+                        drawVisibleWagonCards.add(drawWagonCards.get(nCard));
+                        drawWagonCards.remove(nCard);
 
                         //on l'ajoute dans les cartes du joueur
                         p.addTrainCard(tmp);
@@ -402,12 +402,12 @@ public class Game {
      * @return TrainCard la carte pioché
      */
     public WagonCard drawTrainCard(){
-        int nCard = (int)(Math.random() * (drawTrainCards.size()));
+        int nCard = (int)(Math.random() * (drawWagonCards.size()));
 
-        WagonCard tmp = drawTrainCards.get(nCard);
+        WagonCard tmp = drawWagonCards.get(nCard);
 
         // et on la retire de la pioche
-        drawTrainCards.remove(nCard);
+        drawWagonCards.remove(nCard);
 
         return tmp;
     }

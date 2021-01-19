@@ -1,9 +1,11 @@
 package Model.GameElements;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 import Model.Enum.Color;
 import Model.Game;
@@ -33,56 +35,97 @@ public class Destinations {
         return destinations;
     }
 
-    private void genererDestination(){
-        addDestination(new City("Paris"));
-        addDestination(new City("Madrid"));
-        addDestination(new City("Berlin"));
-        addDestination(new City("Barcelone"));
-        addDestination(new City("Marseille"));
-        addDestination(new City("Tokyo"));
-        addDestination(new City("Kyoto"));
-        addDestination(new City("Sydney"));
-        addDestination(new City("Rio De Janeiro"));
-        addDestination(new City("Buenos aires"));
-        addDestination(new City("Dubai"));
-        addDestination(new City("Le Caire"));
-        addDestination(new City("Alger"));
-        addDestination(new City("Marakech"));
-        addDestination(new City("Tunis"));
-        addDestination(new City("Istanbul"));
-        addDestination(new City("Lyon"));
-        addDestination(new City("Francfort"));
-        addDestination(new City("Bruxelles"));
-        addDestination(new City("Bruge"));
-        addDestination(new City("Genève"));
-        addDestination(new City("Hong Kong"));
-        addDestination(new City("Londres"));
-        addDestination(new City("Pekin"));
-        addDestination(new City("Camberra"));
-        addDestination(new City("Ougadougou"));
-        addDestination(new City("Rennes"));
-        addDestination(new City("Reims"));
-        addDestination(new City("Montpellier"));
-        addDestination(new City("Seville"));
-        addDestination(new City("Vienne"));
-        addDestination(new City("Moscou"));
-        addDestination(new City("St Petersbourg"));
-        addDestination(new City("Kiev"));
-        addDestination(new City("Rabat"));
-        addDestination(new City("New York"));
-        addDestination(new City("Brooklin"));
-        addDestination(new City("Cleveland"));
-        addDestination(new City("Los Angeles"));
-        addDestination(new City("Houston"));
-        System.out.println("destinations generated...");
+    /**
+     * fonction qui genere entre 35 et 45 villes
+     * et qui construit leur nom en piochant dans un dictionnaire de prefixes et
+     * de suffixes
+     */
+    private void genererDestination() {
+        String prefixe = "./txt/prefixes.txt";
+        String suffixe = "./txt/suffixes.txt";
+        List<String> lines = new ArrayList<>();
+        List<String> linessuff = new ArrayList<>();
+        int count = 0;
+
+        //on lit toutes les lignes dans le fichier de prefixes
+        try {
+            lines = Files.readAllLines(Paths.get(Thread.currentThread().getContextClassLoader().getResource(prefixe).getPath()), Charset.defaultCharset());
+            for (String line : lines) {
+                count++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //on lit toutes les lignes dans le fichier de suffixes
+        try {
+            linessuff = Files.readAllLines(Paths.get(Thread.currentThread().getContextClassLoader().getResource(suffixe).getPath()),Charset.defaultCharset());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //on tire un nb de villes au hasard
+        Random random = new Random();
+        count--;
+        int nbvilles = 35+random.nextInt(45-35);
+
+        for (int i=0;i<nbvilles;i++){
+            //pour chaque ville crée on pioche un préfixe et un suffixe et on les assemble
+            int nbpref = 0+random.nextInt(count-0);
+            int nbsuff = 0+random.nextInt(count-0);
+            String name = lines.get(nbpref)+linessuff.get(nbsuff);
+
+            //on verifie que la ville n'existe pas déjà
+            while(destinations.containsKey(name)){
+                nbpref = 0+random.nextInt(count-0);
+                nbsuff = 0+random.nextInt(count-0);
+                name = lines.get(nbpref)+linessuff.get(nbsuff);
+            }
+            System.out.println(name);
+            City c1 = new City(name);
+
+            //on récupère toutes les positions générées
+            ArrayList<Coordonnees> cvilles = new ArrayList<>();
+            for (Map.Entry ville : destinations.entrySet()) {
+                cvilles.add(((City) ville.getValue()).getCoordonnees());
+            }
+
+            //on change les positions si deux villes se collent/superposent
+            //il faut mini une case libre entre chaque ville
+            for(int y=0;y<cvilles.size();y++){
+                if((cvilles.get(y).getX()+1 == c1.getCoordonnees().getX()|| cvilles.get(y).getX()-1==c1.getCoordonnees().getX() || cvilles.get(y).getX() == c1.getCoordonnees().getX()) &&(cvilles.get(y).getY()+1 == c1.getCoordonnees().getY()|| cvilles.get(y).getY()-1==c1.getCoordonnees().getY() || c1.getCoordonnees().getY() == cvilles.get(y).getY())){
+                    c1 = new City(name);
+                    y=0;
+                }
+            }
+            addDestination(c1);
+        }
+        System.out.println(nbvilles+" destinations generated...");
     }
+
     private void genererRoutes(){
-        addRoute(new Route(3, Color.BLUE, false, 0),destinations.get("Paris"), destinations.get("Berlin"));
-        addRoute(new Route(1, Color.ORANGE, false, 0),destinations.get("Paris"), destinations.get("Berlin"));
-        addRoute(new Route(1, Color.GRAY, false, 0),destinations.get("Madrid"), destinations.get("Berlin"));
-        addRoute(new Route(2, Color.RED, false, 0),destinations.get("Madrid"), destinations.get("Paris"));
+        for (Map.Entry from : destinations.entrySet()){
+            boolean enter = false;
+            double distance = 10000;
+            City destination=(City)from.getValue();
+            int x1 = ((City)from.getValue()).getCoordonnees().getX();
+            int y1 = ((City)from.getValue()).getCoordonnees().getY();
+            for (Map.Entry to : destinations.entrySet()){
+                int x2 = ((City)to.getValue()).getCoordonnees().getX();
+                int y2 = ((City)to.getValue()).getCoordonnees().getY();
+                double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
+                if(distance1<distance && ((City) from.getValue()).getName()!=((City) to.getValue()).getName() && !((City)to.getValue()).getRoutesFrom().containsKey(((City)from.getValue()).getName())){
+                    enter = true;
+                    distance = distance1;
+                    destination = (City)to.getValue();
+                }
+            }
+            if(enter)
+                addRoute(new Route(1,Color.BLUE, false,0),(City)from.getValue(), destination);
+        }
         System.out.println("routes generated...");
     }
+
 
     /**
      * retourne une route saisie sous la forme v1 - v2

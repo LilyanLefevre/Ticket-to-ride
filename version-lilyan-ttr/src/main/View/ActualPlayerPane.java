@@ -31,12 +31,15 @@ public class ActualPlayerPane extends JPanel {
 
         JLabel name = new JLabel("Tour de "+p.getName());
         add(name);
+        JLabel jb;
+        Font font = new Font("Arial",Font.BOLD,16);
 
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
                     ImagePane im = new ImagePane("wagon-rouge.png");
-                    JLabel jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     JPanel jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -46,6 +49,7 @@ public class ActualPlayerPane extends JPanel {
                 case BLACK:
                     im = new ImagePane("wagon-noir.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -55,6 +59,7 @@ public class ActualPlayerPane extends JPanel {
                 case BLUE:
                     im = new ImagePane("wagon-bleu.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -64,6 +69,7 @@ public class ActualPlayerPane extends JPanel {
                 case GREEN:
                     im = new ImagePane("wagon-vert.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -73,6 +79,7 @@ public class ActualPlayerPane extends JPanel {
                 case WHITE:
                     im = new ImagePane("wagon-blanc.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -82,6 +89,7 @@ public class ActualPlayerPane extends JPanel {
                 case ORANGE:
                     im = new ImagePane("wagon-orange.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -91,6 +99,7 @@ public class ActualPlayerPane extends JPanel {
                 case PURPLE:
                     im = new ImagePane("wagon-violet.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -100,6 +109,7 @@ public class ActualPlayerPane extends JPanel {
                 case YELLOW:
                     im = new ImagePane("wagon-jaune.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);
@@ -109,6 +119,7 @@ public class ActualPlayerPane extends JPanel {
                 case RAINBOW:
                     im = new ImagePane("locomotive.png");
                     jb = new JLabel(""+((Integer)couleur.getValue()));
+                    jb.setFont(font);
                     jp = new JPanel();
                     jp.setBackground(Color.white);
                     jp.add(jb);

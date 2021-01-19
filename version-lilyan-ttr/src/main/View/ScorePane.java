@@ -16,7 +16,7 @@ public class ScorePane extends JPanel {
         JLabel sc = new JLabel("Scores :");
         add(sc);
         for(int i = 0; i < pl.size(); i++){
-            JLabel tmp = new JLabel("   - "+pl.get(i).getName()+" "+pl.get(i).getPoints()+" pts");
+            JLabel tmp = new JLabel("   - "+pl.get(i).getName()+" "+pl.get(i).getPoints()+" points, "+pl.get(i).getWagons()+" wagons restants");
             add(tmp);
         }
 

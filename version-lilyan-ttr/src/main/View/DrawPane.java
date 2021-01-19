@@ -11,10 +11,9 @@ public class DrawPane extends JPanel {
 
     public DrawPane(Game g) {
         this.g = g;
-        setPreferredSize(new Dimension(500,215));
+        setPreferredSize(new Dimension(800,215));
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createLineBorder(Color.black));
-        gbc.fill = GridBagConstraints.BOTH;
 
         //pioche carte destination
         gbc.gridx = 0;
@@ -22,6 +21,7 @@ public class DrawPane extends JPanel {
         gbc.insets = new Insets(0,0,0,30);
         JPanel cdp = new JPanel();
         cdp.add(new ImagePane("dos-destination.png"));
+        cdp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         add(cdp,gbc);
 
         //pioche carte wagon
@@ -30,6 +30,7 @@ public class DrawPane extends JPanel {
         gbc.insets = new Insets(0,0,0,30);
         JPanel jp = new JPanel();
         jp.add(new ImagePane("dos-wagon.png"));
+        jp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         add(jp,gbc);
 
         //pioche visible carte wagon
@@ -54,7 +55,7 @@ public class DrawPane extends JPanel {
                     cwp.add(new ImagePane("wagon-vert.png"));
                     break;
                 case WHITE:
-                    add(new ImagePane("wagon-blanc.png"));
+                    cwp.add(new ImagePane("wagon-blanc.png"));
                     break;
                 case ORANGE:
                     cwp.add(new ImagePane("wagon-orange.png"));
