@@ -13,7 +13,7 @@ public class ActualPlayerPane extends JPanel {
     HashMap<Model.Enum.Color, Integer> occurencesCouleur;
 
     public ActualPlayerPane(ArrayList<Player> pl, Player p) {
-        setBackground(new Color(0,0,0,64));
+        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
 
         occurencesCouleur = new HashMap<>();
         ArrayList<WagonCard> wCards = p.getwCards();
@@ -39,7 +39,7 @@ public class ActualPlayerPane extends JPanel {
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
-                    CardImagePane im = new CardImagePane("wagon-rouge.png",Model.Enum.Color.RED);
+                    CardImagePane im = new CardImagePane("wagon-rouge.jpg",Model.Enum.Color.RED);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     JPanel jp = new JPanel();
@@ -50,7 +50,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case BLACK:
-                    im = new CardImagePane("wagon-noir.png",Model.Enum.Color.BLACK);
+                    im = new CardImagePane("wagon-noir.jpg",Model.Enum.Color.BLACK);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -61,7 +61,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case BLUE:
-                    im = new CardImagePane("wagon-bleu.png",Model.Enum.Color.BLUE);
+                    im = new CardImagePane("wagon-bleu.jpg",Model.Enum.Color.BLUE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -72,7 +72,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case GREEN:
-                    im = new CardImagePane("wagon-vert.png",Model.Enum.Color.GREEN);
+                    im = new CardImagePane("wagon-vert.jpg",Model.Enum.Color.GREEN);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -83,7 +83,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case WHITE:
-                    im = new CardImagePane("wagon-blanc.png",Model.Enum.Color.WHITE);
+                    im = new CardImagePane("wagon-blanc.jpg",Model.Enum.Color.WHITE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -94,7 +94,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case ORANGE:
-                    im = new CardImagePane("wagon-orange.png",Model.Enum.Color.ORANGE);
+                    im = new CardImagePane("wagon-orange.jpg",Model.Enum.Color.ORANGE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -105,7 +105,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case PURPLE:
-                    im = new CardImagePane("wagon-violet.png",Model.Enum.Color.PURPLE);
+                    im = new CardImagePane("wagon-violet.jpg",Model.Enum.Color.PURPLE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -116,7 +116,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case YELLOW:
-                    im = new CardImagePane("wagon-jaune.png",Model.Enum.Color.YELLOW);
+                    im = new CardImagePane("wagon-jaune.jpg",Model.Enum.Color.YELLOW);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -127,7 +127,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case RAINBOW:
-                    im = new CardImagePane("locomotive.png",Model.Enum.Color.RAINBOW);
+                    im = new CardImagePane("locomotive.jpg",Model.Enum.Color.RAINBOW);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();

@@ -15,7 +15,6 @@ public class CardImagePane extends JPanel {
     public CardImagePane(String name, int i){
         couleur = null;
         index = i;
-        setBackground(new Color(0,0,0,64));
         setPreferredSize(new Dimension(100,190));
         setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
 
@@ -44,6 +43,6 @@ public class CardImagePane extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(buffer,0,0,null);
+        g.drawImage(buffer,0,0,getWidth(),getHeight(),this);
     }
 }

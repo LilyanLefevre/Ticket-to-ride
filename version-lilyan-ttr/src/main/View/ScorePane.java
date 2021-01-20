@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ScorePane extends JPanel {
 
     public ScorePane(ArrayList<Player> pl) {
-        setBackground(new Color(0,0,0,64));
+        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createLineBorder(Color.black));

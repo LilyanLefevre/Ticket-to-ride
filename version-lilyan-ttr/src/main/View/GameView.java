@@ -3,9 +3,12 @@ package View;
 import Controller.GameController;
 import Model.Game;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class GameView {
     private Game g;
@@ -17,7 +20,7 @@ public class GameView {
     private DrawPane draw;
     private ActualPlayerPane playerView;
 
-    public GameView(final Game g) {
+    public GameView(final Game g) throws IOException {
         this.g = g;
         gbc.fill = GridBagConstraints.BOTH;
 
@@ -27,11 +30,14 @@ public class GameView {
 
         //on créer un conteneur global
         container = new JPanel();
-        container.setBackground(Color.lightGray);
         container.setLayout(new GridBagLayout());
 
+        BackgroundPane bgPanel = new BackgroundPane("back-ttr-2.png");
         JScrollPane scrPane = new JScrollPane(container);
-        frame.add(scrPane);
+        container.setOpaque(false);
+        scrPane.setOpaque(false);
+        frame.setContentPane(bgPanel);
+        frame.add(container);
 
         //plateau
         gbc.gridx = 0;

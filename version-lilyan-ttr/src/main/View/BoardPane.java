@@ -19,7 +19,7 @@ public class BoardPane extends JPanel {
 
     /* initialise l'ensemble des tuiles */
     public BoardPane(Destinations d, Game g) {
-        setBackground(new Color(0,0,0,64));
+        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.6f));
 
         this.game = g;
         cityTileHashMap = new HashMap<>();
@@ -55,10 +55,8 @@ public class BoardPane extends JPanel {
                 //si il y a une ville
                 if (jl.getText() != "") {
                     CityTile c = new CityTile(g.getD().getCity(jl.getText()));
-                    jl.setVisible(true);
                     c.add(jl);
-                    c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                    c.setBackground(Color.WHITE);
+                    c.setMargin(new Insets(2,1,1,2));
                     add(c, gbc);
                     cityTileHashMap.put(jl.getText(),c);
                 }
@@ -77,48 +75,47 @@ public class BoardPane extends JPanel {
             //on parcoure les villes reliées à ct1
             for (Map.Entry route : ct1.getRoutesFrom().entrySet()) {
                 City ct2 = game.getD().getCity(((City) route.getKey()).getName());
-                //!\debug/!\ verifie que la ville  bien été affichée car certaines ne s'affichent pas parfois
-                if(cityTileHashMap.containsKey(ct2.getName())) {
-                    CityTile c2 = cityTileHashMap.get(ct2.getName());
-                    Point p2 = c2.getLocation();
+                CityTile c2 = cityTileHashMap.get(ct2.getName());
+                Point p2 = c2.getLocation();
 
-                    //on met la bonne couleur
-                    switch (((ArrayList<Route>)route.getValue()).get(0).getColor()){
-                        case RED:
-                            g.setColor(Color.red);
-                            break;
-                        case BLACK:
-                            g.setColor(Color.black);
-                            break;
-                        case BLUE:
-                            g.setColor(Color.blue);
-                            break;
-                        case GREEN:
-                            g.setColor(Color.green);
-                            break;
-                        case WHITE:
-                            g.setColor(Color.white);
-                            break;
-                        case ORANGE:
-                            g.setColor(Color.orange);
-                            break;
-                        case PURPLE:
-                            g.setColor(Color.MAGENTA);
-                            break;
-                        case YELLOW:
-                            g.setColor(Color.yellow);
-                            break;
-                        case GRAY:
-                            g.setColor(Color.lightGray);
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected color") ;
-                    }
-
-                    //on affiche une ligne entre ct1 et ct2
-                    ((Graphics2D)g).setStroke(new BasicStroke(5));
-                    g.drawLine(p1.x, p1.y, p2.x, p2.y);
+                //on met la bonne couleur
+                switch (((ArrayList<Route>)route.getValue()).get(0).getColor()){
+                    case RED:
+                        g.setColor(Color.red);
+                        break;
+                    case BLACK:
+                        g.setColor(Color.black);
+                        break;
+                    case BLUE:
+                        g.setColor(Color.blue);
+                        break;
+                    case GREEN:
+                        g.setColor(Color.green);
+                        break;
+                    case WHITE:
+                        g.setColor(Color.white);
+                        break;
+                    case ORANGE:
+                        g.setColor(Color.orange);
+                        break;
+                    case PURPLE:
+                        g.setColor(Color.MAGENTA);
+                        break;
+                    case YELLOW:
+                        g.setColor(Color.yellow);
+                        break;
+                    case GRAY:
+                        g.setColor(Color.lightGray);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected color") ;
                 }
+
+                //on affiche une ligne entre ct1 et ct2
+                ((Graphics2D)g).setStroke(new BasicStroke(5));
+                int larg = c2.getWidth()/2;
+                int hau = c2.getHeight()/2;
+                g.drawLine(p1.x+larg, p1.y+hau, p2.x+larg, p2.y+hau);
             }
         }
     }
