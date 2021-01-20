@@ -28,7 +28,6 @@ public class Destinations {
     }
     public void addRoute(Route r, City from, City to) {
         this.destinations.get(from.getName()).addRoute(r, to);
-        this.destinations.get(to.getName()).addRoute(r, from);
     }
 
     public HashMap<String, City> getDestinations() {
@@ -98,9 +97,6 @@ public class Destinations {
                     y=0;
                 }
             }
-            System.out.println("-----");
-            System.out.println(c1.getCoordonnees().getX());
-            System.out.println(c1.getCoordonnees().getY());
             addDestination(c1);
         }
         System.out.println(nbvilles+" destinations generated...");
@@ -146,12 +142,10 @@ public class Destinations {
             if(enter) {
                 Random random = new Random();
                 int r = 0+random.nextInt(9-0);
-                System.out.println(r);
                 while (CountColor.get(r)>6){
                     r = 0+random.nextInt(9-0);
                 }
                 Color c = randomColor.get(r);
-                System.out.println(c.toString());
                 CountColor.set(r,CountColor.get(r)+1);
                 addRoute(new Route(1, c, false, 0), (City) from.getValue(), destination);
             }
@@ -167,7 +161,7 @@ public class Destinations {
                 int x2 = ((City)to.getValue()).getCoordonnees().getX();
                 int y2 = ((City)to.getValue()).getCoordonnees().getY();
                 double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
-                if(distance1<distance && ((City) from.getValue()).getName()!=((City) to.getValue()).getName()  && !((City)from.getValue()).getRoutesFrom().containsKey(((City)to.getValue()).getName())){
+                if(distance1<distance && ((City) from.getValue()).getName()!=((City) to.getValue()).getName()  && !((City)from.getValue()).getRoutesFrom().containsKey((to.getValue()))){
                     enter = true;
                     distance = distance1;
                     destination = (City)to.getValue();
@@ -176,7 +170,6 @@ public class Destinations {
             if(enter) {
                 Random random = new Random();
                 int r = 0+random.nextInt(9-0);
-                System.out.println(r);
                 int cc = 0;
                 boolean b = false;
                 while (CountColor.get(r)>6 && !b){
@@ -186,13 +179,14 @@ public class Destinations {
                         b=true;
                 }
                 Color c = randomColor.get(r);
-                System.out.println(c.toString());
                 CountColor.set(r,CountColor.get(r)+1);
                 addRoute(new Route(1, c, false, 0), (City) from.getValue(), destination);
             }
         }
         System.out.println("routes generated...");
     }
+
+
 
 
     /**
