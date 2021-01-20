@@ -7,7 +7,7 @@ import Model.Enum.*;
 
 import static java.lang.System.exit;
 
-public class Game {
+public class Game extends Observable {
     // l'ensemble des joueurs
     private final ArrayList<Player> players;
 

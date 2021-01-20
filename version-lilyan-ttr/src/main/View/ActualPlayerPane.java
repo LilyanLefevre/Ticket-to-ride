@@ -39,7 +39,7 @@ public class ActualPlayerPane extends JPanel {
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
-                    ImagePane im = new ImagePane("wagon-rouge.png");
+                    CardImagePane im = new CardImagePane("wagon-rouge.png",Model.Enum.Color.RED);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     JPanel jp = new JPanel();
@@ -50,7 +50,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case BLACK:
-                    im = new ImagePane("wagon-noir.png");
+                    im = new CardImagePane("wagon-noir.png",Model.Enum.Color.BLACK);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -61,7 +61,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case BLUE:
-                    im = new ImagePane("wagon-bleu.png");
+                    im = new CardImagePane("wagon-bleu.png",Model.Enum.Color.BLUE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -72,7 +72,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case GREEN:
-                    im = new ImagePane("wagon-vert.png");
+                    im = new CardImagePane("wagon-vert.png",Model.Enum.Color.GREEN);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -83,7 +83,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case WHITE:
-                    im = new ImagePane("wagon-blanc.png");
+                    im = new CardImagePane("wagon-blanc.png",Model.Enum.Color.WHITE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -94,7 +94,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case ORANGE:
-                    im = new ImagePane("wagon-orange.png");
+                    im = new CardImagePane("wagon-orange.png",Model.Enum.Color.ORANGE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -105,7 +105,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case PURPLE:
-                    im = new ImagePane("wagon-violet.png");
+                    im = new CardImagePane("wagon-violet.png",Model.Enum.Color.PURPLE);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -116,7 +116,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case YELLOW:
-                    im = new ImagePane("wagon-jaune.png");
+                    im = new CardImagePane("wagon-jaune.png",Model.Enum.Color.YELLOW);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
@@ -127,7 +127,7 @@ public class ActualPlayerPane extends JPanel {
                     add(im);
                     break;
                 case RAINBOW:
-                    im = new ImagePane("locomotive.png");
+                    im = new CardImagePane("locomotive.png",Model.Enum.Color.RAINBOW);
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();

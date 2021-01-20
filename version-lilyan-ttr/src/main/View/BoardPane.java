@@ -1,5 +1,6 @@
 package View;
 
+import Controller.GameController;
 import Model.Game;
 import Model.GameElements.City;
 import Model.GameElements.Coordonnees;
@@ -13,17 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BoardPane extends JPanel {
-    HashMap<String,CityTile> coordonneesVille;
-    Game game;
-    boolean fini;
+    private HashMap<String,CityTile> cityTileHashMap;
+    private Game game;
 
     /* initialise l'ensemble des tuiles */
     public BoardPane(Destinations d, Game g) {
         setBackground(new Color(0,0,0,64));
 
-        fini = false;
         this.game = g;
-        coordonneesVille = new HashMap<>();
+        cityTileHashMap = new HashMap<>();
         setBorder(BorderFactory.createLineBorder(Color.black));
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200,800));
@@ -55,24 +54,23 @@ public class BoardPane extends JPanel {
 
                 //si il y a une ville
                 if (jl.getText() != "") {
-                    CityTile c = new CityTile();
+                    CityTile c = new CityTile(g.getD().getCity(jl.getText()));
                     jl.setVisible(true);
                     c.add(jl);
                     c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                     c.setBackground(Color.WHITE);
                     add(c, gbc);
-                    coordonneesVille.put(jl.getText(),c);
+                    cityTileHashMap.put(jl.getText(),c);
                 }
             }
         }
-        fini = true;
     }
     public void paintComponent (Graphics g) {
         super.paintComponent (g);
         //on parcoure toutes les villes affichées
-        for (Map.Entry city : coordonneesVille.entrySet()) {
+        for (Map.Entry city : cityTileHashMap.entrySet()) {
             //on enregistre la position des villes
-            CityTile c1 = coordonneesVille.get(city.getKey());
+            CityTile c1 = cityTileHashMap.get(city.getKey());
             Point p1 = c1.getLocation();
             City ct1 = game.getD().getCity((String) city.getKey());
 
@@ -80,8 +78,8 @@ public class BoardPane extends JPanel {
             for (Map.Entry route : ct1.getRoutesFrom().entrySet()) {
                 City ct2 = game.getD().getCity(((City) route.getKey()).getName());
                 //!\debug/!\ verifie que la ville  bien été affichée car certaines ne s'affichent pas parfois
-                if(coordonneesVille.containsKey(ct2.getName())) {
-                    CityTile c2 = coordonneesVille.get(ct2.getName());
+                if(cityTileHashMap.containsKey(ct2.getName())) {
+                    CityTile c2 = cityTileHashMap.get(ct2.getName());
                     Point p2 = c2.getLocation();
 
                     //on met la bonne couleur
@@ -123,8 +121,18 @@ public class BoardPane extends JPanel {
                 }
             }
         }
-
-
     }
 
+    public HashMap<String, CityTile> getCityTileHashMap() {
+        return cityTileHashMap;
+    }
+
+    public void setCityTileHashMap(HashMap<String, CityTile> cityTileHashMap) {
+        this.cityTileHashMap = cityTileHashMap;
+    }
+    public void setActionListener(GameController gc){
+        for(Map.Entry city : cityTileHashMap.entrySet()){
+            ((CityTile)city.getValue()).addActionListener(gc);
+        }
+    }
 }

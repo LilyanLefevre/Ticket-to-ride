@@ -98,12 +98,35 @@ public class Destinations {
                     y=0;
                 }
             }
+            System.out.println("-----");
+            System.out.println(c1.getCoordonnees().getX());
+            System.out.println(c1.getCoordonnees().getY());
             addDestination(c1);
         }
         System.out.println(nbvilles+" destinations generated...");
     }
 
+    /**
+     * fonction qui génère en moyenne 2 fois plus de routes qu'il n'y a de villes
+     * en évitant les croisements de villes/routes
+     */
     private void genererRoutes(){
+        HashMap<Integer, Color> randomColor = new HashMap<>();
+        randomColor.put(0,Color.WHITE);
+        randomColor.put(1,Color.RED);
+        randomColor.put(2,Color.BLACK);
+        randomColor.put(3,Color.BLUE);
+        randomColor.put(4,Color.GREEN);
+        randomColor.put(5,Color.ORANGE);
+        randomColor.put(6,Color.PURPLE);
+        randomColor.put(7,Color.YELLOW);
+        randomColor.put(8,Color.GRAY);
+
+        ArrayList<Integer>CountColor = new ArrayList<>();
+        for (int i=0;i<9;i++){
+            CountColor.add(0);
+        }
+
         for (Map.Entry from : destinations.entrySet()){
             boolean enter = false;
             double distance = 10000;
@@ -114,14 +137,59 @@ public class Destinations {
                 int x2 = ((City)to.getValue()).getCoordonnees().getX();
                 int y2 = ((City)to.getValue()).getCoordonnees().getY();
                 double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
-                if(distance1<distance && ((City) from.getValue()).getName()!=((City) to.getValue()).getName() && !((City)to.getValue()).getRoutesFrom().containsKey(((City)from.getValue()).getName())){
+                if(distance1<distance && ((City)to.getValue()).getRoutesFrom().size()==0 && ((City) from.getValue()).getName()!=((City) to.getValue()).getName() && !((City)to.getValue()).getRoutesFrom().containsKey(((City)from.getValue()).getName())){
                     enter = true;
                     distance = distance1;
                     destination = (City)to.getValue();
                 }
             }
-            if(enter)
-                addRoute(new Route(1,Color.BLUE, false,0),(City)from.getValue(), destination);
+            if(enter) {
+                Random random = new Random();
+                int r = 0+random.nextInt(9-0);
+                System.out.println(r);
+                while (CountColor.get(r)>6){
+                    r = 0+random.nextInt(9-0);
+                }
+                Color c = randomColor.get(r);
+                System.out.println(c.toString());
+                CountColor.set(r,CountColor.get(r)+1);
+                addRoute(new Route(1, c, false, 0), (City) from.getValue(), destination);
+            }
+        }
+
+        for (Map.Entry from : destinations.entrySet()){
+            boolean enter = false;
+            double distance = 10000;
+            City destination=(City)from.getValue();
+            int x1 = ((City)from.getValue()).getCoordonnees().getX();
+            int y1 = ((City)from.getValue()).getCoordonnees().getY();
+            for (Map.Entry to : destinations.entrySet()){
+                int x2 = ((City)to.getValue()).getCoordonnees().getX();
+                int y2 = ((City)to.getValue()).getCoordonnees().getY();
+                double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
+                if(distance1<distance && ((City) from.getValue()).getName()!=((City) to.getValue()).getName()  && !((City)from.getValue()).getRoutesFrom().containsKey(((City)to.getValue()).getName())){
+                    enter = true;
+                    distance = distance1;
+                    destination = (City)to.getValue();
+                }
+            }
+            if(enter) {
+                Random random = new Random();
+                int r = 0+random.nextInt(9-0);
+                System.out.println(r);
+                int cc = 0;
+                boolean b = false;
+                while (CountColor.get(r)>6 && !b){
+                    r = 0+random.nextInt(9-0);
+                    cc++;
+                    if(cc==9)
+                        b=true;
+                }
+                Color c = randomColor.get(r);
+                System.out.println(c.toString());
+                CountColor.set(r,CountColor.get(r)+1);
+                addRoute(new Route(1, c, false, 0), (City) from.getValue(), destination);
+            }
         }
         System.out.println("routes generated...");
     }
