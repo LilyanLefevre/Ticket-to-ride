@@ -26,8 +26,10 @@ public class Destinations {
     public void addDestination(City d) {
         this.destinations.put(d.getName(),d);
     }
-    public void addRoute(Route r, City from, City to) {
-        this.destinations.get(from.getName()).addRoute(r, to);
+
+    //A MODIFIER
+    public void addRoute(Route r) {
+        this.destinations.get(r.getDest1().getName()).addRoute(r, r.getDest2());
     }
 
     public HashMap<String, City> getDestinations() {
@@ -147,7 +149,8 @@ public class Destinations {
                 }
                 Color c = randomColor.get(r);
                 CountColor.set(r,CountColor.get(r)+1);
-                addRoute(new Route(1, c, false, 0), (City) from.getValue(), destination);
+                //A MODIFIER
+                addRoute(new Route((City)from.getValue(),destination,1, c, false, 0));
             }
         }
 
@@ -180,7 +183,8 @@ public class Destinations {
                 }
                 Color c = randomColor.get(r);
                 CountColor.set(r,CountColor.get(r)+1);
-                addRoute(new Route(1, c, false, 0), (City) from.getValue(), destination);
+                //A MODIFIER
+                addRoute(new Route((City)from.getValue(),destination,1, c, false, 0));
             }
         }
         System.out.println("routes generated...");

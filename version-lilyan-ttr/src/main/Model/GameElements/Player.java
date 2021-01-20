@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class Player {
     private final String name;
+    // A MODIFIER
+    private ArrayList<Route> routesEmpruntes;
     private ArrayList<WagonCard> wCards;
     private ArrayList<DestinationCard> dCards;
     private int points;
@@ -24,12 +26,18 @@ public class Player {
         return wagons;
     }
 
+    public ArrayList<Route> getRoutesEmpruntes(){return routesEmpruntes;}
+
     public void setPoints(int points) {
         this.points = points;
     }
 
     public void setWagons(int wagons) {
         this.wagons = wagons;
+    }
+
+    public void addRoute(Route r1){
+        this.routesEmpruntes.add(r1);
     }
 
     public ArrayList<WagonCard> getwCards() {
@@ -52,6 +60,7 @@ public class Player {
         wagons = 45;
         wCards = new ArrayList<>();
         dCards = new ArrayList<>();
+        routesEmpruntes = new ArrayList<>();
 
         // tire 4 cartes destination au hasard
         for(int i = 0 ; i < 20; i++){

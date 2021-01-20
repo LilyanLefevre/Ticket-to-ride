@@ -5,9 +5,10 @@ import Model.Game;
 import java.util.ArrayList;
 
 public class Route {
+    // A MODIFIER
     //représentent les deux destination réliées par cette route
-    /*private final Destination dest1;
-    private final Destination dest2;*/
+    private final City dest1;
+    private final City dest2;
 
     //représente le nombre de wagons que nécessite cette route pour poser ses wagons dessus
     private final int require;
@@ -24,9 +25,10 @@ public class Route {
     //enregistre le joueur qui a éventuellement posé ses wagons dessus
     private Player hasPlayerOn;
 
-    public Route(/*Destination from, Destination to, */int require, Color color, boolean isTunel, int locomotive) {
-        /*this.dest1 = from;
-        this.dest2 = to;*/
+    //A MODIFIER
+    public Route(City from, City to, int require, Color color, boolean isTunel, int locomotive) {
+        this.dest1 = from;
+        this.dest2 = to;
         this.require = require;
         this.color = color;
         this.isTunel = isTunel;
@@ -38,6 +40,12 @@ public class Route {
         return require;
     }
 
+    public City getDest1() {
+        return dest1;
+    }
+    public City getDest2() {
+        return dest2;
+    }
     public Color getColor() {
         return color;
     }

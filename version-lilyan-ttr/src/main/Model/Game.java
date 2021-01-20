@@ -242,12 +242,18 @@ public class Game extends Observable {
                                 alreadyCalled++;
                                 playTurn(p);
                             }
+                            else{
+                                p.addRoute(routeChoix);
+                            }
                         }
                         //si la route a une couleur
                         else {
                             if (routeChoix.getTunnel(p, routeChoix.getColor(), this) == -1) {
                                 alreadyCalled++;
                                 playTurn(p);
+                            }
+                            else{
+                                p.addRoute(routeChoix);
                             }
                         }
                     }
@@ -261,10 +267,16 @@ public class Game extends Observable {
                                 alreadyCalled++;
                                 playTurn(p);
                             }
+                            else{
+                                p.addRoute(routeChoix);
+                            }
                         } else {
                             if (routeChoix.getRoute(p, routeChoix.getColor(), this) == -1) {
                                 alreadyCalled++;
                                 playTurn(p);
+                            }
+                            else{
+                                p.addRoute(routeChoix);
                             }
                         }
                     }
@@ -431,6 +443,19 @@ public class Game extends Observable {
     public void displayScore(){
         for(Player p : players){
             System.out.println(p);
+        }
+    }
+
+    public void determineScore(){
+        for (Player p : players){
+            for(DestinationCard d : p.getdCards()){
+                City from = d.getFrom();
+                for(Route r : p.getRoutesEmpruntes()){
+                    if(r.getDest1()==from){
+                        //
+                    }
+                }
+            }
         }
     }
 }
