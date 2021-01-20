@@ -10,6 +10,8 @@ public class DrawPane extends JPanel {
     private GridBagConstraints gbc = new GridBagConstraints();
 
     public DrawPane(Game g) {
+        setBackground(new Color(0,0,0,64));
+
         this.g = g;
         setPreferredSize(new Dimension(800,215));
         setLayout(new GridBagLayout());
@@ -22,6 +24,7 @@ public class DrawPane extends JPanel {
         JPanel cdp = new JPanel();
         cdp.add(new ImagePane("dos-destination.png"));
         cdp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        cdp.setBackground(new Color(0,0,0,64));
         add(cdp,gbc);
 
         //pioche carte wagon
@@ -31,6 +34,7 @@ public class DrawPane extends JPanel {
         JPanel jp = new JPanel();
         jp.add(new ImagePane("dos-wagon.png"));
         jp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        jp.setBackground(new Color(0,0,0,64));
         add(jp,gbc);
 
         //pioche visible carte wagon
@@ -39,6 +43,8 @@ public class DrawPane extends JPanel {
         gbc.insets = new Insets(0,0,0,5);
         JPanel cwp = new JPanel();
         cwp.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        cwp.setBackground(new Color(0,0,0,64));
+
 
         for(int i = 0; i < g.getDrawVisibleTrainCards().size(); i++){
             switch (g.getDrawVisibleTrainCards().get(i).getColor()){

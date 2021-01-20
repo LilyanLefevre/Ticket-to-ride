@@ -11,8 +11,10 @@ public class ImagePane extends JPanel {
     protected Image buffer;
 
     public ImagePane(String name){
+        setBackground(new Color(0,0,0,64));
         setPreferredSize(new Dimension(100,190));
         setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
+
         try {
             buffer = ImageIO.read(new File(Thread.currentThread().getContextClassLoader().getResource(name).getPath()));
         }
@@ -23,6 +25,7 @@ public class ImagePane extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         g.drawImage(buffer,0,0,null);
     }
 }

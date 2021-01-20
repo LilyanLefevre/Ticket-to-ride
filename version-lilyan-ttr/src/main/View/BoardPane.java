@@ -19,6 +19,8 @@ public class BoardPane extends JPanel {
 
     /* initialise l'ensemble des tuiles */
     public BoardPane(Destinations d, Game g) {
+        setBackground(new Color(0,0,0,64));
+
         fini = false;
         this.game = g;
         coordonneesVille = new HashMap<>();
@@ -57,7 +59,7 @@ public class BoardPane extends JPanel {
                     jl.setVisible(true);
                     c.add(jl);
                     c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                    c.setBackground(Color.GREEN);
+                    c.setBackground(Color.WHITE);
                     add(c, gbc);
                     coordonneesVille.put(jl.getText(),c);
                 }

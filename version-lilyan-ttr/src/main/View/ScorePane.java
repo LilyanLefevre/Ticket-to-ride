@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class ScorePane extends JPanel {
 
     public ScorePane(ArrayList<Player> pl) {
+        setBackground(new Color(0,0,0,64));
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createLineBorder(Color.black));
         setPreferredSize(new Dimension(300,400));

@@ -25,10 +25,10 @@ public class CityTile extends JPanel {
 
     /* change la couleur des tuiles quand on appuie dessus */
     protected void colorTile() {
-        if (getBackground() != Color.GREEN) {
-            setBackground(Color.GREEN);
+        if (getBackground() != Color.RED) {
+            setBackground(Color.RED);
         } else {
-            setBackground(null);
+            setBackground(Color.WHITE);
         }
     }
 }

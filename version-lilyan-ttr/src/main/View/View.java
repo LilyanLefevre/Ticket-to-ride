@@ -24,6 +24,7 @@ public class View {
 
                 //on créer un conteneur global
                 JPanel container = new JPanel();
+                container.setBackground(Color.lightGray);
                 container.setLayout(new GridBagLayout());
 
                 JScrollPane scrPane = new JScrollPane(container);

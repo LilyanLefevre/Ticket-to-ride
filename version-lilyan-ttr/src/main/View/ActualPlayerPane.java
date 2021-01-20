@@ -13,6 +13,8 @@ public class ActualPlayerPane extends JPanel {
     HashMap<Model.Enum.Color, Integer> occurencesCouleur;
 
     public ActualPlayerPane(ArrayList<Player> pl, Player p) {
+        setBackground(new Color(0,0,0,64));
+
         occurencesCouleur = new HashMap<>();
         ArrayList<WagonCard> wCards = p.getwCards();
 
@@ -41,6 +43,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     JPanel jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -51,6 +54,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -61,6 +65,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -71,6 +76,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -81,6 +87,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -91,6 +98,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -101,6 +109,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -111,6 +120,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
@@ -121,6 +131,7 @@ public class ActualPlayerPane extends JPanel {
                     jb = new JLabel(""+((Integer)couleur.getValue()));
                     jb.setFont(font);
                     jp = new JPanel();
+                    jp.setBorder(BorderFactory.createLineBorder(Color.black));
                     jp.setBackground(Color.white);
                     jp.add(jb);
                     im.add(jp);
