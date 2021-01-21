@@ -29,7 +29,7 @@ public class Game{
     //variable qui représente l'ensemble des destinations du jeu
     private Destinations d;
 
-    ArrayList<String> names;
+    private ArrayList<String> names;
 
     public Player getCurrentPlayer() {
         return currentPlayer;

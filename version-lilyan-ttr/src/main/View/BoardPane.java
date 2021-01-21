@@ -23,6 +23,7 @@ import java.util.Map;
 import static java.lang.Math.abs;
 
 public class BoardPane extends JPanel {
+    private static final int HIT_BOX_SIZE = 4;
     private HashMap<String,CityTile> cityTileHashMap;
     private HashMap<Line2D,Route> routePath;
     private Game game;
@@ -80,6 +81,7 @@ public class BoardPane extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        routePath = new HashMap<>();
         super.paintComponent (g);
         //on parcoure toutes les villes affichées
         for (Map.Entry city : cityTileHashMap.entrySet()) {
@@ -115,8 +117,9 @@ public class BoardPane extends JPanel {
                 }else {
                     line = new Line2D.Double(p1.x + larg, p1.y + hau, p2.x + larg, p2.y + hau);
                 }
+
                 ((Graphics2D) g).draw(line);
-                routePath.put(line,((ArrayList<Route>)route.getValue()).get(0));
+                routePath.put(line, ((ArrayList<Route>) route.getValue()).get(0));
             }
         }
     }
@@ -147,11 +150,15 @@ public class BoardPane extends JPanel {
     public Route getRouteClicked(MouseEvent e){
         int x = e.getX();
         int y = e.getY();
-        Point2D p = new Point2D.Double(x,y);
+        int boxX = x - HIT_BOX_SIZE / 2;
+        int boxY = y - HIT_BOX_SIZE / 2;
 
-        for(Map.Entry path : routePath.entrySet()){
-            if(((Line2D)path.getKey()).contains(p)){
-                return ((Route)path.getValue());
+        int width = HIT_BOX_SIZE;
+        int height = HIT_BOX_SIZE;
+
+        for (Map.Entry line : routePath.entrySet()) {
+            if (((Line2D)line.getKey()).intersects(boxX, boxY, width, height)){
+                return ((Route)line.getValue());
             }
         }
         return null;

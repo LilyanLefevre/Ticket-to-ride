@@ -34,12 +34,6 @@ public class City {
             //puis on enregistre la route pour la ville concernée
             routesFrom.put(to,tmp);
         }
-
-        //s'il y a deja des routes pour cette ville
-        //on ajoute simplement au tableau
-        else{
-            routesFrom.get(to).add(r);
-        }
     }
 
     @Override
