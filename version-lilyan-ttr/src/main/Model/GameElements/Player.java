@@ -84,12 +84,12 @@ public class Player {
         String dc = new String();
         dc = "";
         for (int i =0; i < dCards.size(); i++) {
-            dc += /*" "+(i+1) + " - "+ */dCards.get(i).toString();
+            dc += dCards.get(i).toString();
         }
         String tc = new String();
         tc = "";
         for (int i =0; i < wCards.size(); i++) {
-            tc += /*" "+(i+1) + " - "+ */wCards.get(i).toString();
+            tc += wCards.get(i).toString();
         }
         return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+"\n";
     }

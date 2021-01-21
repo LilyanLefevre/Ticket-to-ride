@@ -15,6 +15,6 @@ public class AppTest {
         Game g = new Game(names);
         System.out.println(g.toString());
         g.runGame();
-        g.displayScore();
+        System.out.println(g.scoreToString());
     }
 }

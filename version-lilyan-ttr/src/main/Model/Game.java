@@ -26,6 +26,8 @@ public class Game extends Observable {
     //variable qui représente l'ensemble des destinations du jeu
     private Destinations d;
 
+    ArrayList<String> names;
+
     public ArrayList<WagonCard> getDrawTrainCards() {
         return drawWagonCards;
     }
@@ -133,6 +135,8 @@ public class Game extends Observable {
                 System.out.println("Are you sure ? (O/N)");
                 boolean quit = saisieOuiNon();
                 if (quit) {
+                    determineScore();
+                    System.out.println(scoreToString());
                     exit(0);
                 }
                 playTurn(p);
@@ -244,6 +248,8 @@ public class Game extends Observable {
                             }
                             else{
                                 p.addRoute(routeChoix);
+                                Route inv = new Route(routeChoix.getDest2(),routeChoix.getDest1(), routeChoix.getRequire(), routeChoix.getColor(),routeChoix.isTunel(),routeChoix.getLocomotive());
+                                p.addRoute(inv);
                             }
                         }
                         //si la route a une couleur
@@ -254,6 +260,8 @@ public class Game extends Observable {
                             }
                             else{
                                 p.addRoute(routeChoix);
+                                Route inv = new Route(routeChoix.getDest2(),routeChoix.getDest1(), routeChoix.getRequire(), routeChoix.getColor(),routeChoix.isTunel(),routeChoix.getLocomotive());
+                                p.addRoute(inv);
                             }
                         }
                     }
@@ -269,6 +277,8 @@ public class Game extends Observable {
                             }
                             else{
                                 p.addRoute(routeChoix);
+                                Route inv = new Route(routeChoix.getDest2(),routeChoix.getDest1(), routeChoix.getRequire(), routeChoix.getColor(),routeChoix.isTunel(),routeChoix.getLocomotive());
+                                p.addRoute(inv);
                             }
                         } else {
                             if (routeChoix.getRoute(p, routeChoix.getColor(), this) == -1) {
@@ -277,6 +287,8 @@ public class Game extends Observable {
                             }
                             else{
                                 p.addRoute(routeChoix);
+                                Route inv = new Route(routeChoix.getDest2(),routeChoix.getDest1(), routeChoix.getRequire(), routeChoix.getColor(),routeChoix.isTunel(),routeChoix.getLocomotive());
+                                p.addRoute(inv);
                             }
                         }
                     }
@@ -355,6 +367,7 @@ public class Game extends Observable {
     }
 
     public void runGame(){
+        //on fait tourner le jeu tant qu'il reste plus de 3 wagons à chaque joueurs
         while(!gameIsOver()){
             for(Player p : players) {
                 alreadyCalled = 0;
@@ -363,6 +376,11 @@ public class Game extends Observable {
                 playTurn(p);
             }
         }
+
+        //quand on détecte la fin d'une partie on calcule les points des joueurs suivant leur objectif
+        determineScore();
+        scoreToString();
+
     }
 
     public static int saisieValidIntBornes(int borneInf,int borneSup){
@@ -440,22 +458,69 @@ public class Game extends Observable {
         return tmp;
     }
 
-    public void displayScore(){
+    /**
+     * fonction qui retourne une chaine affichant l'identité de chaque joueurs
+     *
+     * @return String
+     */
+    public String scoreToString(){
+        String res = "";
         for(Player p : players){
-            System.out.println(p);
+            res += p.toString();
         }
+        return res;
     }
+
+    public Player getWinner(){
+        Player max = players.get(0);
+        for(int i = 1; i < players.size(); i++){
+            if(players.get(i).getPoints() > max.getPoints()){
+                max = players.get(i);
+            }
+        }
+        return max;
+    }
+
 
     public void determineScore(){
         for (Player p : players){
+            names = new ArrayList<>();
             for(DestinationCard d : p.getdCards()){
                 City from = d.getFrom();
+                names.add(from.getName());
+                City to = d.getTo();
+                boolean result = false;
                 for(Route r : p.getRoutesEmpruntes()){
                     if(r.getDest1()==from){
-                        //
+                        result = findDest(r.getDest2(),to,p);
+                        if(result) {
+                            p.setPoints(p.getPoints() + d.getPoints());
+                        }
+                    }
+                }
+                if(!result) {
+                    p.setPoints(p.getPoints() - d.getPoints());
+                }
+            }
+        }
+    }
+
+    public boolean findDest(City dest, City destFinal, Player p){
+        if(!names.contains(dest.getName())){
+            names.add(dest.getName());
+        }
+        boolean result = false;
+        for (Route r : p.getRoutesEmpruntes()){
+            if(r.getDest1() == dest) {
+                if(r.getDest2() == destFinal) {
+                    result = true;
+                }else {
+                    if(!names.contains(r.getDest2().toString())) {
+                        result = findDest(r.getDest2(), destFinal, p);
                     }
                 }
             }
         }
+        return result;
     }
 }

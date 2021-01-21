@@ -26,6 +26,7 @@ public class GameView {
 
         //on creer une fenetre
         frame = new JFrame("TTR");
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //on créer un conteneur global

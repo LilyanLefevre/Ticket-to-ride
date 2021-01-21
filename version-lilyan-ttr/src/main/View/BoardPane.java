@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Math.abs;
+
 public class BoardPane extends JPanel {
     private HashMap<String,CityTile> cityTileHashMap;
     private Game game;
@@ -115,7 +117,16 @@ public class BoardPane extends JPanel {
                 ((Graphics2D)g).setStroke(new BasicStroke(5));
                 int larg = c2.getWidth()/2;
                 int hau = c2.getHeight()/2;
-                g.drawLine(p1.x+larg, p1.y+hau, p2.x+larg, p2.y+hau);
+                int distx =abs(ct1.getCoordonnees().getX()-ct2.getCoordonnees().getX());
+                int disty =abs(ct1.getCoordonnees().getY()-ct2.getCoordonnees().getY());
+                if(ct2.getRoutesFrom().containsKey(ct1)){
+                    if(distx>disty)
+                        g.drawLine(p1.x+larg, p1.y+hau+2, p2.x+larg, p2.y+hau+2);
+                    else
+                        g.drawLine(p1.x+larg+2, p1.y+hau, p2.x+larg+2, p2.y+hau);
+                }
+                else
+                    g.drawLine(p1.x+larg, p1.y+hau, p2.x+larg, p2.y+hau);
             }
         }
     }

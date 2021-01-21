@@ -12,5 +12,8 @@ public class TicketToRide {
         GameView gv = new GameView(g);
         GameController gc = new GameController(g,gv);
         gv.setActionListener(gc);
+        System.out.println(g.toString());
+        g.runGame();
+        System.out.println(g.scoreToString());
     }
 }
