@@ -1,90 +1,88 @@
 package View;
 
-import Controller.GameController;
+import Controller.JButtonController;
+import Controller.MouseController;
 import Model.Game;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 
-public class GameView {
+public class GameView extends JFrame{
     private Game g;
     private GridBagConstraints gbc = new GridBagConstraints();
-    private JFrame frame;
     private JPanel container;
     private BoardPane board;
     private ScorePane score;
     private DrawPane draw;
     private ActualPlayerPane playerView;
     private ButtonPane buttons;
+    public boolean fini = false;
 
-    public GameView(final Game g) throws IOException {
-        this.g = g;
-        gbc.fill = GridBagConstraints.BOTH;
+    public GameView(final Game ga) throws IOException {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                g = ga;
+                gbc.fill = GridBagConstraints.BOTH;
 
-        //on creer une fenetre
-        frame = new JFrame("TTR");
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //on créer un conteneur global
-        container = new JPanel();
-        container.setLayout(new GridBagLayout());
+                //on créer un conteneur global
+                container = new JPanel();
+                container.setLayout(new GridBagLayout());
 
-        BackgroundPane bgPanel = new BackgroundPane("back-ttr-2.png");
-        JScrollPane scrPane = new JScrollPane(container);
-        container.setOpaque(false);
-        scrPane.setOpaque(false);
-        frame.setContentPane(bgPanel);
-        frame.add(container);
+                JScrollPane scrPane = new JScrollPane(container);
+                add(scrPane);
 
-        //plateau
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridheight = 2;
-        gbc.insets = new Insets(0,0,0,0);
-        board = new BoardPane(g.getD(),g);
-        container.add(board, gbc);
+                //plateau
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                gbc.gridheight = 2;
+                gbc.insets = new Insets(0, 0, 0, 0);
+                board = new BoardPane(g.getD(), g);
+                container.add(board, gbc);
 
-        //score
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridheight = 1;
-        gbc.insets = new Insets(0,0,0,0);
-        score = new ScorePane(g.getPlayers());
-        container.add(score, gbc);
+                //score
+                gbc.gridx = 1;
+                gbc.gridy = 0;
+                gbc.gridheight = 1;
+                gbc.insets = new Insets(0, 0, 0, 0);
+                score = new ScorePane(g.getPlayers());
+                container.add(score, gbc);
 
-        //pioche
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridheight = 1;
-        gbc.insets = new Insets(0,0,0,0);
-        draw = new DrawPane(g);
-        container.add(draw, gbc);
+                //pioche
+                gbc.gridx = 0;
+                gbc.gridy = 2;
+                gbc.gridheight = 1;
+                gbc.insets = new Insets(0, 0, 0, 0);
+                draw = new DrawPane(g);
+                container.add(draw, gbc);
 
-        //carte du joueur actuel
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.gridheight = 2;
-        gbc.insets = new Insets(0,0,0,0);
-        playerView = new ActualPlayerPane(g.getPlayers(), g.getPlayers().get(0));
-        container.add(playerView, gbc);
+                //carte du joueur actuel
+                gbc.gridx = 1;
+                gbc.gridy = 1;
+                gbc.gridheight = 2;
+                gbc.insets = new Insets(0, 0, 0, 0);
+                playerView = new ActualPlayerPane(g.getPlayers(), g.getPlayers().get(0));
+                container.add(playerView, gbc);
 
-        //boutons
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.gridheight = 2;
-        gbc.insets = new Insets(0,0,0,0);
-        buttons = new ButtonPane();
-        container.add(buttons, gbc);
+                //boutons
+                gbc.gridx = 1;
+                gbc.gridy = 2;
+                gbc.gridheight = 2;
+                gbc.insets = new Insets(0, 0, 0, 0);
+                buttons = new ButtonPane();
+                container.add(buttons, gbc);
 
-        frame.setLocationRelativeTo(null);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.pack();
-        frame.setVisible(true);
+                setLocationRelativeTo(null);
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+                pack();
+                setVisible(true);
+                fini = true;
+            }
+        });
     }
 
 
@@ -95,14 +93,6 @@ public class GameView {
 
     public void setGbc(GridBagConstraints gbc) {
         this.gbc = gbc;
-    }
-
-    public JFrame getFrame() {
-        return frame;
-    }
-
-    public void setFrame(JFrame frame) {
-        this.frame = frame;
     }
 
     public JPanel getContainer() {
@@ -141,10 +131,21 @@ public class GameView {
         this.playerView = playerView;
     }
 
-    public void setActionListener(GameController gc){
+    public ButtonPane getButtons() {
+        return buttons;
+    }
+
+    public void setActionListener(JButtonController gc){
         board.setActionListener(gc);
+        buttons.setActionListener(gc);
         /*score.setActionListener(gc);
         draw.setActionListener(gc);
         playerView.setActionListener(gc);*/
+    }
+    public void setMouseController(MouseController mc){
+        board.setMouseListener(mc);
+        draw.setMouseListener(mc);
+        playerView.setMouseListener(mc);
+        buttons.setMouseListener(mc);
     }
 }

@@ -1,6 +1,7 @@
 package View;
 
-import Controller.GameController;
+import Controller.JButtonController;
+import Controller.MouseController;
 import Model.Game;
 import Model.GameElements.City;
 import Model.GameElements.Coordonnees;
@@ -9,22 +10,32 @@ import Model.GameElements.Route;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.Math.abs;
 
 public class BoardPane extends JPanel {
     private HashMap<String,CityTile> cityTileHashMap;
+    private HashMap<Path2D,Route> routePath;
     private Game game;
+    private boolean fini;
 
     /* initialise l'ensemble des tuiles */
     public BoardPane(Destinations d, Game g) {
-        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.6f));
-
+        fini = false;
         this.game = g;
         cityTileHashMap = new HashMap<>();
+        routePath = new HashMap<>();
+
+        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.6f));
         setBorder(BorderFactory.createLineBorder(Color.black));
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200,800));
@@ -64,71 +75,97 @@ public class BoardPane extends JPanel {
                 }
             }
         }
+        fini = true;
     }
-    public void paintComponent (Graphics g) {
-        super.paintComponent (g);
-        //on parcoure toutes les villes affichées
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        List<Connection> connections = new ArrayList<Connection>();
+
+        //on enregistre toutes les routes sous forme d'une connexion de JButton
         for (Map.Entry city : cityTileHashMap.entrySet()) {
             //on enregistre la position des villes
             CityTile c1 = cityTileHashMap.get(city.getKey());
-            Point p1 = c1.getLocation();
             City ct1 = game.getD().getCity((String) city.getKey());
-
             //on parcoure les villes reliées à ct1
             for (Map.Entry route : ct1.getRoutesFrom().entrySet()) {
                 City ct2 = game.getD().getCity(((City) route.getKey()).getName());
                 CityTile c2 = cityTileHashMap.get(ct2.getName());
-                Point p2 = c2.getLocation();
-
-                //on met la bonne couleur
-                switch (((ArrayList<Route>)route.getValue()).get(0).getColor()){
-                    case RED:
-                        g.setColor(Color.red);
-                        break;
-                    case BLACK:
-                        g.setColor(Color.black);
-                        break;
-                    case BLUE:
-                        g.setColor(Color.blue);
-                        break;
-                    case GREEN:
-                        g.setColor(Color.green);
-                        break;
-                    case WHITE:
-                        g.setColor(Color.white);
-                        break;
-                    case ORANGE:
-                        g.setColor(Color.orange);
-                        break;
-                    case PURPLE:
-                        g.setColor(Color.MAGENTA);
-                        break;
-                    case YELLOW:
-                        g.setColor(Color.yellow);
-                        break;
-                    case GRAY:
-                        g.setColor(Color.lightGray);
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected color") ;
-                }
-
-                //on affiche une ligne entre ct1 et ct2
-                ((Graphics2D)g).setStroke(new BasicStroke(5));
-                int larg = c2.getWidth()/2;
-                int hau = c2.getHeight()/2;
-                int distx =abs(ct1.getCoordonnees().getX()-ct2.getCoordonnees().getX());
-                int disty =abs(ct1.getCoordonnees().getY()-ct2.getCoordonnees().getY());
-                if(ct2.getRoutesFrom().containsKey(ct1)){
-                    if(distx>disty)
-                        g.drawLine(p1.x+larg, p1.y+hau+2, p2.x+larg, p2.y+hau+2);
-                    else
-                        g.drawLine(p1.x+larg+2, p1.y+hau, p2.x+larg+2, p2.y+hau);
-                }
-                else
-                    g.drawLine(p1.x+larg, p1.y+hau, p2.x+larg, p2.y+hau);
+                Color c = Model.Enum.Color.getAwtColor(((ArrayList<Route>) route.getValue()).get(0).getColor());
+                connections.add(new Connection(c1,c2,c, ((ArrayList<Route>) route.getValue()).get(0)));
             }
         }
+
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        //on trace les routes
+        for (Connection connection : connections) {
+            JButton source = connection.getSource();
+            JButton dest = connection.getDestination();
+
+            //on trace le fond en noir
+            /*g2d.setStroke(new BasicStroke(8));
+            g2d.setColor(Color.black);*/
+            Path2D path = new Path2D.Double();
+            /*path.moveTo(horizontalCenter(source), verticalCenter(source));
+            path.curveTo(horizontalCenter(source), verticalCenter(dest),horizontalCenter(source), verticalCenter(dest),horizontalCenter(dest), verticalCenter(dest));
+            g2d.draw(path);*/
+
+            //on trace par dessus en plus petit la route de la bonne couleur
+            g2d.setStroke(new BasicStroke(6));
+            g2d.setColor(connection.getColor());
+            path = new Path2D.Double();
+            path.moveTo(horizontalCenter(source), verticalCenter(source));
+            path.curveTo(horizontalCenter(source), verticalCenter(dest),horizontalCenter(source), verticalCenter(dest),horizontalCenter(dest), verticalCenter(dest));
+            g2d.draw(path);
+            routePath.put(path,connection.getRoute());
+        }
+        g2d.dispose();
+    }
+
+    protected double horizontalCenter(JComponent bounds) {
+
+        return bounds.getX() + bounds.getWidth() / 2d;
+
+    }
+
+    protected double verticalCenter(JComponent bounds) {
+
+        return bounds.getY() + bounds.getHeight() / 2d;
+
+    }
+
+    protected boolean hasIntersection(Line2D line, JComponent... exclude) {
+        List<JComponent> toExclude = Arrays.asList(exclude);
+        boolean intersects = false;
+        for (Component comp : getComponents()) {
+            if (!toExclude.contains(comp)) {
+                if (line.intersects(comp.getBounds())) {
+                    System.out.println(line.getP1() + "-" + line.getP2() + " intersets with " + ((JButton)comp).getText() + "; " + comp.getBounds());
+                    intersects = true;
+                    break;
+                }
+            }
+        }
+        return intersects;
+    }
+
+    protected Line2D lineDownTo(JComponent from, JComponent to) {
+        return new Line2D.Double(horizontalCenter(from), from.getY(), horizontalCenter(from), verticalCenter(to));
+    }
+
+    protected Line2D lineAcrossTo(JComponent from, JComponent to) {
+        return new Line2D.Double(from.getX(), verticalCenter(from), horizontalCenter(to), verticalCenter(from));
+    }
+
+    protected Point2D centerOf(Rectangle bounds) {
+        return new Point2D.Double(bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2);
+    }
+
+    protected boolean canGoDownTo(Point2D startPoint, Point2D endPoint, JComponent to, JComponent from) {
+        Point2D targetPoint = new Point2D.Double(startPoint.getX(), endPoint.getY());
+        return !hasIntersection(new Line2D.Double(startPoint, targetPoint), to, from);
     }
 
     public HashMap<String, CityTile> getCityTileHashMap() {
@@ -138,9 +175,30 @@ public class BoardPane extends JPanel {
     public void setCityTileHashMap(HashMap<String, CityTile> cityTileHashMap) {
         this.cityTileHashMap = cityTileHashMap;
     }
-    public void setActionListener(GameController gc){
+
+    public HashMap<Path2D,Route> getRoutePath() {
+        return routePath;
+    }
+
+    public void setActionListener(JButtonController gc){
         for(Map.Entry city : cityTileHashMap.entrySet()){
             ((CityTile)city.getValue()).addActionListener(gc);
         }
+    }
+    public void setMouseListener(MouseController mc){
+        addMouseListener(mc);
+    }
+
+    public Route getRouteClicked(MouseEvent e){
+        int x = e.getX();
+        int y = e.getY();
+        Point2D p = new Point2D.Double(x,y);
+
+        for(Map.Entry path : routePath.entrySet()){
+            if(((Path2D)path.getKey()).contains(p)){
+                return ((Route)path.getValue());
+            }
+        }
+        return null;
     }
 }

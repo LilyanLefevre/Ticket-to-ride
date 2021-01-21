@@ -11,6 +11,9 @@ public class Game{
     // l'ensemble des joueurs
     private final ArrayList<Player> players;
 
+    //joueur actuel
+    private Player currentPlayer;
+
     // pioche de cartes de couleurs
     private ArrayList<WagonCard> drawWagonCards;
 
@@ -27,6 +30,10 @@ public class Game{
     private Destinations d;
 
     ArrayList<String> names;
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     public ArrayList<WagonCard> getDrawTrainCards() {
         return drawWagonCards;
@@ -48,11 +55,19 @@ public class Game{
         return alreadyCalled;
     }
 
+    public void setAlreadyCalled(int alreadyCalled) {
+        this.alreadyCalled = alreadyCalled;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
     public Destinations getD() {
         return d;
     }
 
-    public Game(ArrayList<String> names /*,String destination_file_path, String route_file_path*/) {
+    public Game(ArrayList<String> names) {
 
         // initialisation des cartes wagons
         drawWagonCards = new ArrayList<>(Color.values().length*14);
@@ -88,6 +103,8 @@ public class Game{
             players.add(i,new Player(names.get(i), Color.values()[i], drawDestinationCards, drawWagonCards));
         }
         alreadyCalled = 0;
+
+        currentPlayer = players.get(0);
     }
 
     /**
@@ -370,6 +387,7 @@ public class Game{
         while(!gameIsOver()){
             for(Player p : players) {
                 alreadyCalled = 0;
+                currentPlayer = p;
                 System.out.println("\n\n////////////////////C'est au tour de " + p.getName()+" de jouer////////////////////");
                 System.out.println(p);
                 playTurn(p);
@@ -379,8 +397,6 @@ public class Game{
         //quand on détecte la fin d'une partie on calcule les points des joueurs suivant leur objectif
         determineScore();
         scoreToString();
-        
-
     }
 
     public static int saisieValidIntBornes(int borneInf,int borneSup){

@@ -1,21 +1,42 @@
 package View;
 
+import Controller.MouseController;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class ButtonPane extends JPanel {
+    private JButton piocherW;
+    private JButton piocherD;
+    private JButton prendreR;
+    private JButton quitter;
+
+    public JButton getPiocherW() {
+        return piocherW;
+    }
+
+    public JButton getPiocherD() {
+        return piocherD;
+    }
+
+    public JButton getPrendreR() {
+        return prendreR;
+    }
+
+    public JButton getQuitter() {
+        return quitter;
+    }
 
     public ButtonPane() {
 
         setLayout(new GridLayout(4,3));
         setBorder(BorderFactory.createLineBorder(Color.black));
-        //setPreferredSize(new Dimension(700,100));
 
-
-        JButton piocherW = new JButton("Piocher des wagons");
-        JButton piocherD = new JButton("Piocher des destinations");
-        JButton prendreR = new JButton("Prendre une route");
-        JButton quitter = new JButton("Quitter");
+        piocherW = new JButton("Piocher des wagons");
+        piocherD = new JButton("Piocher des destinations");
+        prendreR = new JButton("Prendre une route");
+        quitter = new JButton("Quitter");
         add(new JLabel());
         add(piocherW);
         add(new JLabel());
@@ -28,7 +49,19 @@ public class ButtonPane extends JPanel {
         add(new JLabel());
         add(quitter);
         add(new JLabel());
+    }
 
-        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
+    public void setActionListener(ActionListener ac){
+        piocherD.addActionListener(ac);
+        piocherW.addActionListener(ac);
+        prendreR.addActionListener(ac);
+        quitter.addActionListener(ac);
+    }
+
+    public void setMouseListener(MouseController mc) {
+        piocherD.addMouseListener(mc);
+        piocherW.addMouseListener(mc);
+        prendreR.addMouseListener(mc);
+        quitter.addMouseListener(mc);
     }
 }

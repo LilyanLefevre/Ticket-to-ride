@@ -12,9 +12,18 @@ public class BackgroundPane extends JPanel {
 
     private BufferedImage backgroundImage;
 
-    public BackgroundPane(String name) throws IOException {
-        this.backgroundImage = ImageIO.read(new File(Thread.currentThread().getContextClassLoader().getResource(name).getPath()));
-        setLayout(new BorderLayout());
+    public BackgroundPane(final String name){
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    backgroundImage = ImageIO.read(new File(Thread.currentThread().getContextClassLoader().getResource(name).getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                setLayout(new BorderLayout());
+            }
+        });
     }
 
     @Override

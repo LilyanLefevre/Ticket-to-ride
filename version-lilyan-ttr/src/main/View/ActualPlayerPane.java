@@ -1,5 +1,6 @@
 package View;
 
+import Controller.MouseController;
 import Model.GameElements.Player;
 import Model.GameElements.WagonCard;
 
@@ -142,5 +143,7 @@ public class ActualPlayerPane extends JPanel {
             }
         }
     }
-
+    public void setMouseListener(MouseController mc){
+        addMouseListener(mc);
+    }
 }

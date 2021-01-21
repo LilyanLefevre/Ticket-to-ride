@@ -1,5 +1,6 @@
 package View;
 
+import Controller.MouseController;
 import Model.Game;
 
 import javax.swing.*;
@@ -106,5 +107,9 @@ public class DrawPane extends JPanel {
             }
         }
         add(piocheVisibleWagon,gbc);
+    }
+
+    public void setMouseListener(MouseController mc){
+        addMouseListener(mc);
     }
 }

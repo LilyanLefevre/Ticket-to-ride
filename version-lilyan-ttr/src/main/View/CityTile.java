@@ -14,6 +14,7 @@ public class CityTile extends JButton {
 
 
     public City getCity() {
+        //setMinimumSize(new Dimension(200,20));
         return c;
     }
 
