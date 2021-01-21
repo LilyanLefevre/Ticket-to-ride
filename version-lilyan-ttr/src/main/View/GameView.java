@@ -19,6 +19,7 @@ public class GameView {
     private ScorePane score;
     private DrawPane draw;
     private ActualPlayerPane playerView;
+    private ButtonPane buttons;
 
     public GameView(final Game g) throws IOException {
         this.g = g;
@@ -72,11 +73,20 @@ public class GameView {
         playerView = new ActualPlayerPane(g.getPlayers(), g.getPlayers().get(0));
         container.add(playerView, gbc);
 
+        //boutons
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.gridheight = 2;
+        gbc.insets = new Insets(0,0,0,0);
+        buttons = new ButtonPane();
+        container.add(buttons, gbc);
+
         frame.setLocationRelativeTo(null);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.pack();
         frame.setVisible(true);
     }
+
 
 
     public GridBagConstraints getGbc() {

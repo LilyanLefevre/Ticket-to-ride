@@ -7,7 +7,7 @@ import Model.Enum.*;
 
 import static java.lang.System.exit;
 
-public class Game extends Observable {
+public class Game{
     // l'ensemble des joueurs
     private final ArrayList<Player> players;
 
@@ -293,7 +293,6 @@ public class Game extends Observable {
                         }
                     }
                 }
-
                 break;
 
             //si on pioche des cartes destination
@@ -380,6 +379,7 @@ public class Game extends Observable {
         //quand on détecte la fin d'une partie on calcule les points des joueurs suivant leur objectif
         determineScore();
         scoreToString();
+        
 
     }
 
