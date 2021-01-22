@@ -11,18 +11,23 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class CardImagePane extends JLabel {
+public class CardButtonPane extends JButton {
     private static final long   serialVersionUID    = 1L;
     protected ImageIcon buffer;
-    private Model.Enum.Color couleur;
+    private int index;
+    private Color couleur;
 
     public Color getCouleur() {
         return couleur;
     }
 
-    public CardImagePane(String name, Model.Enum.Color c, final int nb){
-        couleur = c;
+    public int getIndex() {
+        return index;
+    }
 
+    public CardButtonPane(String name, int i, Color c){
+        index = i;
+        couleur = c;
         setPreferredSize(new Dimension(120,190));
         setVerticalTextPosition(SwingConstants.BOTTOM);
         setHorizontalTextPosition(SwingConstants.CENTER);
@@ -32,14 +37,10 @@ public class CardImagePane extends JLabel {
 
         //on modifie sa taille
         Image image = buffer.getImage();
-        Image newimg = image.getScaledInstance(90, 150,  java.awt.Image.SCALE_SMOOTH);
+        Image newimg = image.getScaledInstance(105, 175,  java.awt.Image.SCALE_SMOOTH);
         buffer = new ImageIcon(newimg);
 
-        //on met l'imafe
         setIcon(buffer);
-        setText(""+nb);
-
-
     }
 
 }

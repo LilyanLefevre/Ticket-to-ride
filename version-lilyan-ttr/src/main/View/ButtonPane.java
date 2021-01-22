@@ -1,6 +1,6 @@
 package View;
 
-import Controller.MouseController;
+import Controller.RouteController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +32,8 @@ public class ButtonPane extends JPanel {
 
         setLayout(new GridLayout(4,3));
         setBorder(BorderFactory.createLineBorder(Color.black));
+        setBackground(new Color(0,0,0,0.3f));
+
 
         piocherW = new JButton("Piocher des wagons");
         piocherD = new JButton("Piocher des destinations");
@@ -58,7 +60,7 @@ public class ButtonPane extends JPanel {
         quitter.addActionListener(ac);
     }
 
-    public void setMouseListener(MouseController mc) {
+    public void setMouseListener(RouteController mc) {
         piocherD.addMouseListener(mc);
         piocherW.addMouseListener(mc);
         prendreR.addMouseListener(mc);

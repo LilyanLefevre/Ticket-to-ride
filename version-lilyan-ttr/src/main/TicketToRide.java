@@ -1,10 +1,9 @@
 import Controller.JButtonController;
-import Controller.MouseController;
+import Controller.RouteController;
 import Model.Game;
 import Model.GameElements.Player;
 import View.GameView;
 
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,10 +15,11 @@ public class TicketToRide {
         while(!gv.fini){
             System.out.println("attente de l'affichage du jeu");
         }
+
+        RouteController mc = new RouteController(g,gv);
+        gv.setRouteListener(mc);
         JButtonController gc = new JButtonController(g,gv);
         gv.setActionListener(gc);
-        MouseController mc = new MouseController(g,gv);
-        gv.setMouseController(mc);
 
         //on fait tourner le jeu tant qu'il reste plus de 3 wagons à chaque joueurs
         while(!g.gameIsOver()){

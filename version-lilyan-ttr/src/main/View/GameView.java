@@ -1,7 +1,7 @@
 package View;
 
 import Controller.JButtonController;
-import Controller.MouseController;
+import Controller.RouteController;
 import Model.Game;
 
 import javax.swing.*;
@@ -63,15 +63,15 @@ public class GameView extends JFrame{
                 //carte du joueur actuel
                 gbc.gridx = 1;
                 gbc.gridy = 1;
-                gbc.gridheight = 2;
+                gbc.gridheight = 1;
                 gbc.insets = new Insets(0, 0, 0, 0);
-                playerView = new ActualPlayerPane(g.getPlayers(), g.getPlayers().get(0));
+                playerView = new ActualPlayerPane(g.getPlayers().get(0));
                 container.add(playerView, gbc);
 
                 //boutons
                 gbc.gridx = 1;
                 gbc.gridy = 2;
-                gbc.gridheight = 2;
+                gbc.gridheight = 1;
                 gbc.insets = new Insets(0, 0, 0, 0);
                 buttons = new ButtonPane();
                 container.add(buttons, gbc);
@@ -138,14 +138,20 @@ public class GameView extends JFrame{
     public void setActionListener(JButtonController gc){
         board.setActionListener(gc);
         buttons.setActionListener(gc);
-        /*score.setActionListener(gc);
         draw.setActionListener(gc);
+        /*score.setActionListener(gc);
+
         playerView.setActionListener(gc);*/
     }
-    public void setMouseController(MouseController mc){
+    public void setRouteListener(RouteController mc){
         board.setMouseListener(mc);
-        draw.setMouseListener(mc);
-        playerView.setMouseListener(mc);
-        buttons.setMouseListener(mc);
+    }
+
+    public void updateView(Game g,JButtonController jc){
+        score.updateScore(g.getPlayers());
+        playerView.updateCard(g.getCurrentPlayer());
+        draw.updateCard();
+        draw.setActionListener(jc);
+
     }
 }

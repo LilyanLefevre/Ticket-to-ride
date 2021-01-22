@@ -1,6 +1,7 @@
 package View;
 
-import Controller.MouseController;
+import Controller.JButtonController;
+import Controller.RouteController;
 import Model.Game;
 
 import javax.swing.*;
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 public class DrawPane extends JPanel {
     private Game g;
     private GridBagConstraints gbc = new GridBagConstraints();
-    private JPanel piocheDestination;
-    private JPanel piocheWagon;
+    private CardButtonPane piocheDestination;
+    private CardButtonPane piocheWagon;
     private JPanel piocheVisibleWagon;
-    private ArrayList<CardImagePane> cartesVisibles;
+    private ArrayList<CardButtonPane> cartesVisibles;
 
     public DrawPane(Game g) {
         this.g = g;
@@ -29,21 +30,25 @@ public class DrawPane extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(0,0,0,30);
-        piocheDestination = new JPanel();
-        piocheDestination.add(new CardImagePane("dos-destination.jpg",-1));
-        piocheDestination.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        piocheDestination.setBackground(new Color(0,0,0,64));
-        add(piocheDestination,gbc);
+
+        JPanel jp1 = new JPanel();
+        piocheDestination = new CardButtonPane("dos-destination.jpg",-2,null);
+        jp1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        jp1.setBackground(new Color(0,0,0,64));
+        jp1.add(piocheDestination);
+        add(jp1,gbc);
 
         //pioche carte wagon
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.insets = new Insets(0,0,0,30);
-        piocheWagon = new JPanel();
-        piocheWagon.add(new CardImagePane("dos-wagon.jpg",-1));
-        piocheWagon.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        piocheWagon.setBackground(new Color(0,0,0,64));
-        add(piocheWagon,gbc);
+
+        piocheWagon = new CardButtonPane("dos-wagon.jpg",-1,null);
+        JPanel jp2 = new JPanel();
+        jp2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        jp2.setBackground(new Color(0,0,0,64));
+        jp2.add(piocheWagon);
+        add(jp2,gbc);
 
         //pioche visible carte wagon
         gbc.gridx = 2;
@@ -58,47 +63,47 @@ public class DrawPane extends JPanel {
         for(int i = 0; i < g.getDrawVisibleTrainCards().size(); i++){
             switch (g.getDrawVisibleTrainCards().get(i).getColor()){
                 case RED:
-                    CardImagePane tmp = new CardImagePane("wagon-rouge.jpg", i);
+                    CardButtonPane tmp = new CardButtonPane("wagon-rouge.jpg", i, Model.Enum.Color.RED);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case BLACK:
-                    tmp = new CardImagePane("wagon-noir.jpg", i);
+                    tmp = new CardButtonPane("wagon-noir.jpg", i, Model.Enum.Color.BLACK);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case BLUE:
-                    tmp = new CardImagePane("wagon-bleu.jpg", i);
+                    tmp = new CardButtonPane("wagon-bleu.jpg", i, Model.Enum.Color.BLUE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case GREEN:
-                    tmp = new CardImagePane("wagon-vert.jpg", i);
+                    tmp = new CardButtonPane("wagon-vert.jpg", i, Model.Enum.Color.GREEN);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case WHITE:
-                    tmp = new CardImagePane("wagon-blanc.jpg", i);
+                    tmp = new CardButtonPane("wagon-blanc.jpg", i, Model.Enum.Color.WHITE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case ORANGE:
-                    tmp = new CardImagePane("wagon-orange.jpg", i);
+                    tmp = new CardButtonPane("wagon-orange.jpg", i, Model.Enum.Color.ORANGE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case PURPLE:
-                    tmp = new CardImagePane("wagon-violet.jpg", i);
+                    tmp = new CardButtonPane("wagon-violet.jpg", i, Model.Enum.Color.PURPLE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case YELLOW:
-                    tmp = new CardImagePane("wagon-jaune.jpg", i);
+                    tmp = new CardButtonPane("wagon-jaune.jpg", i, Model.Enum.Color.YELLOW);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
                 case RAINBOW:
-                    tmp = new CardImagePane("locomotive.jpg", i);
+                    tmp = new CardButtonPane("locomotive.jpg", i,  Model.Enum.Color.RAINBOW);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
@@ -109,7 +114,89 @@ public class DrawPane extends JPanel {
         add(piocheVisibleWagon,gbc);
     }
 
-    public void setMouseListener(MouseController mc){
+    public void setMouseListener(RouteController mc){
         addMouseListener(mc);
+    }
+
+    public JButton getPiocheDestination() {
+        return piocheDestination;
+    }
+
+    public JButton getPiocheWagon() {
+        return piocheWagon;
+    }
+
+    public JPanel getPiocheVisibleWagon() {
+        return piocheVisibleWagon;
+    }
+
+    public ArrayList<CardButtonPane> getCartesVisibles() {
+        return cartesVisibles;
+    }
+    public void setActionListener(JButtonController gc){
+        piocheWagon.addActionListener(gc);
+        piocheDestination.addActionListener(gc);
+        for(CardButtonPane c : cartesVisibles){
+            c.addActionListener(gc);
+        }
+    }
+
+    public void updateCard(){
+        piocheVisibleWagon.removeAll();
+        cartesVisibles = new ArrayList<>();
+        //afficher les images des cartes visibles de la pioche
+        for(int i = 0; i < g.getDrawVisibleTrainCards().size(); i++){
+            switch (g.getDrawVisibleTrainCards().get(i).getColor()){
+                case RED:
+                    CardButtonPane tmp = new CardButtonPane("wagon-rouge.jpg", i, Model.Enum.Color.RED);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case BLACK:
+                    tmp = new CardButtonPane("wagon-noir.jpg", i, Model.Enum.Color.BLACK);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case BLUE:
+                    tmp = new CardButtonPane("wagon-bleu.jpg", i, Model.Enum.Color.BLUE);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case GREEN:
+                    tmp = new CardButtonPane("wagon-vert.jpg", i, Model.Enum.Color.GREEN);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case WHITE:
+                    tmp = new CardButtonPane("wagon-blanc.jpg", i, Model.Enum.Color.WHITE);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case ORANGE:
+                    tmp = new CardButtonPane("wagon-orange.jpg", i, Model.Enum.Color.ORANGE);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case PURPLE:
+                    tmp = new CardButtonPane("wagon-violet.jpg", i, Model.Enum.Color.PURPLE);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case YELLOW:
+                    tmp = new CardButtonPane("wagon-jaune.jpg", i, Model.Enum.Color.YELLOW);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                case RAINBOW:
+                    tmp = new CardButtonPane("locomotive.jpg", i,  Model.Enum.Color.RAINBOW);
+                    cartesVisibles.add(tmp);
+                    piocheVisibleWagon.add(tmp);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected color: "+g.getDrawVisibleTrainCards().get(i).getColor()) ;
+            }
+        }
+        piocheVisibleWagon.revalidate();
+        piocheVisibleWagon.repaint();
     }
 }

@@ -1,7 +1,7 @@
 package View;
 
 import Controller.JButtonController;
-import Controller.MouseController;
+import Controller.RouteController;
 import Model.Game;
 import Model.GameElements.City;
 import Model.GameElements.Coordonnees;
@@ -12,12 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.lang.Math.abs;
@@ -143,7 +138,7 @@ public class BoardPane extends JPanel {
             ((CityTile)city.getValue()).addActionListener(gc);
         }
     }
-    public void setMouseListener(MouseController mc){
+    public void setMouseListener(RouteController mc){
         addMouseListener(mc);
     }
 

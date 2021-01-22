@@ -9,12 +9,12 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class MouseController implements MouseListener {
+public class RouteController implements MouseListener {
     private Game model;
     private GameView view;
     private Player currentPlayer;
 
-    public MouseController(Game g, GameView gv) {
+    public RouteController(Game g, GameView gv) {
         model = g;
         view = gv;
         currentPlayer = g.getPlayers().get(0);

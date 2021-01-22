@@ -187,8 +187,8 @@ public class Player {
 
         //on les replace dans la pioche
         for(WagonCard t : toRemove){
-            int nCard = (int)(Math.random() * (g.getDrawTrainCards().size()));
-            g.getDrawTrainCards().add(nCard,t);
+            int nCard = (int)(Math.random() * (g.getDrawWagonCards().size()));
+            g.getDrawWagonCards().add(nCard,t);
         }
 
         return ret;

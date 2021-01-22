@@ -13,6 +13,7 @@ public class Game{
 
     //joueur actuel
     private Player currentPlayer;
+    private int indexCurrentPlayer;
 
     // pioche de cartes de couleurs
     private ArrayList<WagonCard> drawWagonCards;
@@ -35,7 +36,7 @@ public class Game{
         return currentPlayer;
     }
 
-    public ArrayList<WagonCard> getDrawTrainCards() {
+    public ArrayList<WagonCard> getDrawWagonCards() {
         return drawWagonCards;
     }
 
@@ -105,6 +106,7 @@ public class Game{
         alreadyCalled = 0;
 
         currentPlayer = players.get(0);
+        indexCurrentPlayer = 0;
     }
 
     /**
@@ -538,5 +540,16 @@ public class Game{
             }
         }
         return result;
+    }
+
+    public Player nextPlayer(){
+        if(indexCurrentPlayer == players.size()-1){
+            currentPlayer = players.get(0);
+            indexCurrentPlayer = 0;
+        }else{
+            indexCurrentPlayer += 1;
+            currentPlayer = players.get(indexCurrentPlayer);
+        }
+        return currentPlayer;
     }
 }

@@ -60,10 +60,8 @@ public class City {
         while(it.hasNext()){
             Map.Entry city = (Map.Entry) it.next();
             ret += "        to "+city.getKey()+" : \n";
-            //on affiche toutes les routes pour rejoindre les villes depuis la ville courante
-            for(int i = 0; i < ((ArrayList<Route>)city.getValue()).size(); i++){
-                ret += "            "+((ArrayList<Route>)city.getValue()).get(i).toString();
-            }
+            ret += "            "+((Route)city.getValue()).toString();
+
         }
         return ret;
     }
