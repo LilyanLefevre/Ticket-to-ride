@@ -5,7 +5,7 @@ import java.util.*;
 public class City {
     private String name;
     private Coordonnees c;
-    private HashMap<City, ArrayList<Route>> routesFrom;
+    private HashMap<City, Route> routesFrom;
 
     public City(String name){
         this.name = name;
@@ -21,7 +21,7 @@ public class City {
         return c;
     }
 
-    public HashMap<City, ArrayList<Route>> getRoutesFrom() {
+    public HashMap<City, Route> getRoutesFrom() {
         return routesFrom;
     }
 
@@ -29,10 +29,8 @@ public class City {
         //s'il n'y aucune route associée à cette destination
         //on initialise l'ensemble de routes
         if(routesFrom.get(to) == null){
-            ArrayList<Route> tmp = new ArrayList<>();
-            tmp.add(r);
             //puis on enregistre la route pour la ville concernée
-            routesFrom.put(to,tmp);
+            routesFrom.put(to,r);
         }
     }
 

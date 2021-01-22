@@ -224,19 +224,8 @@ public class Destinations {
             return null;
         }
 
-        //s'il n'y a plus d'une route qui relie les deux
-        ArrayList<Route> tmp = destinations.get(v1).getRoutesFrom().get(destinations.get(v2));
-        if(tmp.size() > 1){
-            //on fait choisir la route
-            System.out.println("There are several roads connecting these cities , which one do you choose ?");
-            for(int i = 0; i < tmp.size(); i++){
-                System.out.println("    "+(i+1)+" - "+tmp.get(i));
-            }
-            int c = Game.saisieValidIntBornes(1,tmp.size());
-            return tmp.get(c-1);
-        }
-        //sinon on retourne la seule route
-        return tmp.get(0);
+        Route tmp = destinations.get(v1).getRoutesFrom().get(destinations.get(v2));
+        return tmp;
     }
 
     /**

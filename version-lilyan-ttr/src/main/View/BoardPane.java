@@ -97,7 +97,7 @@ public class BoardPane extends JPanel {
                 Point p2 = c2.getLocation();
 
                 //on met la bonne couleur
-                Color c = Model.Enum.Color.getAwtColor(((ArrayList<Route>)route.getValue()).get(0).getColor());
+                Color c = Model.Enum.Color.getAwtColor(((Route)route.getValue()).getColor());
                 g.setColor(c);
 
                 //on affiche une ligne entre ct1 et ct2
@@ -119,7 +119,7 @@ public class BoardPane extends JPanel {
                 }
 
                 ((Graphics2D) g).draw(line);
-                routePath.put(line, ((ArrayList<Route>) route.getValue()).get(0));
+                routePath.put(line, ((Route) route.getValue()));
             }
         }
     }
