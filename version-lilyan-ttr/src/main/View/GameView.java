@@ -24,6 +24,7 @@ public class GameView extends JFrame{
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                setTitle("Ticket to ride");
                 g = ga;
                 gbc.fill = GridBagConstraints.BOTH;
 
