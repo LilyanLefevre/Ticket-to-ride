@@ -21,7 +21,7 @@ public class ScorePane extends JPanel {
         setBorder(BorderFactory.createLineBorder(Color.black));
         setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel container = new JPanel();
+        container = new JPanel();
         container.setBackground(new Color(0.0f, 0.0f, 0.0f, 0));
         container.setPreferredSize(new Dimension(500,300));
         container.setLayout(new GridLayout(5,0));
@@ -37,6 +37,7 @@ public class ScorePane extends JPanel {
             JLabel tmp = new JLabel(pl.get(i).getName()+" "+pl.get(i).getPoints()+" points, "+pl.get(i).getWagons()+" wagons restants",SwingConstants.CENTER);
             font = new Font("Arial",Font.CENTER_BASELINE,16);
             tmp.setFont(font);
+            tmp.setForeground(pl.get(i).getColor());
             container.add(tmp);
             scoreLabels.put(pl.get(i),tmp);
         }

@@ -170,7 +170,11 @@ public class Destinations {
                 //A MODIFIER
                 if(lenreg!=null)
                     TabRoutes.add(lenreg);
-                addRoute(new Route((City)from.getValue(),destination,1, c, false, 0));
+                if(c == Color.GRAY){
+                    addRoute(new Route((City)from.getValue(),destination,1, c, true, 0));
+                }else{
+                    addRoute(new Route((City)from.getValue(),destination,1, c, false, 0));
+                }
             }
         }
         System.out.println(TabRoutes.size());
@@ -226,7 +230,11 @@ public class Destinations {
                 if(lenreg!=null)
                     TabRoutes.add(lenreg);
                 count++;
-                addRoute(new Route((City)from.getValue(),destination,1, c, false, 0));
+                if(c == Color.GRAY){
+                    addRoute(new Route((City)from.getValue(),destination,1, c, true, 0));
+                }else{
+                    addRoute(new Route((City)from.getValue(),destination,1, c, false, 0));
+                }
             }
         }
         System.out.println(TabRoutes.size());

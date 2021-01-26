@@ -32,7 +32,7 @@ public class RouteController implements MouseListener {
         if(r != null){
             System.out.println("vous avez cliqué sur la route entre "+r.getDest1()+" et "+r.getDest2());
             int input = JOptionPane.showConfirmDialog(null ,"Cette route relie "+r.getDest1()+" à "+r.getDest2()+". Elle est de couleur "+r.getColor()+" " +
-                            "et il faut "+r.getRequire()+" wagons pour la prendre.", r.getDest1()+" à "+r.getDest2(),JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            "et il faut "+r.getRequire()+" wagons pour la prendre.", r.getDest1()+" à "+r.getDest2(),JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
         }
     }
 

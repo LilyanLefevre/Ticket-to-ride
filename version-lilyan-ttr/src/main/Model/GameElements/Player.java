@@ -1,8 +1,10 @@
 package Model.GameElements;
-import Model.Enum.*;
 import Model.Game;
 
+import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
+import Model.Enum.*;
 
 public class Player {
     private final String name;
@@ -133,12 +135,12 @@ public class Player {
      * @param c la couleur voulue
      * @return un entier représentant le nombre de carte de la bonne couleur
      */
-    public int countOccurencesOf(Color c){
+    public int countOccurencesOf(Model.Enum.Color c){
         int i = 0;
 
         //compte le nombre de carte de la couleur donnée et locomotives
         for(WagonCard t : wCards){
-            if(t.getColor() == c || t.getColor() == Color.RAINBOW){
+            if(t.getColor() == c || t.getColor() == Model.Enum.Color.RAINBOW){
                 i++;
             }
         }
@@ -150,7 +152,7 @@ public class Player {
      * @param c la couleur voulue
      * @return un entier représentant le nombre de carte de la bonne couleur
      */
-    public int countWithoutRainbowOccurencesOf(Color c ){
+    public int countWithoutRainbowOccurencesOf(Model.Enum.Color c ){
         int i = 0;
 
         //compte le nombre de carte de la couleur donnée et locomotives
@@ -170,7 +172,7 @@ public class Player {
      * @param nb le nombre de carte a retirer
      * @return le nombre de carte retiré
      */
-    public int removeTrainCards(Color c, int nb, Game g){
+    public int removeTrainCards(Model.Enum.Color c, int nb, Game g){
         int i = 0;
         ArrayList<WagonCard> toRemove = new ArrayList<>();
         for(WagonCard t : wCards){

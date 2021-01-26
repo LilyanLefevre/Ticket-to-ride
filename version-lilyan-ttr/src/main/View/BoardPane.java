@@ -22,12 +22,14 @@ public class BoardPane extends JPanel {
     private HashMap<String,CityTile> cityTileHashMap;
     private HashMap<Line2D,Route> routePath;
     private Game game;
+    private Destinations d;
     private boolean fini;
 
     /* initialise l'ensemble des tuiles */
     public BoardPane(Destinations d, Game g) {
         fini = false;
         this.game = g;
+        this.d = d;
         cityTileHashMap = new HashMap<>();
         routePath = new HashMap<>();
 
@@ -92,7 +94,12 @@ public class BoardPane extends JPanel {
                 Point p2 = c2.getLocation();
 
                 //on met la bonne couleur
-                Color c = Model.Enum.Color.getAwtColor(((Route)route.getValue()).getColor());
+                Color c;
+                if(((Route)route.getValue()).isAlreadyTakenRoute()){
+                    c = ((Route)route.getValue()).getPlayer().getColor();
+                }else{
+                    c = Model.Enum.Color.getAwtColor(((Route)route.getValue()).getColor());
+                }
                 g.setColor(c);
 
                 //on affiche une ligne entre ct1 et ct2
@@ -110,7 +117,6 @@ public class BoardPane extends JPanel {
             }
         }
     }
-
 
 
     public HashMap<String, CityTile> getCityTileHashMap() {
@@ -132,6 +138,12 @@ public class BoardPane extends JPanel {
     }
     public void setMouseListener(RouteController mc){
         addMouseListener(mc);
+    }
+
+    public void updateRoute(){
+        removeAll();
+        revalidate();
+        repaint();
     }
 
     public Route getRouteClicked(MouseEvent e){

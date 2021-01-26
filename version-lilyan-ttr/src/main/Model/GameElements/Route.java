@@ -70,6 +70,9 @@ public class Route {
     public void setPlayer(Player p) {
         this.hasPlayerOn = p;
     }
+    public Player getPlayer() {
+        return hasPlayerOn;
+    }
 
     /**
      * Answers a string containing a concise, human-readable
