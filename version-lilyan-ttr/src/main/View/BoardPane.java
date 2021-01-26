@@ -99,19 +99,11 @@ public class BoardPane extends JPanel {
                 ((Graphics2D)g).setStroke(new BasicStroke(5));
                 int larg = c2.getWidth()/2;
                 int hau = c2.getHeight()/2;
-                int distx = abs(ct1.getCoordonnees().getX() - ct2.getCoordonnees().getX());
-                int disty = abs(ct1.getCoordonnees().getY() - ct2.getCoordonnees().getY());
+                //int distx = abs(ct1.getCoordonnees().getX() - ct2.getCoordonnees().getX());
+                //int disty = abs(ct1.getCoordonnees().getY() - ct2.getCoordonnees().getY());
 
                 Line2D line;
-                if(ct2.getRoutesFrom().containsKey(ct1)){
-                    if(distx>disty) {
-                        line = new Line2D.Double(p1.x + larg, p1.y + hau + 2, p2.x + larg, p2.y + hau + 2);
-                    }else {
-                        line = new Line2D.Double(p1.x + larg + 2, p1.y + hau, p2.x + larg + 2, p2.y + hau);
-                    }
-                }else {
-                    line = new Line2D.Double(p1.x + larg, p1.y + hau, p2.x + larg, p2.y + hau);
-                }
+                line = new Line2D.Double(p1.x + larg, p1.y + hau, p2.x + larg, p2.y + hau);
 
                 ((Graphics2D) g).draw(line);
                 routePath.put(line, ((Route) route.getValue()));
@@ -159,3 +151,4 @@ public class BoardPane extends JPanel {
         return null;
     }
 }
+
