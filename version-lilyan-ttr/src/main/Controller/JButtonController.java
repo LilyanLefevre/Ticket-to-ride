@@ -3,6 +3,7 @@ package Controller;
 import Model.Enum.Color;
 import Model.Game;
 import Model.GameElements.City;
+import Model.GameElements.DestinationCard;
 import Model.GameElements.Player;
 import Model.GameElements.WagonCard;
 import View.CardButtonPane;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
 
@@ -117,7 +119,66 @@ public class JButtonController implements ActionListener {
                 }
             }
         }
-        if(src == view.getButtons().getPiocherD()){
+
+        // si on souhaite piocher des cartes destination
+        if(src == view.getButtons().getPiocherD() || src == view.getDraw().getPiocheDestination()){
+            //s'il reste au moins une carte destination
+            if(model.getDrawDestinationCards().size() > 0) {
+                System.out.println("Vous avez pioché les trois cartes Destination suivantes: ");
+                ArrayList<DestinationCard> dctmp = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    if (model.getDrawDestinationCards().size() > 0) {
+                        DestinationCard tmpd = model.drawDestinationCard();
+                        System.out.print("  " + (i + 1) + " - " + tmpd);
+                        dctmp.add(tmpd);
+                    }
+                }
+
+
+                String message = "Vous avez pioché les cartes suivantes, sélectionner celle(s) que vous voulez garder.";
+                Object[] params = new Object[4];
+                params[0] = message;
+                JCheckBox cb1 = new JCheckBox(dctmp.get(0).toString());
+                params[1] = cb1;
+                JCheckBox cb2 = null;
+                JCheckBox cb3 = null;
+                if(dctmp.size() > 1){
+                    cb2 = new JCheckBox(dctmp.get(1).toString());
+                    params[2] = cb2;
+                }
+                if(dctmp.size() > 2){
+                    cb3 = new JCheckBox(dctmp.get(2).toString());
+                    params[3] = cb3;
+
+                }
+
+                int input = JOptionPane.showConfirmDialog(null ,params,
+                        "Piocher des cartes destinations",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+                //on met les cartes dans le jeu du joueur
+                System.out.println("Vous avez conservé les cartes suivantes :");
+                if(cb1.isSelected()){
+                    System.out.print(dctmp.get(0).toString());
+                    currentPlayer.addDestinationCard(dctmp.get(0));
+                }
+                if(dctmp.size() > 1 && cb2.isSelected()){
+                    System.out.print(dctmp.get(1).toString());
+                    currentPlayer.addDestinationCard(dctmp.get(1));
+                }
+                if(dctmp.size() > 2 && cb3.isSelected()){
+                    System.out.print(dctmp.get(2).toString());
+                    currentPlayer.addDestinationCard(dctmp.get(2));
+                }
+                input = JOptionPane.showConfirmDialog(null ,"Fin de votre tour",
+                        "Fin du tour",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                currentPlayer = model.nextPlayer();
+                currentAction = 0;
+                nbCardTaken = 0;
+            }else{
+                int input = JOptionPane.showConfirmDialog(null ,"Il n'y a plus de carte detination disponible.",
+                        "Piocher des cartes destinations",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            }
+
             System.out.println("Vous avez cliqué sur piocher des destinations");
         }
         if(src == view.getButtons().getPrendreR()){
@@ -131,10 +192,23 @@ public class JButtonController implements ActionListener {
             }
         }
 
+        if(src == view.getPlayerView().getObjButton()){
+            int taille = currentPlayer.getdCards().size();
+            
+            Object[] params = new Object[taille];
+            for(int i = 0; i < taille; i++){
+                JLabel jb = new JLabel(currentPlayer.getdCards().get(i).toString(),SwingConstants.CENTER);
+                params[i] = jb;
+            }
+            int input = JOptionPane.showConfirmDialog(null ,params,
+                    "Mes cartes destination",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        }
+
         if(currentAction == 0) {
             view.getButtons().getPiocherW().setEnabled(true);
             view.getButtons().getPiocherD().setEnabled(true);
             view.getButtons().getPrendreR().setEnabled(true);
+            view.getDraw().getPiocheDestination().setEnabled(true);
             view.updateView(model,this);
             view.repaint();
         }

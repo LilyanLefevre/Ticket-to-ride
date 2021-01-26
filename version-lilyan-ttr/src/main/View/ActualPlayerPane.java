@@ -1,5 +1,6 @@
 package View;
 
+import Controller.JButtonController;
 import Controller.RouteController;
 import Model.GameElements.Player;
 import Model.GameElements.WagonCard;
@@ -15,6 +16,7 @@ public class ActualPlayerPane extends JPanel {
     private JLabel name;
     private JPanel cardWagonPanel;
     private JPanel cardDestinationPanel;
+    private JButton objButton;
 
     public HashMap<Model.Enum.Color, Integer> getOccurencesCouleur() {
         return occurencesCouleur;
@@ -26,6 +28,10 @@ public class ActualPlayerPane extends JPanel {
 
     public JLabel getNamePlayer() {
         return name;
+    }
+
+    public JButton getObjButton() {
+        return objButton;
     }
 
     public void setName(JLabel name) {
@@ -127,18 +133,16 @@ public class ActualPlayerPane extends JPanel {
         //on affiche les cartes objectifs
         cardDestinationPanel = new JPanel();
         cardDestinationPanel.setBackground(new Color(0.0f, 0.0f, 0.0f, 0));
-        JButton objButton = new JButton("Voir les objectifs");
+        objButton = new JButton("Voir les objectifs");
         cardDestinationPanel.add(objButton);
         add(cardDestinationPanel,BorderLayout.SOUTH);
     }
-    public void setMouseListener(RouteController mc){
-        addMouseListener(mc);
+    public void setActionListener(JButtonController mc){
+        objButton.addActionListener(mc);
     }
 
     public void updateCard(Player p){
-        ActualPlayerPane newPane = new ActualPlayerPane(p);
-
-        name.setText(p.getName());
+        name.setText("<html><u>Tour de "+p.getName()+"</u></html>");
 
         occurencesCouleur = new HashMap<>();
         ArrayList<WagonCard> wCards = p.getwCards();

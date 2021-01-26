@@ -140,9 +140,9 @@ public class GameView extends JFrame{
         board.setActionListener(gc);
         buttons.setActionListener(gc);
         draw.setActionListener(gc);
-        /*score.setActionListener(gc);
+        /*score.setActionListener(gc)*/;
 
-        playerView.setActionListener(gc);*/
+        playerView.setActionListener(gc);
     }
     public void setRouteListener(RouteController mc){
         board.setMouseListener(mc);
