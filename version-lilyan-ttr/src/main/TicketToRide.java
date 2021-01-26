@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class TicketToRide {
     public static void main (String [] args) throws IOException {
-        Game g = new Game(new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "View")));
+        Game g = new Game(new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "maaaaaaaaaaaa")));
         GameView gv = new GameView(g);
         while(!gv.fini){
             System.out.println("attente de l'affichage du jeu");

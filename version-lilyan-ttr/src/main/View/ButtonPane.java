@@ -32,7 +32,7 @@ public class ButtonPane extends JPanel {
 
         setLayout(new GridLayout(4,3));
         setBorder(BorderFactory.createLineBorder(Color.black));
-        setBackground(new Color(0,0,0,0.3f));
+        //setBackground(new Color(0,0,0,0.3f));
 
 
         piocherW = new JButton("Piocher des wagons");

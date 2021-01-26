@@ -96,7 +96,7 @@ public enum Color {
                 c = java.awt.Color.yellow;
                 break;
             case GRAY:
-                c = java.awt.Color.lightGray;
+                c = java.awt.Color.gray;
                 break;
             default:
                 throw new IllegalStateException("Unexpected color");

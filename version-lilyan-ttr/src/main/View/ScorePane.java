@@ -15,7 +15,7 @@ public class ScorePane extends JPanel {
     public ScorePane(ArrayList<Player> pl) {
         scoreLabels = new HashMap<>();
 
-        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
+        //setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
 
         setLayout(new FlowLayout());
         setBorder(BorderFactory.createLineBorder(Color.black));
@@ -34,8 +34,9 @@ public class ScorePane extends JPanel {
 
         //on affiche chaque joueur
         for(int i = 0; i < pl.size(); i++){
-            JLabel tmp = new JLabel(pl.get(i).getName()+" "+pl.get(i).getPoints()+" points, "+pl.get(i).getWagons()+" wagons restants",SwingConstants.CENTER);
-            font = new Font("Arial",Font.CENTER_BASELINE,16);
+            JLabel tmp = new JLabel("<html> <body style='text-align: center'>"+pl.get(i).getName()+" "+pl.get(i).getPoints()+" points, "
+                    +pl.get(i).getWagons()+" wagons restants </body></html>",SwingConstants.CENTER);
+            font = new Font("Arial",Font.BOLD,22);
             tmp.setFont(font);
             tmp.setForeground(pl.get(i).getColor());
             container.add(tmp);
@@ -47,7 +48,8 @@ public class ScorePane extends JPanel {
     public void updateScore(ArrayList<Player> players){
         //on affiche chaque joueur
         for(int i = 0; i < players.size(); i++){
-            scoreLabels.get(players.get(i)).setText(players.get(i).getName()+" "+players.get(i).getPoints()+" points, "+players.get(i).getWagons()+" wagons restants");
+            scoreLabels.get(players.get(i)).setText("<html> <body style='text-align: center'"+players.get(i).getName()+" "+players.get(i).getPoints()+
+                    " points, "+players.get(i).getWagons()+" wagons restants </body></html>");
             scoreLabels.put(players.get(i),scoreLabels.get(players.get(i)));
 
         }

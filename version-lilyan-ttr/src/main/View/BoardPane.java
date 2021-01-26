@@ -15,7 +15,6 @@ import java.awt.geom.Line2D;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.Math.abs;
 
 public class BoardPane extends JPanel {
     private static final int HIT_BOX_SIZE = 4;
@@ -33,7 +32,7 @@ public class BoardPane extends JPanel {
         cityTileHashMap = new HashMap<>();
         routePath = new HashMap<>();
 
-        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.6f));
+        setBackground(Color.lightGray);
         setBorder(BorderFactory.createLineBorder(Color.black));
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1200,800));

@@ -56,7 +56,7 @@ public class ActualPlayerPane extends JPanel {
 
 
     public ActualPlayerPane(Player p) {
-        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
+        //setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
 
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(500,300));

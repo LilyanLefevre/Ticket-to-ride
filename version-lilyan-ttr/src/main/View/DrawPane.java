@@ -20,7 +20,7 @@ public class DrawPane extends JPanel {
         this.g = g;
         this.cartesVisibles = new ArrayList<>();
 
-        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
+        //setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
 
         setPreferredSize(new Dimension(800,215));
         setLayout(new GridBagLayout());
