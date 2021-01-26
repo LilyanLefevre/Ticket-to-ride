@@ -23,7 +23,7 @@ public class ScorePane extends JPanel {
 
         container = new JPanel();
         container.setBackground(new Color(0.0f, 0.0f, 0.0f, 0));
-        container.setPreferredSize(new Dimension(500,300));
+        container.setPreferredSize(new Dimension(400,200));
         container.setLayout(new GridLayout(5,0));
 
         //on affiche le label score
@@ -36,7 +36,7 @@ public class ScorePane extends JPanel {
         for(int i = 0; i < pl.size(); i++){
             JLabel tmp = new JLabel("<html> <body style='text-align: center'>"+pl.get(i).getName()+" "+pl.get(i).getPoints()+" points, "
                     +pl.get(i).getWagons()+" wagons restants </body></html>",SwingConstants.CENTER);
-            font = new Font("Arial",Font.BOLD,22);
+            font = new Font("Arial",Font.BOLD,19);
             tmp.setFont(font);
             tmp.setForeground(pl.get(i).getColor());
             container.add(tmp);

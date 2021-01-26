@@ -23,7 +23,7 @@ public class CardImagePane extends JLabel {
     public CardImagePane(String name, Model.Enum.Color c, final int nb){
         couleur = c;
 
-        setPreferredSize(new Dimension(120,190));
+        setPreferredSize(new Dimension(120,210));
         setVerticalTextPosition(SwingConstants.BOTTOM);
         setHorizontalTextPosition(SwingConstants.CENTER);
 
@@ -32,7 +32,7 @@ public class CardImagePane extends JLabel {
 
         //on modifie sa taille
         Image image = buffer.getImage();
-        Image newimg = image.getScaledInstance(90, 150,  java.awt.Image.SCALE_SMOOTH);
+        Image newimg = image.getScaledInstance(110, 190,  java.awt.Image.SCALE_SMOOTH);
         buffer = new ImageIcon(newimg);
 
         //on met l'imafe

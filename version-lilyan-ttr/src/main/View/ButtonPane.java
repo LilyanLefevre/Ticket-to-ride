@@ -29,8 +29,9 @@ public class ButtonPane extends JPanel {
     }
 
     public ButtonPane() {
-
-        setLayout(new GridLayout(4,3));
+        GridLayout gl = new GridLayout(4,3);
+        gl.setVgap(15);
+        setLayout(gl);
         setBorder(BorderFactory.createLineBorder(Color.black));
         //setBackground(new Color(0,0,0,0.3f));
 

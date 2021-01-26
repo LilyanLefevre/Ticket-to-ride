@@ -67,6 +67,7 @@ public class GameView extends JFrame{
                 gbc.gridheight = 1;
                 gbc.insets = new Insets(0, 0, 0, 0);
                 playerView = new ActualPlayerPane(g.getPlayers().get(0));
+                playerView.setPreferredSize(new Dimension(board.getWidth()+score.getWidth(), board.getHeight()+draw.getHeight()));
                 container.add(playerView, gbc);
 
                 //boutons
@@ -76,6 +77,8 @@ public class GameView extends JFrame{
                 gbc.insets = new Insets(0, 0, 0, 0);
                 buttons = new ButtonPane();
                 container.add(buttons, gbc);
+
+                playerView.getObjButton().setPreferredSize(buttons.getPiocherD().getPreferredSize());
 
                 setLocationRelativeTo(null);
                 setExtendedState(JFrame.MAXIMIZED_BOTH);

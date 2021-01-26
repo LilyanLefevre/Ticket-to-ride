@@ -58,8 +58,8 @@ public class ActualPlayerPane extends JPanel {
     public ActualPlayerPane(Player p) {
         //setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
 
-        setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(500,300));
+        setLayout(new BorderLayout(0,50));
+        //setPreferredSize(new Dimension(600,500));
         setBorder(BorderFactory.createLineBorder(Color.black));
 
         occurencesCouleur = new HashMap<>();
@@ -83,9 +83,9 @@ public class ActualPlayerPane extends JPanel {
 
         //on affiche les cartes du joueur
         cardWagonPanel = new JPanel();
-        cardWagonPanel.setLayout(new FlowLayout());
+        cardWagonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         cardWagonPanel.setBackground(new Color(0,0,0,0));
-
+        cardWagonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
