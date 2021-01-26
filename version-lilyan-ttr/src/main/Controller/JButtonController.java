@@ -331,6 +331,7 @@ public class JButtonController implements ActionListener {
             view.getButtons().getPiocherD().setEnabled(true);
             view.getButtons().getPrendreR().setEnabled(true);
             view.getDraw().getPiocheDestination().setEnabled(true);
+            view.getDraw().getPiocheWagon().setEnabled(true);
             view.updateView(model,this);
             view.repaint();
         }

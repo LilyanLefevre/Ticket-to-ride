@@ -153,6 +153,5 @@ public class GameView extends JFrame{
         playerView.updateCard(g.getCurrentPlayer());
         draw.updateCard();
         draw.setActionListener(jc);
-
     }
 }

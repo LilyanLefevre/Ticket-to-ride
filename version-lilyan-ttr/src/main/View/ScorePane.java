@@ -48,11 +48,13 @@ public class ScorePane extends JPanel {
     public void updateScore(ArrayList<Player> players){
         //on affiche chaque joueur
         for(int i = 0; i < players.size(); i++){
-            scoreLabels.get(players.get(i)).setText("<html> <body style='text-align: center'"+players.get(i).getName()+" "+players.get(i).getPoints()+
-                    " points, "+players.get(i).getWagons()+" wagons restants </body></html>");
+            scoreLabels.get(players.get(i)).setText("<html> <body style='text-align: center'>"+players.get(i).getName()+" "+players.get(i).getPoints()+" points, "
+                    +players.get(i).getWagons()+" wagons restants </body></html>");
             scoreLabels.put(players.get(i),scoreLabels.get(players.get(i)));
-
         }
+
+        revalidate();
+        repaint();
     }
 
 }
