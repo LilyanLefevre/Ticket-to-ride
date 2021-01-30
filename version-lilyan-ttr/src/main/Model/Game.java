@@ -505,22 +505,37 @@ public class Game{
     }
 
 
+    /**
+     * fonction qui va calculer le score de chaque joueur en vérifiant s'il a fait ses objectifs ou non
+     */
     public void determineScore(){
+        //on parcoure les joueurs
         for (Player p : players){
+            //tableau qui va servir à enregistrer les noms des villes déjà visitées
             names = new ArrayList<>();
+
+            //on parcoure les objectifs du joueur courant
             for(DestinationCard d : p.getdCards()){
+                //on enregistre le couple de villes à relier
                 City from = d.getFrom();
                 names.add(from.getName());
                 City to = d.getTo();
+
                 boolean result = false;
+                //pour chaque route empruntée par le joueur
                 for(Route r : p.getRoutesEmpruntes()){
+                    //on regarde si elle part de la premiere ville de l'objectif
                     if(r.getDest1()==from){
+                        //et on essaie de construire le chemin vers la deuxieme ville
                         result = findDest(r.getDest2(),to,p);
+
+                        //si il existe un chemin on ajoute les points
                         if(result) {
                             p.setPoints(p.getPoints() + d.getPoints());
                         }
                     }
                 }
+                //si on a pas atteint la ville alors on retire des points au joueur
                 if(!result) {
                     p.setPoints(p.getPoints() - d.getPoints());
                 }
@@ -528,6 +543,15 @@ public class Game{
         }
     }
 
+    /**
+     * fonction qui va construire un chemin entre deux villes données parmis les routes prises par le joueur
+     *
+     * @param dest City la ville de départ
+     * @param destFinal City la ville d'arrivée
+     * @param p Player le joueur concerné
+     *
+     * @return boolean true si le joueur a relié les deux villes, false sinon
+     */
     public boolean findDest(City dest, City destFinal, Player p){
         if(!names.contains(dest.getName())){
             names.add(dest.getName());
@@ -547,11 +571,20 @@ public class Game{
         return result;
     }
 
+    /**
+     * fonction qui retourne le prochain joueur à jouer
+     *
+     * @return Player le prochain joueur à jouer
+     */
     public Player nextPlayer(){
+        //si on est actuellement sur le dernier joueur
         if(indexCurrentPlayer == players.size()-1){
+            //on retourne le premier
             currentPlayer = players.get(0);
             indexCurrentPlayer = 0;
-        }else{
+        }
+        //sinon on retourne juste le suivant
+        else{
             indexCurrentPlayer += 1;
             currentPlayer = players.get(indexCurrentPlayer);
         }

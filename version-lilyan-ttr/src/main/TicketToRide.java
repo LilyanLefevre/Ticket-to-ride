@@ -13,7 +13,7 @@ public class TicketToRide {
         Game g = new Game(new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "View")));
         GameView gv = new GameView(g);
         while(!gv.fini){
-            System.out.println("attente de l'affichage du jeu");
+            //System.out.println("attente de l'affichage du jeu");
         }
 
         RouteController mc = new RouteController(g,gv);

@@ -14,11 +14,17 @@ import Model.Game;
 
 public class Destinations {
     private HashMap<String, City> destinations;
+    private ArrayList<Route> routes;
+    private ArrayList<String> names;
+    private ArrayList<Route> rEmpruntees;
 
     public Destinations(){
         destinations = new HashMap<>();
+        routes = new ArrayList<>();
+        rEmpruntees = new ArrayList<>();
         genererDestination();
         genererRoutes();
+        genererDoubleRoute();
     }
 
     public City getCity(String name){
@@ -32,6 +38,7 @@ public class Destinations {
     //A MODIFIER
     public void addRoute(Route r) {
         this.destinations.get(r.getDest1().getName()).addRoute(r, r.getDest2());
+        routes.add(r);
     }
 
     public HashMap<String, City> getDestinations() {
@@ -70,7 +77,7 @@ public class Destinations {
         //on tire un nb de villes au hasard
         Random random = new Random();
         count--;
-        int nbvilles = 35+random.nextInt(45-35);
+        int nbvilles = /*35+random.nextInt(45-35)*/35;
 
         for (int i=0;i<nbvilles;i++){
             //pour chaque ville crée on pioche un préfixe et un suffixe et on les assemble
@@ -241,7 +248,70 @@ public class Destinations {
         System.out.println("routes generated...");
     }
 
+    /**
+     * double un certain nombre routes suivant leur fréquence d'utilisation
+     *
+     */
+    public void genererDoubleRoute(){
+        //on construit tous les couples v1-v2 afin de relier chaque villes entre elles
+        HashMap<City,City> couples = new HashMap<>();
+        for(Map.Entry v1 : destinations.entrySet()) {
+            for (Map.Entry v2 : destinations.entrySet()) {
+                //pour chacun des couples on trace le chemin et on incrémente la frequence d'utilisation
+                //des routes utilisées
+                if(v1 != v2) {
+                    names = new ArrayList<>();
+                    rEmpruntees = new ArrayList<>();
+                    construireChemin((City)v1.getValue(), (City)v2.getValue());
+                    construireChemin((City)v2.getValue(), (City)v1.getValue());
+                    for(Route r : rEmpruntees){
+                        r.setFreqUtilisation(r.getFreqUtilisation()+1);
+                    }
+                }
+            }
+        }
 
+        //on trie les routes de la plus utilisée à la moins utilisée
+        Collections.sort(routes);
+
+        int k = 0;
+        while(routes.size() != 2*destinations.size() /*k != 10*/){
+            Route cur = routes.get(k);
+            Route tmp = new Route(cur.getDest2(), cur.getDest1(), cur.getRequire(), cur.getColor(), cur.isTunel(), cur.getLocomotive());
+            addRoute(tmp);
+            k++;
+        }
+
+        for(Route r : routes){
+            System.out.println("La route "+r.getDest1()+" vers "+r.getDest2()+" a été utilisée "+r.getFreqUtilisation()+" fois.");
+        }
+    }
+
+    /**
+     * fonction qui créer un chemin entre deux villes
+     *
+     //* @param v1 City une ville
+     //* @param v2 City l'autre ville
+     */
+    private void construireChemin(City v1, City v2) {
+        if(!names.contains(v1.getName())){
+            names.add(v1.getName());
+        }
+        for (Route r : routes){
+            if(r.getDest1() == v1) {
+                if(r.getDest2() == v2) {
+                    rEmpruntees.add(r);
+                }
+                else{
+                    if(!names.contains(r.getDest2().toString())) {
+                        construireChemin(r.getDest2(), v2);
+                    }
+                }
+            }
+        }
+    }
+
+    
 
 
     /**

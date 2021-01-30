@@ -1,10 +1,11 @@
 package Model.GameElements;
 import Model.Enum.*;
 import Model.Game;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class Route {
+public class Route implements Comparable{
     // A MODIFIER
     //représentent les deux destination réliées par cette route
     private final City dest1;
@@ -25,6 +26,9 @@ public class Route {
     //enregistre le joueur qui a éventuellement posé ses wagons dessus
     private Player hasPlayerOn;
 
+    //enregistre le nombre de fois où on utilise la route pour rejoindre deux villes
+    private int freqUtilisation;
+
     //A MODIFIER
     public Route(City from, City to, int require, Color color, boolean isTunel, int locomotive) {
         this.dest1 = from;
@@ -34,10 +38,19 @@ public class Route {
         this.isTunel = isTunel;
         this.locomotive = locomotive;
         this.hasPlayerOn = null;
+        this.freqUtilisation = 0;
     }
 
     public int getRequire() {
         return require;
+    }
+
+    public int getFreqUtilisation() {
+        return freqUtilisation;
+    }
+
+    public void setFreqUtilisation(int freqUtilisation) {
+        this.freqUtilisation = freqUtilisation;
     }
 
     public City getDest1() {
@@ -229,4 +242,9 @@ public class Route {
         }
     }
 
+
+    @Override
+    public int compareTo(@NotNull Object o) {
+        return ((Route)o).getFreqUtilisation() - this.getFreqUtilisation();
+    }
 }
