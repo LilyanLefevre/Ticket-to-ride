@@ -12,7 +12,7 @@ public class Coordonnees {
         this.y = y;
     }
     public Coordonnees(){
-        Coordonnees tmp = genererCoordonnees(2,17);
+        Coordonnees tmp = genererCoordonnees(0,19);
         this.x = tmp.getX();
         this.y = tmp.getY();
     }

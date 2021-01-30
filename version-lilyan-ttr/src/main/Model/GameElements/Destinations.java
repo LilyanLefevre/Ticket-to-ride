@@ -24,7 +24,7 @@ public class Destinations {
         rEmpruntees = new ArrayList<>();
         genererDestination();
         genererRoutes();
-        genererDoubleRoute();
+//        genererDoubleRoute();
     }
 
     public City getCity(String name){
@@ -77,7 +77,7 @@ public class Destinations {
         //on tire un nb de villes au hasard
         Random random = new Random();
         count--;
-        int nbvilles = 35+random.nextInt(45-35);
+        int nbvilles = /*35+random.nextInt(45-35)*/40;
 
         for (int i=0;i<nbvilles;i++){
             //pour chaque ville crée on pioche un préfixe et un suffixe et on les assemble
@@ -103,7 +103,7 @@ public class Destinations {
             //on change les positions si deux villes se collent/superposent
             //il faut mini une case libre entre chaque ville
             for(int y=0;y<cvilles.size();y++){
-                if(cvilles.get(y).distance(c1.getCoordonnees()) < 1){
+                if(cvilles.get(y).distance(c1.getCoordonnees()) < 2){
                     c1 = new City(name);
                     y=0;
                 }
@@ -142,20 +142,26 @@ public class Destinations {
             City destination=(City)from.getValue();
             int x1 = ((City)from.getValue()).getCoordonnees().getX();
             int y1 = ((City)from.getValue()).getCoordonnees().getY();
+
             for (Map.Entry to : destinations.entrySet()){
                 boolean intersect = false;
                 int x2 = ((City)to.getValue()).getCoordonnees().getX();
                 int y2 = ((City)to.getValue()).getCoordonnees().getY();
                 double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
                 Line2D l = new Line2D.Double(x1,y1,x2,y2);
-                if(distance1<distance && ((City)to.getValue()).getRoutesFrom().size()==0 && ((City) from.getValue()).getName()!=((City) to.getValue()).getName() && !((City)to.getValue()).getRoutesFrom().containsKey(((City)from.getValue()).getName())){
+
+                if(distance1 < distance && ((City)to.getValue()).getRoutesFrom().size()==0
+                        && ((City) from.getValue()).getName()!=((City) to.getValue()).getName()
+                        && !((City)to.getValue()).getRoutesFrom().containsKey(((City)from.getValue()).getName())){
                     for (int i = 0; i < TabRoutes.size(); i++) {
                         if (l.intersectsLine(TabRoutes.get(i))&& l!=TabRoutes.get(i)) {
                             Point2D p = new Point2D.Double(x2,y2);
                             Point2D p1 = new Point2D.Double(x1,y1);
                             Point2D inter = intersection(TabRoutes.get(i),l);
+
                             if(!p.equals(inter) && !p1.equals(inter)){
-                                intersect = true;}
+                                intersect = true;
+                            }
                         }
                     }
                     if (!intersect) {
@@ -185,6 +191,7 @@ public class Destinations {
             }
         }
         System.out.println(TabRoutes.size());
+        genererDoubleRoute();
 
         int count = 0;
 
@@ -287,7 +294,7 @@ public class Destinations {
 
         int k = 0;
         //on complete les routes pour avoir deux fois plus de routes que de villes
-        while(/*routes.size() != 2*destinations.size()*/ k != 5){
+        while(/*routes.size() != 2*destinations.size()*/ k != 10){
             Route cur = routes.get(k);
 
             //on prend une couleur au hasard différente de celle de la premiere

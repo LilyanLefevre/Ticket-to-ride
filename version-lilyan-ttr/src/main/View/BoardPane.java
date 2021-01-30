@@ -14,6 +14,9 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.HashMap;
 import java.util.Map;
+import static java.lang.Math.abs;
+
+
 
 
 public class BoardPane extends JPanel {
@@ -47,7 +50,7 @@ public class BoardPane extends JPanel {
                 gbc.gridx = x;
 
                 //on prepare l'affichage du nom (ou pas) de la ville (s'il y a)
-                JLabel jl = new JLabel();
+                String name = "";
                 gbc.gridwidth = 1;
 
                 //on regarde s'il existe une ville qui a ces coordonnées là
@@ -56,19 +59,17 @@ public class BoardPane extends JPanel {
 
                     //s'il y a une ville avec ces coordonnées on entre le nom dans le label
                     if (tmp.getX() == x && tmp.getY() == y) {
-                        jl.setText(((String) city.getKey()));
+                       name = ((String) city.getKey());
                         gbc.gridwidth = 1;
-                        coordonnees = tmp;
                     }
                 }
 
                 //si il y a une ville
-                if (jl.getText() != "") {
-                    CityTile c = new CityTile(g.getD().getCity(jl.getText()));
-                    c.add(jl);
+                if (name != "") {
+                    CityTile c = new CityTile(g.getD().getCity(name));
                     c.setMargin(new Insets(2,1,1,2));
                     add(c, gbc);
-                    cityTileHashMap.put(jl.getText(),c);
+                    cityTileHashMap.put(name,c);
                 }
             }
         }
@@ -103,13 +104,58 @@ public class BoardPane extends JPanel {
 
                 //on affiche une ligne entre ct1 et ct2
                 ((Graphics2D)g).setStroke(new BasicStroke(5));
-                int larg = c2.getWidth()/2;
-                int hau = c2.getHeight()/2;
-                //int distx = abs(ct1.getCoordonnees().getX() - ct2.getCoordonnees().getX());
-                //int disty = abs(ct1.getCoordonnees().getY() - ct2.getCoordonnees().getY());
+
 
                 Line2D line;
-                line = new Line2D.Double(p1.x + larg, p1.y + hau, p2.x + larg, p2.y + hau);
+                int larg1 = c1.getWidth()/2;
+                int larg2 = c2.getWidth()/2;
+                int hau1 = c1.getHeight()/2;
+                int hau2 = c2.getHeight()/2;
+
+                if(ct2.getRoutesFrom().containsKey(ct1)){
+                    boolean dejaFirstDouble = false;
+                    for(Map.Entry r : routePath.entrySet()){
+                        if(((Route) r.getValue()).getDest1() == ct2 && ((Route) r.getValue()).getDest2() == ct1){
+                            dejaFirstDouble = true;
+                        }
+                    }
+                    if(dejaFirstDouble){
+                        larg1 = (c1.getWidth())/2+4;
+                        larg2 = (c2.getWidth())/2+4;
+                        hau1 = (c1.getHeight())/2+4;
+                        hau2 = (c2.getHeight())/2+4;
+                        if(ct1.getCoordonnees().getX() < ct2.getCoordonnees().getX()){
+                            larg1 = (c1.getWidth())/2+6;
+                            larg2 = (c2.getWidth())/2+6;
+                            hau1 = (c1.getHeight())/2+6;
+                            hau2 = (c2.getHeight())/2+6;
+                        }
+                        if(ct1.getCoordonnees().getX() > ct2.getCoordonnees().getX()
+                                && ct1.getCoordonnees().getY() > ct2.getCoordonnees().getY() ){
+                            larg1 = (c1.getWidth())/2+10;
+                            larg2 = (c2.getWidth())/2+10;
+                            hau1 = (c1.getHeight())/2+10;
+                            hau2 = (c2.getHeight())/2+10;
+                        }
+
+                    }else{
+                        larg1 = (c1.getWidth())/2-4;
+                        larg2 = (c2.getWidth())/2-4;
+                        hau1 = (c1.getHeight())/2-4;
+                        hau2 = (c2.getHeight())/2-4;
+
+                        if(ct1.getCoordonnees().getX() < ct2.getCoordonnees().getX()
+                                && ct1.getCoordonnees().getY() < ct2.getCoordonnees().getY() ){
+                            larg1 = (c1.getWidth())/2-10;
+                            larg2 = (c2.getWidth())/2-10;
+                            hau1 = (c1.getHeight())/2-10;
+                            hau2 = (c2.getHeight())/2-10;
+                        }
+                    }
+
+                }
+
+                line = new Line2D.Double(p1.x + larg1, p1.y + hau1, p2.x + larg2, p2.y + hau2);
 
                 ((Graphics2D) g).draw(line);
                 routePath.put(line, ((Route) route.getValue()));
