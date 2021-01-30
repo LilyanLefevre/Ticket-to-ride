@@ -77,7 +77,7 @@ public class Destinations {
         //on tire un nb de villes au hasard
         Random random = new Random();
         count--;
-        int nbvilles = /*35+random.nextInt(45-35)*/35;
+        int nbvilles = 35+random.nextInt(45-35);
 
         for (int i=0;i<nbvilles;i++){
             //pour chaque ville crée on pioche un préfixe et un suffixe et on les assemble
@@ -103,7 +103,7 @@ public class Destinations {
             //on change les positions si deux villes se collent/superposent
             //il faut mini une case libre entre chaque ville
             for(int y=0;y<cvilles.size();y++){
-                if((cvilles.get(y).getX()+1 == c1.getCoordonnees().getX()|| cvilles.get(y).getX()-1==c1.getCoordonnees().getX() || cvilles.get(y).getX() == c1.getCoordonnees().getX()) &&(cvilles.get(y).getY()+1 == c1.getCoordonnees().getY()|| cvilles.get(y).getY()-1==c1.getCoordonnees().getY() || c1.getCoordonnees().getY() == cvilles.get(y).getY())){
+                if(cvilles.get(y).distance(c1.getCoordonnees()) < 1){
                     c1 = new City(name);
                     y=0;
                 }
@@ -274,10 +274,30 @@ public class Destinations {
         //on trie les routes de la plus utilisée à la moins utilisée
         Collections.sort(routes);
 
+        HashMap<Integer, Color> randomColor = new HashMap<>();
+        randomColor.put(0,Color.WHITE);
+        randomColor.put(1,Color.RED);
+        randomColor.put(2,Color.BLACK);
+        randomColor.put(3,Color.BLUE);
+        randomColor.put(4,Color.GREEN);
+        randomColor.put(5,Color.ORANGE);
+        randomColor.put(6,Color.PURPLE);
+        randomColor.put(7,Color.YELLOW);
+        randomColor.put(8,Color.GRAY);
+
         int k = 0;
-        while(routes.size() != 2*destinations.size() /*k != 10*/){
+        //on complete les routes pour avoir deux fois plus de routes que de villes
+        while(/*routes.size() != 2*destinations.size()*/ k != 5){
             Route cur = routes.get(k);
-            Route tmp = new Route(cur.getDest2(), cur.getDest1(), cur.getRequire(), cur.getColor(), cur.isTunel(), cur.getLocomotive());
+
+            //on prend une couleur au hasard différente de celle de la premiere
+            Random random = new Random();
+            int r = 0+random.nextInt(9-0);
+            while(randomColor.get(r) == cur.getColor()){
+                r = 0+random.nextInt(9-0);
+            }
+            //on ajoute la double route
+            Route tmp = new Route(cur.getDest2(), cur.getDest1(), cur.getRequire(), randomColor.get(r), cur.isTunel(), cur.getLocomotive());
             addRoute(tmp);
             k++;
         }
@@ -311,7 +331,7 @@ public class Destinations {
         }
     }
 
-    
+
 
 
     /**

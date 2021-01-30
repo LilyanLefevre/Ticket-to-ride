@@ -12,10 +12,10 @@ public class TicketToRide {
     public static void main (String [] args) throws IOException {
         Game g = new Game(new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "View")));
         GameView gv = new GameView(g);
+        int i=0;
         while(!gv.fini){
-            //System.out.println("attente de l'affichage du jeu");
+            System.out.print("");
         }
-
         RouteController mc = new RouteController(g,gv);
         gv.setRouteListener(mc);
         JButtonController gc = new JButtonController(g,gv);

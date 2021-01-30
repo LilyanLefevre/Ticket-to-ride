@@ -55,6 +55,7 @@ public class JButtonController implements ActionListener {
             view.getButtons().getPiocherD().setEnabled(false);
             view.getButtons().getPrendreR().setEnabled(false);
             view.getDraw().getPiocheDestination().setEnabled(false);
+            view.getDraw().getPiocheWagon().setEnabled(true);
             currentAction = 1;
         }
 
@@ -331,7 +332,7 @@ public class JButtonController implements ActionListener {
             view.getButtons().getPiocherD().setEnabled(true);
             view.getButtons().getPrendreR().setEnabled(true);
             view.getDraw().getPiocheDestination().setEnabled(true);
-            view.getDraw().getPiocheWagon().setEnabled(true);
+            view.getDraw().getPiocheWagon().setEnabled(false);
             view.updateView(model,this);
             view.repaint();
         }

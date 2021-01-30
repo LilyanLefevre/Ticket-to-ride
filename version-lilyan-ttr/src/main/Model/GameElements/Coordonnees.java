@@ -12,7 +12,7 @@ public class Coordonnees {
         this.y = y;
     }
     public Coordonnees(){
-        Coordonnees tmp = genererCoordonnees(0,19);
+        Coordonnees tmp = genererCoordonnees(2,17);
         this.x = tmp.getX();
         this.y = tmp.getY();
     }
@@ -51,4 +51,7 @@ public class Coordonnees {
         return new Coordonnees(cx,cy);
     }
 
+    public double distance(Coordonnees x) {
+        return Math.sqrt(Math.pow((x.getY() - getY()),2) + Math.pow((x.getX() - getX()),2));
+    }
 }

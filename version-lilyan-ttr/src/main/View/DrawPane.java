@@ -36,6 +36,7 @@ public class DrawPane extends JPanel {
         jp1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         jp1.setBackground(new Color(0,0,0,64));
         jp1.add(piocheDestination);
+        jp1.setVisible(false);
         add(jp1,gbc);
 
         //pioche carte wagon
@@ -48,6 +49,7 @@ public class DrawPane extends JPanel {
         jp2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         jp2.setBackground(new Color(0,0,0,64));
         jp2.add(piocheWagon);
+        piocheWagon.setEnabled(false);
         add(jp2,gbc);
 
         //pioche visible carte wagon

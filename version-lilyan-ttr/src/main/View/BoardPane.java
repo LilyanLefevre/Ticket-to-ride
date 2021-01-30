@@ -57,7 +57,7 @@ public class BoardPane extends JPanel {
                     //s'il y a une ville avec ces coordonnées on entre le nom dans le label
                     if (tmp.getX() == x && tmp.getY() == y) {
                         jl.setText(((String) city.getKey()));
-                        gbc.gridwidth = 2;
+                        gbc.gridwidth = 1;
                         coordonnees = tmp;
                     }
                 }
