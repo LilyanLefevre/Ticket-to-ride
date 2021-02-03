@@ -20,7 +20,6 @@ import static java.lang.System.exit;
 public class JButtonController implements ActionListener {
     private Game model;
     private GameView view;
-    private HashMap<String, CityTile> cityHashMap;
     private Player currentPlayer;
 
     private int currentAction = 0;
@@ -335,6 +334,7 @@ public class JButtonController implements ActionListener {
                     "Mes cartes destination",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
         }
 
+        //fin d'un tour
         if(currentAction == 0) {
             view.getButtons().getPiocherW().setEnabled(true);
             view.getButtons().getPiocherD().setEnabled(true);
@@ -344,8 +344,6 @@ public class JButtonController implements ActionListener {
             view.updateView(model,this);
             view.repaint();
         }
-
-
     }
 
 
@@ -548,5 +546,5 @@ public class JButtonController implements ActionListener {
                 "Choix d'une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
         return (Route) routeList.getSelectedItem();
     }
- 
+
 }
