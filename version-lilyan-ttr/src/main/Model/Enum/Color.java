@@ -1,11 +1,14 @@
 package Model.Enum;
 
-import Model.GameElements.Route;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * classe qui représente un nombre limité de couleurs
+ * qui composent le jeu
+ */
 public enum Color {
     RED,
     BLACK,
@@ -31,6 +34,11 @@ public enum Color {
         return this.name();
     }
 
+    /**
+     * fonction qui permet de saisir une couleur existante
+     *
+     * @return une Color existante
+     */
     public static Color saisieColor(){
         String choix = "";
         Scanner entree =   new Scanner(System.in);
@@ -67,6 +75,14 @@ public enum Color {
         return Color.valueOf(choix);
     }
 
+    /**
+     * fonction qui retourne une couleur utilisable par awt
+     * depuis une couleur du jeu
+     *
+     * @param co Color la couleur à convertir en couleur awt
+     *
+     * @return une couleur java.awt.Color correspondante
+     */
     public static java.awt.Color getAwtColor(Color co){
         java.awt.Color c;
         //on met la bonne couleur
@@ -102,5 +118,28 @@ public enum Color {
                 throw new IllegalStateException("Unexpected color");
         }
         return c;
+    }
+
+    /**
+     * fonction retournant une couleur au hasard
+     *
+     * @return Color la couleur tirée au hasard
+     */
+    public Color aleaColor(){
+        HashMap<Integer, Color> randomColor = new HashMap<>();
+        randomColor.put(0,Color.WHITE);
+        randomColor.put(1,Color.RED);
+        randomColor.put(2,Color.BLACK);
+        randomColor.put(3,Color.BLUE);
+        randomColor.put(4,Color.GREEN);
+        randomColor.put(5,Color.ORANGE);
+        randomColor.put(6,Color.PURPLE);
+        randomColor.put(7,Color.YELLOW);
+        randomColor.put(8,Color.GRAY);
+
+        Random random = new Random();
+        int r = 0+random.nextInt(9-0);
+
+        return randomColor.get(r);
     }
 }

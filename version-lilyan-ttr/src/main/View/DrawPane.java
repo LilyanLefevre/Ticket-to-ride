@@ -8,13 +8,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * classe qui représente le panel qui affiche la pioche de carte wagon
+ */
 public class DrawPane extends JPanel {
     private Game g;
     private GridBagConstraints gbc = new GridBagConstraints();
-    private CardButtonPane piocheDestination;
     private CardButtonPane piocheWagon;
     private JPanel piocheVisibleWagon;
     private ArrayList<CardButtonPane> cartesVisibles;
+
+    public JButton getPiocheWagon() {
+        return piocheWagon;
+    }
 
     public DrawPane(Game g) {
         this.g = g;
@@ -30,14 +36,6 @@ public class DrawPane extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(0,0,0,30);
-
-        JPanel jp1 = new JPanel();
-        piocheDestination = new CardButtonPane("dos-destination.jpg",-2,null);
-        jp1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        jp1.setBackground(new Color(0,0,0,64));
-        jp1.add(piocheDestination);
-        jp1.setVisible(false);
-        add(jp1,gbc);
 
         //pioche carte wagon
         gbc.gridx = 1;
@@ -116,36 +114,25 @@ public class DrawPane extends JPanel {
         add(piocheVisibleWagon,gbc);
     }
 
-    public void setMouseListener(RouteController mc){
-        addMouseListener(mc);
-    }
-
-    public JButton getPiocheDestination() {
-        return piocheDestination;
-    }
-
-    public JButton getPiocheWagon() {
-        return piocheWagon;
-    }
-
-    public JPanel getPiocheVisibleWagon() {
-        return piocheVisibleWagon;
-    }
-
-    public ArrayList<CardButtonPane> getCartesVisibles() {
-        return cartesVisibles;
-    }
+    /**
+     * fonction qui ajoute un action listener aux cartes
+     *
+     * @param gc l'action listener
+     */
     public void setActionListener(JButtonController gc){
         piocheWagon.addActionListener(gc);
-        piocheDestination.addActionListener(gc);
         for(CardButtonPane c : cartesVisibles){
             c.addActionListener(gc);
         }
     }
 
+    /**
+     * fonction qui actualise l'affichage des cartes (en cas de prise d'une carte par ex)
+     */
     public void updateCard(){
         piocheVisibleWagon.removeAll();
         cartesVisibles = new ArrayList<>();
+
         //afficher les images des cartes visibles de la pioche
         for(int i = 0; i < g.getDrawVisibleTrainCards().size(); i++){
             switch (g.getDrawVisibleTrainCards().get(i).getColor()){

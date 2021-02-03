@@ -1,6 +1,9 @@
 package Model.GameElements;
 import Model.Enum.*;
 
+/**
+ * classe qui représente une carte Wagon (cartes de couleurs qui permettent de prendre les routes)
+ */
 public class WagonCard {
     private Color color;
 

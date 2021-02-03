@@ -6,10 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * classe qui représente le panel qui affiche les scores des joueurs
+ */
 public class ScorePane extends JPanel {
-    HashMap<Player,JLabel> scoreLabels;
+    HashMap<Player,JLabel> scoreLabels; //ensemble de labels qui contiennet les infos des joueurs
     JPanel container;
 
     public ScorePane(ArrayList<Player> pl) {
@@ -45,6 +47,11 @@ public class ScorePane extends JPanel {
         add(container);
     }
 
+    /**
+     * fonction qui rafaîchit l'affichage des scores des joueurs
+     *
+     * @param players ensemble des joueurs du jeu
+     */
     public void updateScore(ArrayList<Player> players){
         //on affiche chaque joueur
         for(int i = 0; i < players.size(); i++){

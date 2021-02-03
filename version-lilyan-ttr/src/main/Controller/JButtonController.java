@@ -10,18 +10,18 @@ import View.GameView;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.HashMap;
 
 import static java.lang.System.exit;
 
+/**
+ * classe du controller des boutons du jeu
+ */
 public class JButtonController implements ActionListener {
     private Game model;
     private GameView view;
-    private Player currentPlayer;
 
+    private Player currentPlayer;
     private int currentAction = 0;
     private int nbCardTaken = 0;
     private int lastIndexTaken = -3;
@@ -53,7 +53,6 @@ public class JButtonController implements ActionListener {
             view.getButtons().getPiocherW().setEnabled(false);
             view.getButtons().getPiocherD().setEnabled(false);
             view.getButtons().getPrendreR().setEnabled(false);
-            view.getDraw().getPiocheDestination().setEnabled(false);
             view.getDraw().getPiocheWagon().setEnabled(true);
             currentAction = 1;
         }
@@ -190,7 +189,6 @@ public class JButtonController implements ActionListener {
             view.getButtons().getPiocherW().setEnabled(false);
             view.getButtons().getPiocherD().setEnabled(false);
             view.getButtons().getPrendreR().setEnabled(false);
-            view.getDraw().getPiocheDestination().setEnabled(false);
             view.getDraw().getPiocheWagon().setEnabled(false);
             if (currentAction == 0) {
                 choixCity1 = null;
@@ -262,11 +260,11 @@ public class JButtonController implements ActionListener {
 
                                 Color choixColor = chooseColor();
 
-                                getTunnel(choixColor, routeChoix);
+                                routeChoix.getTunnel(choixColor, model,currentPlayer);
                             }
                             //si la route a une couleur
                             else {
-                                getTunnel(routeChoix.getColor(), routeChoix);
+                                routeChoix.getTunnel(routeChoix.getColor(), model,currentPlayer);
                             }
                         }
                         //si c'est pas un tunnel
@@ -277,7 +275,7 @@ public class JButtonController implements ActionListener {
                                 Color choixColor = chooseColor();
 
                                 //si le joueur a pas pu prendre le ferrie
-                                if (getFerrie( choixColor, routeChoix) == -1) {
+                                if (routeChoix.getFerrie( choixColor, model, currentPlayer) == -1) {
                                     currentAction = 0;
                                     choixCity1.setEnabled(true);
                                     choixCity2.setEnabled(true);
@@ -287,7 +285,7 @@ public class JButtonController implements ActionListener {
                                 }
                             } else {
                                 //si le joueur a pas pu prendre la route
-                                if (getRoute(routeChoix.getColor(), routeChoix) == -1) {
+                                if (routeChoix.getRoute(routeChoix.getColor(), model, currentPlayer) == -1) {
                                     currentAction = 0;
                                     choixCity1.setEnabled(true);
                                     choixCity2.setEnabled(true);
@@ -339,177 +337,9 @@ public class JButtonController implements ActionListener {
             view.getButtons().getPiocherW().setEnabled(true);
             view.getButtons().getPiocherD().setEnabled(true);
             view.getButtons().getPrendreR().setEnabled(true);
-            view.getDraw().getPiocheDestination().setEnabled(true);
             view.getDraw().getPiocheWagon().setEnabled(false);
             view.updateView(model,this);
             view.repaint();
-        }
-    }
-
-
-    /**
-     * fonction qui permet de prendre un tunnel
-     * @param c Color la couleur désirée
-     * @param r Route la route désirée
-     *
-     */
-    public void getTunnel(Color c, Route r){
-        //on tire trois cartes de la pioche
-        ArrayList<WagonCard> tctmp = new ArrayList<>();
-        int k = 0;
-            for( int i = 0; i < 3; i++){
-            WagonCard tmp = model.drawTrainCard();
-            System.out.println(tmp);
-            if(tmp.getColor() == c || tmp.getColor() == Color.RAINBOW){
-                k++;
-            }
-            tctmp.add(tmp);
-        }
-
-            if( k > 0){
-            //si le joueur n'a pas assez de cartes on s'arrete la
-            if(currentPlayer.countOccurencesOf(c) < r.getRequire()+k){
-                int input = JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de carte "
-                                +c+", il en fallait "+(r.getRequire()+k),"Prendre une route",
-                        JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            }else{
-                int accept = JOptionPane.showConfirmDialog(null ,"Vous devez rajouter "+k+" carte(s)." +
-                                " Acceptez-vous ?","Prendre une route",JOptionPane.YES_NO_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE);
-
-                if(accept == JOptionPane.YES_OPTION){
-                    //on enregistre le joueur sur la route
-                    r.setPlayer(currentPlayer);
-
-                    //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-                    int nbRemovedCard = currentPlayer.removeTrainCards(c, r.getRequire()+k, model);
-                    if(nbRemovedCard < r.getRequire()+k){
-                        currentPlayer.removeTrainCards(Color.RAINBOW, (r.getRequire()+k) - nbRemovedCard, model);
-                    }
-
-                    currentPlayer.setWagons(currentPlayer.getWagons()-r.getRequire());
-                    currentPlayer.setPoints(currentPlayer.getPoints()+r.howManyPointsFor(r.getRequire()));
-                    currentPlayer.addRoute(r);
-                    Route inv = new Route(r.getDest2(),r.getDest1(), r.getRequire(), r.getColor(),r.isTunel(),r.getLocomotive());
-                    currentPlayer.addRoute(inv);
-                    JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route "+r,
-                            "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-
-        }else{
-            //on enregistre le joueur sur la route
-            r.setPlayer(currentPlayer);
-
-            //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-            int nbRemovedCard = currentPlayer.removeTrainCards(c, r.getRequire()+k, model);
-            if(nbRemovedCard < r.getRequire()+k){
-                currentPlayer.removeTrainCards(Color.RAINBOW, (r.getRequire()+k) - nbRemovedCard, model);
-            }
-
-            //on change les stats du joueur
-            currentPlayer.setWagons(currentPlayer.getWagons()-r.getRequire());
-            currentPlayer.setPoints(currentPlayer.getPoints()+r.howManyPointsFor(r.getRequire()));
-            currentPlayer.addRoute(r);
-            Route inv = new Route(r.getDest2(),r.getDest1(), r.getRequire(), r.getColor(),r.isTunel(),r.getLocomotive());
-            currentPlayer.addRoute(inv);
-            JOptionPane.showConfirmDialog(null ,"Vous n'avez pas besoin de rajouter de cartes. " +
-                            "Vous possédez désormais la route "+r,"Prendre une route",JOptionPane.OK_OPTION
-                    , JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    /**
-     * fonction qui permet de prendre un tunnel
-     * @param c Color la couleur désirée
-     * @param r Route la route désirée
-     *
-     * @return int -1 si le joueur ne pouvait prendre la route, 0 s'il l'a prise
-     */
-    public int getFerrie(Color c, Route r){
-
-        //on verifie qu'on a assez de locomotives
-        int nbLocos = currentPlayer.countOccurencesOf(Color.RAINBOW);
-        if(r.getLocomotive() > 0) {
-            if (nbLocos < r.getLocomotive()) {
-                JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de locomotive pour " +
-                                "posséder ce ferrie."+r,"Prendre une route",JOptionPane.OK_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE);
-                return -1;
-            }
-        }
-        //on verifie qu'on peut poser assez de cartes autres que les locos obligatoires
-        if(currentPlayer.countOccurencesOf(c) < r.getRequire()-r.getLocomotive()){
-            JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de cartes de couleur "+c+
-                            "  pour posséder ce ferrie.","Prendre une route",JOptionPane.OK_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE);
-            return -1;
-        }else {
-            //on vérifie si les locos a poser obligatoirement ne font pas partie des cartes pour
-            //poser le reste du chemin
-            int nbCard = currentPlayer.countWithoutRainbowOccurencesOf(c);
-            nbCard +=nbLocos;
-
-            //si on a assez de cartes loco plus d'autres cartes de couleur alors on peut prendre la route
-            if (nbCard >= r.getRequire()) {
-                r.setPlayer(currentPlayer);
-
-                //on retire les cartes de couleur c et les eventuelles cartes loco. qui ont completé le nombre de carte a avoir
-                int nbRemovedCard = currentPlayer.removeTrainCards(c, r.getRequire() - r.getLocomotive(), model);
-                if (nbRemovedCard < r.getRequire() - r.getLocomotive()) {
-                    currentPlayer.removeTrainCards(Color.RAINBOW, (r.getRequire() - r.getLocomotive()) - nbRemovedCard, model);
-                }
-
-                //on retire le nombre de carte loco qu'on devait avoir pour prendre cette route
-                currentPlayer.removeTrainCards(Color.RAINBOW, r.getLocomotive(), model);
-                JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + r,
-                        "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                currentPlayer.setWagons(currentPlayer.getWagons()-r.getRequire());
-                currentPlayer.setPoints(currentPlayer.getPoints()+r.howManyPointsFor(r.getRequire()));
-                currentPlayer.addRoute(r);
-                Route inv = new Route(r.getDest2(),r.getDest1(), r.getRequire(), r.getColor(),r.isTunel(),r.getLocomotive());
-                currentPlayer.addRoute(inv);
-                return 0;
-            } else {
-                JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de Locomotives pour " +
-                                "prendre cette route.","Prendre une route",JOptionPane.OK_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE);
-                return -1;
-            }
-        }
-    }
-
-    /**
-     * fonction qui permet de prendre un tunnel
-     * @param c Color la couleur désirée
-     * @param r Route la route désirée
-     *
-     * @return int -1 si le joueur ne pouvait prendre la route, 0 s'il l'a prise
-     */
-    public int getRoute(Color c, Route r){
-        //si le joueur n'a pas assez de cartes on s'arrete la
-        if(currentPlayer.countOccurencesOf(c) < r.getRequire()){
-            JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de cartes pour posséder " +
-                            "cette route.","Prendre une route",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
-            return -1;
-        }else {
-            //on enregistre le joueur sur la route
-            r.setPlayer(currentPlayer);
-
-            //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-            int nbRemovedCard = currentPlayer.removeTrainCards(c, r.getRequire(), model);
-            if (nbRemovedCard < r.getRequire()) {
-                currentPlayer.removeTrainCards(Color.RAINBOW, (r.getRequire()) - nbRemovedCard, model);
-            }
-            System.out.println();
-            JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + r,
-                    "Prendre une route",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
-            currentPlayer.setWagons(currentPlayer.getWagons()-r.getRequire());
-            currentPlayer.setPoints(currentPlayer.getPoints()+r.howManyPointsFor(r.getRequire()));
-            currentPlayer.addRoute(r);
-            Route inv = new Route(r.getDest2(),r.getDest1(), r.getRequire(), r.getColor(),r.isTunel(),r.getLocomotive());
-            currentPlayer.addRoute(inv);
-            return 0;
         }
     }
 
@@ -528,6 +358,7 @@ public class JButtonController implements ActionListener {
                 "Choix d'une couleur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
         return (Color) colorList.getSelectedItem();
     }
+
     /**
      * fonction qui permet de choisir une couleur graphiquement
      * @return Color la couleur choisie

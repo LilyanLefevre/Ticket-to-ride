@@ -2,9 +2,18 @@ package Model.GameElements;
 
 import java.util.*;
 
+/**
+ * classe qui représente une ville
+ */
 public class City {
     private String name;
     private Coordonnees c;
+
+    /**
+     * cet attibrut contient toutes les villes reliées par la ville courante
+     * et stocke une route pour chacun des couples composés de la ville courante
+     * et de chaque ville de l'ensemble
+     */
     private HashMap<City, Route> routesFrom;
 
     public City(String name){
@@ -25,15 +34,6 @@ public class City {
         return routesFrom;
     }
 
-    public void addRoute(Route r, City to){
-        //s'il n'y aucune route associée à cette destination
-        //on initialise l'ensemble de routes
-        if(routesFrom.get(to) == null){
-            //puis on enregistre la route pour la ville concernée
-            routesFrom.put(to,r);
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,6 +52,28 @@ public class City {
         return this.name;
     }
 
+    /**
+     * fonction qui permet d'ajouter une route qui relie la ville
+     * courant à la ville donnée en paramètre
+     *
+     * @param r la route à ajouter
+     * @param to la ville reliée
+     */
+    public void addRoute(Route r, City to){
+        //s'il n'y aucune route associée à cette destination
+        //on initialise l'ensemble de routes
+        if(routesFrom.get(to) == null){
+            //puis on enregistre la route pour la ville concernée
+            routesFrom.put(to,r);
+        }
+    }
+
+    /**
+     * fonction qui retourne un string représentant toutes les routes qui partent de la ville
+     * courante
+     *
+     * @return un String avec toutes les routes
+     */
     public String routesFromToString(){
         String ret = "";
         Iterator it = routesFrom.entrySet().iterator();

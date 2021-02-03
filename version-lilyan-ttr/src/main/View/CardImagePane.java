@@ -1,27 +1,16 @@
 package View;
 
-import Model.Enum.Color;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
+/**
+ * classe qui représente une image de carte non clickable
+ */
 public class CardImagePane extends JLabel {
-    private static final long   serialVersionUID    = 1L;
     protected ImageIcon buffer;
-    private Model.Enum.Color couleur;
 
-    public Color getCouleur() {
-        return couleur;
-    }
 
-    public CardImagePane(String name, Model.Enum.Color c, final int nb){
-        couleur = c;
+    public CardImagePane(String name, final int nb){
 
         setPreferredSize(new Dimension(120,210));
         setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -35,7 +24,7 @@ public class CardImagePane extends JLabel {
         Image newimg = image.getScaledInstance(110, 190,  java.awt.Image.SCALE_SMOOTH);
         buffer = new ImageIcon(newimg);
 
-        //on met l'imafe
+        //on met l'image et son nb d'occurence
         setIcon(buffer);
         setText(""+nb);
 

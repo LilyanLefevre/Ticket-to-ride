@@ -1,16 +1,17 @@
 package View;
 
-import Controller.RouteController;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * classe du panel qui contient tous les boutons d'actions du jeu
+ */
 public class ButtonPane extends JPanel {
-    private JButton piocherW;
-    private JButton piocherD;
-    private JButton prendreR;
-    private JButton quitter;
+    private JButton piocherW; //bouton pioche carte wagon
+    private JButton piocherD; //bouton pioche carte destination
+    private JButton prendreR; //bouton prendre une route
+    private JButton quitter; //bouton quitter le jeu
 
     public JButton getPiocherW() {
         return piocherW;
@@ -54,6 +55,11 @@ public class ButtonPane extends JPanel {
         add(new JLabel());
     }
 
+    /**
+     * ajoute un actionListener aux boutons
+     *
+     * @param ac le listener
+     */
     public void setActionListener(ActionListener ac){
         piocherD.addActionListener(ac);
         piocherW.addActionListener(ac);
@@ -61,10 +67,4 @@ public class ButtonPane extends JPanel {
         quitter.addActionListener(ac);
     }
 
-    public void setMouseListener(RouteController mc) {
-        piocherD.addMouseListener(mc);
-        piocherW.addMouseListener(mc);
-        prendreR.addMouseListener(mc);
-        quitter.addMouseListener(mc);
-    }
 }

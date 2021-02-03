@@ -2,20 +2,16 @@ package View;
 
 import Model.Enum.Color;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
+/**
+ * classe qui représente un bouton avec un image de carte en fond
+ */
 public class CardButtonPane extends JButton {
-    private static final long   serialVersionUID    = 1L;
-    protected ImageIcon buffer;
-    private int index;
-    private Color couleur;
+    protected ImageIcon buffer; // l'image
+    private int index; //l'indexe de la carte représenté dans son ensemble source
+    private Color couleur; // la couleur de la carte
 
     public Color getCouleur() {
         return couleur;

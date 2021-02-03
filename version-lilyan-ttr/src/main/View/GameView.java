@@ -9,18 +9,42 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * classe qui représente la vue du jeu
+ */
 public class GameView extends JFrame{
     private Game g;
     private GridBagConstraints gbc = new GridBagConstraints();
     private JPanel container;
-    private BoardPane board;
-    private ScorePane score;
-    private DrawPane draw;
-    private ActualPlayerPane playerView;
-    private ButtonPane buttons;
+    private BoardPane board; //le plateau avec les villes et les routes
+    private ScorePane score; //les scores
+    private DrawPane draw; //la pioche
+    private ActualPlayerPane playerView; //la vue du joueur actuel
+    private ButtonPane buttons; //les boutons
     public boolean fini = false;
 
-    public GameView(final Game ga) throws IOException {
+    public BoardPane getBoard() {
+        return board;
+    }
+
+    public DrawPane getDraw() {
+        return draw;
+    }
+
+    public ActualPlayerPane getPlayerView() {
+        return playerView;
+    }
+
+    public ButtonPane getButtons() {
+        return buttons;
+    }
+
+    public void setGbc(GridBagConstraints gbc) {
+        this.gbc = gbc;
+    }
+
+
+    public GameView(final Game ga){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -89,68 +113,33 @@ public class GameView extends JFrame{
         });
     }
 
-
-
-    public GridBagConstraints getGbc() {
-        return gbc;
-    }
-
-    public void setGbc(GridBagConstraints gbc) {
-        this.gbc = gbc;
-    }
-
-    public JPanel getContainer() {
-        return container;
-    }
-
-    public void setContainer(JPanel container) {
-        this.container = container;
-    }
-
-    public BoardPane getBoard() {
-        return board;
-    }
-
-    public ScorePane getScore() {
-        return score;
-    }
-
-    public void setScore(ScorePane score) {
-        this.score = score;
-    }
-
-    public DrawPane getDraw() {
-        return draw;
-    }
-
-    public void setDraw(DrawPane draw) {
-        this.draw = draw;
-    }
-
-    public ActualPlayerPane getPlayerView() {
-        return playerView;
-    }
-
-    public void setPlayerView(ActualPlayerPane playerView) {
-        this.playerView = playerView;
-    }
-
-    public ButtonPane getButtons() {
-        return buttons;
-    }
-
+    /**
+     * fonction qui ajoute un controller aux panels qui composent la vue
+     *
+     * @param gc le controller
+     */
     public void setActionListener(JButtonController gc){
         board.setActionListener(gc);
         buttons.setActionListener(gc);
         draw.setActionListener(gc);
-        /*score.setActionListener(gc)*/;
-
         playerView.setActionListener(gc);
     }
+
+    /**
+     * fonction qui ajoute un listener de souris aux panels qui en ont besoin
+     *
+     * @param mc le listener
+     */
     public void setRouteListener(RouteController mc){
         board.setMouseListener(mc);
     }
 
+    /**
+     * fonction qui rafraichit la vue
+     *
+     * @param g Game le jeu
+     * @param jc le controller de boutons
+     */
     public void updateView(Game g,JButtonController jc){
         score.updateScore(g.getPlayers());
         playerView.updateCard(g.getCurrentPlayer());

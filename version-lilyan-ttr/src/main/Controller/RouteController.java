@@ -1,7 +1,5 @@
 package Controller;
 
-import Model.Game;
-import Model.GameElements.Player;
 import Model.GameElements.Route;
 import View.GameView;
 
@@ -9,15 +7,14 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * classe de l'écouteur de la souris qui va permettre de cliquer sur une route
+ */
 public class RouteController implements MouseListener {
-    private Game model;
     private GameView view;
-    private Player currentPlayer;
 
-    public RouteController(Game g, GameView gv) {
-        model = g;
+    public RouteController(GameView gv) {
         view = gv;
-        currentPlayer = g.getPlayers().get(0);
     }
 
     /**
@@ -31,8 +28,10 @@ public class RouteController implements MouseListener {
         Route r = view.getBoard().getRouteClicked(e);
         if(r != null){
             System.out.println("vous avez cliqué sur la route entre "+r.getDest1()+" et "+r.getDest2());
-            int input = JOptionPane.showConfirmDialog(null ,"Cette route relie "+r.getDest1()+" à "+r.getDest2()+". Elle est de couleur "+r.getColor()+" " +
-                            "et il faut "+r.getRequire()+" wagons pour la prendre.", r.getDest1()+" à "+r.getDest2(),JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            int input = JOptionPane.showConfirmDialog(null ,"Cette route relie "+r.getDest1()+
+                    " à "+r.getDest2()+". Elle est de couleur "+r.getColor()+" " +"et il faut "+r.getRequire()+
+                    " wagons pour la prendre.", r.getDest1()+" à "+r.getDest2()
+                    ,JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -43,7 +42,6 @@ public class RouteController implements MouseListener {
      */
     @Override
     public void mousePressed(MouseEvent e) {
-        //System.out.println("souris pressée");
     }
 
     /**
@@ -53,7 +51,6 @@ public class RouteController implements MouseListener {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
-        //System.out.println("souris relachée");
     }
 
     /**
@@ -63,7 +60,6 @@ public class RouteController implements MouseListener {
      */
     @Override
     public void mouseEntered(MouseEvent e) {
-        //System.out.println("souris entrée");
     }
 
     /**
@@ -73,6 +69,5 @@ public class RouteController implements MouseListener {
      */
     @Override
     public void mouseExited(MouseEvent e) {
-        //System.out.println("souris sortie");
     }
 }

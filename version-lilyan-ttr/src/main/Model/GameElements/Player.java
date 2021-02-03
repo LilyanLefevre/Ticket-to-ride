@@ -1,20 +1,20 @@
 package Model.GameElements;
 import Model.Game;
 
-import java.awt.*;
 import java.awt.Color;
 import java.util.ArrayList;
-import Model.Enum.*;
 
+/**
+ * classe représentant un joueur du jeu
+ */
 public class Player {
-    private final String name;
-    // A MODIFIER
-    private ArrayList<Route> routesEmpruntes;
-    private ArrayList<WagonCard> wCards;
-    private ArrayList<DestinationCard> dCards;
-    private int points;
-    private int wagons;
-    private final Color color;
+    private final String name; //son nom
+    private ArrayList<Route> routesEmpruntes; //les routes qu'il possède
+    private ArrayList<WagonCard> wCards; //ses cartes wagons
+    private ArrayList<DestinationCard> dCards; //ses cartes destination
+    private int points; //ses points
+    private int wagons; //son nombre de wagons restants
+    private final Color color; //sa couleur
 
     public String getName() {
         return name;
@@ -30,18 +30,6 @@ public class Player {
 
     public ArrayList<Route> getRoutesEmpruntes(){return routesEmpruntes;}
 
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public void setWagons(int wagons) {
-        this.wagons = wagons;
-    }
-
-    public void addRoute(Route r1){
-        this.routesEmpruntes.add(r1);
-    }
-
     public ArrayList<WagonCard> getwCards() {
         return wCards;
     }
@@ -54,6 +42,13 @@ public class Player {
         return color;
     }
 
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setWagons(int wagons) {
+        this.wagons = wagons;
+    }
 
     public Player(String name, Color color, ArrayList<DestinationCard> dc, ArrayList<WagonCard> tc) {
         this.name = name;
@@ -96,6 +91,41 @@ public class Player {
         return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+"\n";
     }
 
+
+    /**
+     * fonction qui ajoute une route au tableau de routes empruntées par le joueur
+     *
+     * @param r1 Route la route à ajouter
+     */
+    public void addRoute(Route r1){
+        this.routesEmpruntes.add(r1);
+    }
+
+    /**
+     * fonction qui ajoute une carte wagon à l'ensemble de carte wagon du joueur
+     *
+     * @param tc WagonCard la carte à ajouter
+     */
+    public void addTrainCard(WagonCard tc){
+        wCards.add(tc);
+    }
+
+    /**
+     * fonction qui ajoute une carte destination à l'ensemble de carte destination du joueur
+     *
+     * @param dc DestinationCard la carte à ajouter
+     */
+    public void addDestinationCard(DestinationCard dc){
+        dCards.add(dc);
+    }
+
+    /**
+     * fonction qui permet au joueur de piocher une carte wagon dans la pioche et la retourne
+     *
+     * @param tc l'ensemble de cartes wagon qui composent la pioche
+     *
+     * @return une carte tirée au hasard dedans
+     */
     public WagonCard drawTrainCard(ArrayList<WagonCard> tc){
         int nCard = (int)(Math.random() * (tc.size()));
 
@@ -109,6 +139,13 @@ public class Player {
         return tmp;
     }
 
+    /**
+     * fonction qui permet au joueur de piocher une carte destination dans la pioche et la retourne
+     *
+     * @param dc l'ensemble de cartes destination qui composent la pioche
+     *
+     * @return une carte tirée au hasard dedans
+     */
     public DestinationCard drawDestinationCard(ArrayList<DestinationCard> dc){
         int nCard = (int)(Math.random() * (dc.size()));
 
@@ -122,12 +159,6 @@ public class Player {
         return tmp;
     }
 
-    public void addTrainCard(WagonCard tc){
-        wCards.add(tc);
-    }
-    public void addDestinationCard(DestinationCard dc){
-        dCards.add(dc);
-    }
 
     /**
      * fonction qui permet de compter le nombre de carte d'une certaine couleur

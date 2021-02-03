@@ -2,19 +2,21 @@ package Model.GameElements;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import Model.Enum.Color;
-import Model.Game;
 
+/**
+ * classe qui représente un ensemble de villes composant le jeu
+ */
 public class Destinations {
     private HashMap<String, City> destinations;
     private ArrayList<Route> routes;
+
+    /* variables servant aux différents appels récursifs pour la fonction construireChemin */
     private ArrayList<String> names;
     private ArrayList<Route> rEmpruntees;
 
@@ -24,21 +26,10 @@ public class Destinations {
         rEmpruntees = new ArrayList<>();
         genererDestination();
         genererRoutes();
-//        genererDoubleRoute();
     }
 
     public City getCity(String name){
         return destinations.get(name);
-    }
-
-    public void addDestination(City d) {
-        this.destinations.put(d.getName(),d);
-    }
-
-    //A MODIFIER
-    public void addRoute(Route r) {
-        this.destinations.get(r.getDest1().getName()).addRoute(r, r.getDest2());
-        routes.add(r);
     }
 
     public HashMap<String, City> getDestinations() {
@@ -46,13 +37,35 @@ public class Destinations {
     }
 
     /**
-     * fonction qui genere entre 35 et 45 villes
+     * fonction ajoutant une ville à l'ensemble
+     *
+     * @param d City la ville à ajouter
+     */
+    public void addDestination(City d) {
+        this.destinations.put(d.getName(),d);
+    }
+
+    /**
+     * fonction ajoutant une route à une ville de l'ensemble
+     *
+     * @param r Route la route à ajouter
+     */
+    public void addRoute(Route r) {
+        this.destinations.get(r.getDest1().getName()).addRoute(r, r.getDest2());
+        routes.add(r);
+    }
+
+
+    /**
+     * fonction qui genere entre 35 et 40 villes
      * et qui construit leur nom en piochant dans un dictionnaire de prefixes et
      * de suffixes
      */
     private void genererDestination() {
+        /* fichier où se trouvent les prefixes et les suffixes */
         String prefixe = "./txt/prefixes.txt";
         String suffixe = "./txt/suffixes.txt";
+
         List<String> lines = new ArrayList<>();
         List<String> linessuff = new ArrayList<>();
         int count = 0;
@@ -118,6 +131,8 @@ public class Destinations {
      * en évitant les croisements de villes/routes
      */
     private void genererRoutes(){
+        //on enregistre les couleurs dans un tableau pour pouvoir compter
+        //leur nombre d'utilisation
         ArrayList<Line2D>TabRoutes = new ArrayList<>();
         HashMap<Integer, Color> randomColor = new HashMap<>();
         randomColor.put(0,Color.WHITE);
@@ -152,8 +167,7 @@ public class Destinations {
     }
 
     /**
-     * double un certain nombre routes suivant leur fréquence d'utilisation
-     *
+     * double 10 routes suivant leur fréquence d'utilisation
      */
     public void genererDoubleRoute(){
         //on construit tous les couples v1-v2 afin de relier chaque villes entre elles
@@ -210,6 +224,15 @@ public class Destinations {
         }
     }
 
+    /**
+     * fonction servant à générer des routes pour relier toutes les villes ensemble
+     * @param from
+     * @param TabRoutes
+     * @param CountColor
+     * @param randomColor
+     * @param nbtour
+     * @param compteur
+     */
     public void GenererFirstRoute(City from, ArrayList<Line2D>TabRoutes,ArrayList<Integer>CountColor,HashMap<Integer, Color> randomColor, int nbtour, int compteur){
         int x1 = from.getCoordonnees().getX();
         int y1 = from.getCoordonnees().getY();
@@ -273,6 +296,14 @@ public class Destinations {
         }
     }
 
+    /**
+     * fonction servant à générer des routes pour ...
+     * @param from
+     * @param TabRoutes
+     * @param CountColor
+     * @param randomColor
+     * @param count
+     */
     public void GenererLastRoute(City from, ArrayList<Line2D>TabRoutes,ArrayList<Integer>CountColor,HashMap<Integer, Color> randomColor, int count){
         boolean enter = false;
         Line2D lenreg = null;
@@ -397,33 +428,13 @@ public class Destinations {
     }
 
     /**
-     * saisie d'une destination existante
+     * fonction retourne le Point2D où se croisent les deux lignes
      *
-     * @return City une destination existante
+     * @param a Line2D la première ligne
+     * @param b Line2D la deuxième ligne
+     *
+     * @return Point2D le point d'intersection
      */
-    public City saisieDestination(){
-        String choix = "";
-        Scanner entree =   new Scanner(System.in);
-
-        try{
-            choix = entree.next();
-        }catch (InputMismatchException e){
-            entree.next();
-        }
-        //verif de la saisie
-        boolean exist = destinations.containsKey(choix);
-        while(!exist) {
-            System.out.println("Bad city. Try again.");
-            try {
-                choix = entree.next();
-            } catch (InputMismatchException e) {
-                entree.next();
-            }
-            exist = destinations.containsKey(choix);
-        }
-        return destinations.get(choix);
-    }
-
     public static Point2D intersection(Line2D a, Line2D b) {
         double x1 = a.getX1(), y1 = a.getY1(), x2 = a.getX2(), y2 = a.getY2(), x3 = b.getX1(), y3 = b.getY1(),
                 x4 = b.getX2(), y4 = b.getY2();

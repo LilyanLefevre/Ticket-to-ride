@@ -21,7 +21,7 @@ public class TicketToRide {
         }
 
         //on ajoute les controlleurs
-        RouteController mc = new RouteController(g,gv);
+        RouteController mc = new RouteController(gv);
         gv.setRouteListener(mc);
         JButtonController gc = new JButtonController(g,gv);
         gv.setActionListener(gc);

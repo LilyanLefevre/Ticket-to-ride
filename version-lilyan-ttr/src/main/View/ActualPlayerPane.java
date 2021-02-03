@@ -11,55 +11,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * classe qui représente le panel qui affiche les cartes du joueur actuel
+ */
 public class ActualPlayerPane extends JPanel {
-    private HashMap<Model.Enum.Color, Integer> occurencesCouleur;
+    private HashMap<Model.Enum.Color, Integer> occurencesCouleur; //map ou ono enregistre les occurences des cartes du joueur
     private JLabel name;
     private JPanel cardWagonPanel;
     private JPanel cardDestinationPanel;
     private JButton objButton;
 
-    public HashMap<Model.Enum.Color, Integer> getOccurencesCouleur() {
-        return occurencesCouleur;
-    }
-
-    public void setOccurencesCouleur(HashMap<Model.Enum.Color, Integer> occurencesCouleur) {
-        this.occurencesCouleur = occurencesCouleur;
-    }
-
-    public JLabel getNamePlayer() {
-        return name;
-    }
-
     public JButton getObjButton() {
         return objButton;
     }
 
-    public void setName(JLabel name) {
-        this.name = name;
-    }
-
-    public JPanel getCardWagonPanel() {
-        return cardWagonPanel;
-    }
-
-    public void setCardWagonPanel(JPanel cardWagonPanel) {
-        this.cardWagonPanel = cardWagonPanel;
-    }
-
-    public JPanel getCardDestinationPanel() {
-        return cardDestinationPanel;
-    }
-
-    public void setCardDestinationPanel(JPanel cardDestinationPanel) {
-        this.cardDestinationPanel = cardDestinationPanel;
-    }
-
-
     public ActualPlayerPane(Player p) {
-        //setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
-
         setLayout(new BorderLayout(0,50));
-        //setPreferredSize(new Dimension(600,500));
         setBorder(BorderFactory.createLineBorder(Color.black));
 
         occurencesCouleur = new HashMap<>();
@@ -89,39 +56,39 @@ public class ActualPlayerPane extends JPanel {
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
-                    CardImagePane im = new CardImagePane("wagon-rouge.jpg",Model.Enum.Color.RED,((Integer)couleur.getValue()));
+                    CardImagePane im = new CardImagePane("wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLACK:
-                    im = new CardImagePane("wagon-noir.jpg",Model.Enum.Color.BLACK,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-noir.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLUE:
-                    im = new CardImagePane("wagon-bleu.jpg",Model.Enum.Color.BLUE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-bleu.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case GREEN:
-                    im = new CardImagePane("wagon-vert.jpg",Model.Enum.Color.GREEN,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-vert.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case WHITE:
-                    im = new CardImagePane("wagon-blanc.jpg",Model.Enum.Color.WHITE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-blanc.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case ORANGE:
-                    im = new CardImagePane("wagon-orange.jpg",Model.Enum.Color.ORANGE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-orange.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case PURPLE:
-                    im = new CardImagePane("wagon-violet.jpg",Model.Enum.Color.PURPLE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-violet.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case YELLOW:
-                    im = new CardImagePane("wagon-jaune.jpg",Model.Enum.Color.YELLOW,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-jaune.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case RAINBOW:
-                    im = new CardImagePane("locomotive.jpg",Model.Enum.Color.RAINBOW,((Integer)couleur.getValue()));
+                    im = new CardImagePane("locomotive.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 default:
@@ -137,10 +104,21 @@ public class ActualPlayerPane extends JPanel {
         cardDestinationPanel.add(objButton);
         add(cardDestinationPanel,BorderLayout.SOUTH);
     }
+
+    /**
+     * fonction qui ajoute un actionListener aux boutons du panel
+     *
+     * @param mc le controleur à ajouter
+     */
     public void setActionListener(JButtonController mc){
         objButton.addActionListener(mc);
     }
 
+    /**
+     * fonction qui recharge l'affichage des cartes du joueur (quand il prend une carte par ex)
+     *
+     * @param p le joueur à actualiser
+     */
     public void updateCard(Player p){
         name.setText("<html><u>Tour de "+p.getName()+"</u></html>");
 
@@ -159,39 +137,39 @@ public class ActualPlayerPane extends JPanel {
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
-                    CardImagePane im = new CardImagePane("wagon-rouge.jpg",Model.Enum.Color.RED,((Integer)couleur.getValue()));
+                    CardImagePane im = new CardImagePane("wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLACK:
-                    im = new CardImagePane("wagon-noir.jpg",Model.Enum.Color.BLACK,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-noir.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLUE:
-                    im = new CardImagePane("wagon-bleu.jpg",Model.Enum.Color.BLUE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-bleu.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case GREEN:
-                    im = new CardImagePane("wagon-vert.jpg",Model.Enum.Color.GREEN,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-vert.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case WHITE:
-                    im = new CardImagePane("wagon-blanc.jpg",Model.Enum.Color.WHITE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-blanc.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case ORANGE:
-                    im = new CardImagePane("wagon-orange.jpg",Model.Enum.Color.ORANGE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-orange.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case PURPLE:
-                    im = new CardImagePane("wagon-violet.jpg",Model.Enum.Color.PURPLE,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-violet.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case YELLOW:
-                    im = new CardImagePane("wagon-jaune.jpg",Model.Enum.Color.YELLOW,((Integer)couleur.getValue()));
+                    im = new CardImagePane("wagon-jaune.jpg", ((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case RAINBOW:
-                    im = new CardImagePane("locomotive.jpg",Model.Enum.Color.RAINBOW,((Integer)couleur.getValue()));
+                    im = new CardImagePane("locomotive.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 default:

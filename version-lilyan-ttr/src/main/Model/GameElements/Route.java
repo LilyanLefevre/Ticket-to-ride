@@ -3,8 +3,12 @@ import Model.Enum.*;
 import Model.Game;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
+/**
+ * classe qui représente une route dans le jeu
+ */
 public class Route implements Comparable{
     // A MODIFIER
     //représentent les deux destination réliées par cette route
@@ -29,7 +33,6 @@ public class Route implements Comparable{
     //enregistre le nombre de fois où on utilise la route pour rejoindre deux villes
     private int freqUtilisation;
 
-    //A MODIFIER
     public Route(City from, City to, int require, Color color, boolean isTunel, int locomotive) {
         this.dest1 = from;
         this.dest2 = to;
@@ -44,15 +47,9 @@ public class Route implements Comparable{
     public int getRequire() {
         return require;
     }
-
     public int getFreqUtilisation() {
         return freqUtilisation;
     }
-
-    public void setFreqUtilisation(int freqUtilisation) {
-        this.freqUtilisation = freqUtilisation;
-    }
-
     public City getDest1() {
         return dest1;
     }
@@ -62,14 +59,22 @@ public class Route implements Comparable{
     public Color getColor() {
         return color;
     }
-
     public boolean isTunel() {
         return isTunel;
     }
-
     public int getLocomotive() {
         return locomotive;
     }
+    public Player getPlayer() {
+        return hasPlayerOn;
+    }
+    public void setPlayer(Player p) {
+        this.hasPlayerOn = p;
+    }
+    public void setFreqUtilisation(int freqUtilisation) {
+        this.freqUtilisation = freqUtilisation;
+    }
+
 
     /**
      * tells if there is somebody on this route
@@ -80,12 +85,6 @@ public class Route implements Comparable{
         return hasPlayerOn != null;
     }
 
-    public void setPlayer(Player p) {
-        this.hasPlayerOn = p;
-    }
-    public Player getPlayer() {
-        return hasPlayerOn;
-    }
 
     /**
      * Answers a string containing a concise, human-readable
@@ -98,12 +97,23 @@ public class Route implements Comparable{
         return "with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
     }
 
-    public int getTunnel(Player p, Color c, Game g){
+
+    @Override
+    public int compareTo(@NotNull Object o) {
+        return ((Route)o).getFreqUtilisation() - this.getFreqUtilisation();
+    }
+
+    /**
+     * fonction qui permet de prendre un tunnel graphiquement
+     * @param c Color la couleur désirée
+     *
+     */
+    public void getTunnel(Color c, Game model, Player currentPlayer){
         //on tire trois cartes de la pioche
         ArrayList<WagonCard> tctmp = new ArrayList<>();
         int k = 0;
         for( int i = 0; i < 3; i++){
-            WagonCard tmp = g.drawTrainCard();
+            WagonCard tmp = model.drawTrainCard();
             System.out.println(tmp);
             if(tmp.getColor() == c || tmp.getColor() == Color.RAINBOW){
                 k++;
@@ -113,118 +123,154 @@ public class Route implements Comparable{
 
         if( k > 0){
             //si le joueur n'a pas assez de cartes on s'arrete la
-            if(p.countOccurencesOf(c) < this.getRequire()+k){
-                System.out.println("Vous devez rajouter "+k+" carte(s) mais vous n'en avez pas assez. Raté !");
-                return 0;
+            if(currentPlayer.countOccurencesOf(c) < this.getRequire()+k){
+                int input = JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de carte "
+                                +c+", il en fallait "+(this.getRequire()+k),"Prendre une route",
+                        JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
             }else{
-                System.out.println("Vous devez rajouter "+k+" carte(s). Acceptez-vous ? (O/N)");
-                boolean accept = g.saisieOuiNon();
+                int accept = JOptionPane.showConfirmDialog(null ,"Vous devez rajouter "+k+" carte(s)." +
+                                " Acceptez-vous ?","Prendre une route",JOptionPane.YES_NO_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE);
 
-                if(accept){
+                if(accept == JOptionPane.YES_OPTION){
                     //on enregistre le joueur sur la route
-                    this.setPlayer(p);
+                    this.setPlayer(currentPlayer);
 
                     //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-                    int nbRemovedCard = p.removeTrainCards(c, this.getRequire()+k, g);
+                    int nbRemovedCard = currentPlayer.removeTrainCards(c, this.getRequire()+k, model);
                     if(nbRemovedCard < this.getRequire()+k){
-                        p.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, g);
+                        currentPlayer.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, model);
                     }
-                    System.out.println("Vous possédez désormais la route "+this);
-                    p.setWagons(p.getWagons()-this.getRequire());
-                    p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
-                    return 0;
+
+                    currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
+                    currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
+                    currentPlayer.addRoute(this);
+                    Route inv = new Route(this.getDest2(),this.getDest1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
+                    currentPlayer.addRoute(inv);
+                    JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route "+this,
+                            "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 }
-                return -1;
             }
 
         }else{
             //on enregistre le joueur sur la route
-            this.setPlayer(p);
+            this.setPlayer(currentPlayer);
 
             //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-            int nbRemovedCard = p.removeTrainCards(c, this.getRequire()+k, g);
+            int nbRemovedCard = currentPlayer.removeTrainCards(c, this.getRequire()+k, model);
             if(nbRemovedCard < this.getRequire()+k){
-                p.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, g);
+                currentPlayer.removeTrainCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, model);
             }
 
-            System.out.println("Vous n'avez pas besoin de rajouter de cartes, bravo!\nVous possédez désormais la route "+this);
-            p.setWagons(p.getWagons()-this.getRequire());
-            p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
-            return 0;
+            //on change les stats du joueur
+            currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
+            currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
+            currentPlayer.addRoute(this);
+            Route inv = new Route(this.getDest2(),this.getDest1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
+            currentPlayer.addRoute(inv);
+            JOptionPane.showConfirmDialog(null ,"Vous n'avez pas besoin de rajouter de cartes. " +
+                            "Vous possédez désormais la route "+this,"Prendre une route",JOptionPane.OK_OPTION
+                    , JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
-    public int getRoute(Player p, Color c, Game g){
-        //si le joueur n'a pas assez de cartes on s'arrete la
-        if(p.countOccurencesOf(c) < this.getRequire()){
-            System.out.println("Vous n'avez pas assez de cartes pour posséder cette route.");
-            return -1;
-        }else {
-            //on enregistre le joueur sur la route
-            this.setPlayer(p);
-
-            //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
-            int nbRemovedCard = p.removeTrainCards(c, this.getRequire(), g);
-            if (nbRemovedCard < this.getRequire()) {
-                p.removeTrainCards(Color.RAINBOW, (this.getRequire()) - nbRemovedCard, g);
-            }
-            System.out.println("Vous possédez désormais la route " + this);
-            p.setWagons(p.getWagons()-this.getRequire());
-            p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
-            return 0;
-        }
-    }
-    public int getFerrie(Player p, Color c, Game g){
-        Player tmp = p;
+    /**
+     * fonction qui permet de prendre un ferrie graphiquement
+     * @param c Color la couleur désirée
+     *
+     * @return int -1 si le joueur ne pouvait prendre la route, 0 s'il l'a prise
+     */
+    public int getFerrie(Color c, Game model, Player currentPlayer){
 
         //on verifie qu'on a assez de locomotives
-        int nbLocos = p.countOccurencesOf(Color.RAINBOW);
-        if(getLocomotive() > 0) {
+        int nbLocos = currentPlayer.countOccurencesOf(Color.RAINBOW);
+        if(this.getLocomotive() > 0) {
             if (nbLocos < this.getLocomotive()) {
-                System.out.println("Vous n'avez pas assez de locomotive pour posséder ce ferrie.");
+                JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de locomotive pour " +
+                                "posséder ce ferrie."+this,"Prendre une route",JOptionPane.OK_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE);
                 return -1;
             }
         }
         //on verifie qu'on peut poser assez de cartes autres que les locos obligatoires
-        if(p.countOccurencesOf(c) < getRequire()-getLocomotive()){
-            System.out.println("Vous n'avez pas assez de cartes de couleur "+c+"  pour posséder ce ferrie.");
+        if(currentPlayer.countOccurencesOf(c) < this.getRequire()-this.getLocomotive()){
+            JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de cartes de couleur "+c+
+                            "  pour posséder ce ferrie.","Prendre une route",JOptionPane.OK_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE);
             return -1;
         }else {
             //on vérifie si les locos a poser obligatoirement ne font pas partie des cartes pour
             //poser le reste du chemin
-            int nbCard = p.countWithoutRainbowOccurencesOf(c);
+            int nbCard = currentPlayer.countWithoutRainbowOccurencesOf(c);
             nbCard +=nbLocos;
 
             //si on a assez de cartes loco plus d'autres cartes de couleur alors on peut prendre la route
-            if (nbCard >= getRequire()) {
-                this.setPlayer(p);
+            if (nbCard >= this.getRequire()) {
+                this.setPlayer(currentPlayer);
 
                 //on retire les cartes de couleur c et les eventuelles cartes loco. qui ont completé le nombre de carte a avoir
-                int nbRemovedCard = p.removeTrainCards(c, this.getRequire() - getLocomotive(), g);
-                if (nbRemovedCard < this.getRequire() - getLocomotive()) {
-                    p.removeTrainCards(Color.RAINBOW, (this.getRequire() - getLocomotive()) - nbRemovedCard, g);
+                int nbRemovedCard = currentPlayer.removeTrainCards(c, this.getRequire() - this.getLocomotive(), model);
+                if (nbRemovedCard < this.getRequire() - this.getLocomotive()) {
+                    currentPlayer.removeTrainCards(Color.RAINBOW, (this.getRequire() - this.getLocomotive()) - nbRemovedCard, model);
                 }
 
                 //on retire le nombre de carte loco qu'on devait avoir pour prendre cette route
-                p.removeTrainCards(Color.RAINBOW, getLocomotive(), g);
-                System.out.println("Vous possédez désormais la route " + this);
-                p.setWagons(p.getWagons()-this.getRequire());
-                p.setPoints(p.getPoints()+howManyPointsFor(this.getRequire()));
+                currentPlayer.removeTrainCards(Color.RAINBOW, this.getLocomotive(), model);
+                JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + this,
+                        "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
+                currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
+                currentPlayer.addRoute(this);
+                Route inv = new Route(this.getDest2(),this.getDest1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
+                currentPlayer.addRoute(inv);
                 return 0;
             } else {
-                System.out.println("Vous n'avez pas assez de Locomotives pour prendre cette route.");
+                JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de Locomotives pour " +
+                                "prendre cette route.","Prendre une route",JOptionPane.OK_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE);
                 return -1;
             }
         }
     }
 
     /**
+     * fonction qui permet de prendre une route normale graphiquement
+     * @param c Color la couleur désirée
+     *
+     * @return int -1 si le joueur ne pouvait prendre la route, 0 s'il l'a prise
+     */
+    public int getRoute(Color c, Game model, Player currentPlayer) {
+        //si le joueur n'a pas assez de cartes on s'arrete la
+        if(currentPlayer.countOccurencesOf(c) < this.getRequire()){
+            JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de cartes pour posséder " +
+                    "cette route.","Prendre une route",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+            return -1;
+        }else {
+            //on enregistre le joueur sur la route
+            this.setPlayer(currentPlayer);
+
+            //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
+            int nbRemovedCard = currentPlayer.removeTrainCards(c, this.getRequire(), model);
+            if (nbRemovedCard < this.getRequire()) {
+                currentPlayer.removeTrainCards(Color.RAINBOW, (this.getRequire()) - nbRemovedCard, model);
+            }
+            System.out.println();
+            JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + this,
+                    "Prendre une route",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+            currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
+            currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
+            currentPlayer.addRoute(this);
+            Route inv = new Route(this.getDest2(),this.getDest1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
+            currentPlayer.addRoute(inv);
+            return 0;
+        }
+    }
+    /**
      * convertit un nombre de wagons en nombre de points
      * @param nb
      * @return la valeur en points de nb wagons
      */
-    public int howManyPointsFor(int nb){
-        switch(nb) {
+    public int howManyPointsFor(int nb) {
+        switch (nb) {
             case 1:
                 return 1;
             case 2:
@@ -240,11 +286,5 @@ public class Route implements Comparable{
             default:
                 throw new IllegalStateException("Unexpected value: " + nb);
         }
-    }
-
-
-    @Override
-    public int compareTo(@NotNull Object o) {
-        return ((Route)o).getFreqUtilisation() - this.getFreqUtilisation();
     }
 }

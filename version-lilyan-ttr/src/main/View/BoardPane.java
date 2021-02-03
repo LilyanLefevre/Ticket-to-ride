@@ -14,15 +14,14 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.HashMap;
 import java.util.Map;
-import static java.lang.Math.abs;
 
-
-
-
+/**
+ * classe qui représente le panel qui affiche les villes et les routes du jeu
+ */
 public class BoardPane extends JPanel {
-    private static final int HIT_BOX_SIZE = 4;
-    private HashMap<String,CityTile> cityTileHashMap;
-    private HashMap<Line2D,Route> routePath;
+    private static final int HIT_BOX_SIZE = 4; //hit box quand on clique sur les routes
+    private HashMap<String,CityTile> cityTileHashMap; //ensemble qui contient les boutons représentants les villes
+    private HashMap<Line2D,Route> routePath; //ensemble qui contient les Line2D qui représentent les routes
     private Game game;
     private Destinations d;
     private boolean fini;
@@ -43,6 +42,7 @@ public class BoardPane extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 1;
 
+        //on utilise une grille de 20*20 pour représenter les villes
         for (int y = 0; y < 20; y++) {
             gbc.gridy = y;
             for (int x = 0; x < 20; x++) {
@@ -105,13 +105,14 @@ public class BoardPane extends JPanel {
                 //on affiche une ligne entre ct1 et ct2
                 ((Graphics2D)g).setStroke(new BasicStroke(5));
 
-
+                //on initialise les points qui vont être reliés par une ligne
                 Line2D line;
                 int larg1 = c1.getWidth()/2;
                 int larg2 = c2.getWidth()/2;
                 int hau1 = c1.getHeight()/2;
                 int hau2 = c2.getHeight()/2;
 
+                //on espace un peu les routes qu'on detecte comme doubles
                 if(ct2.getRoutesFrom().containsKey(ct1)){
                     boolean dejaFirstDouble = false;
                     for(Map.Entry r : routePath.entrySet()){
@@ -157,24 +158,22 @@ public class BoardPane extends JPanel {
         }
     }
 
-
-    public HashMap<String, CityTile> getCityTileHashMap() {
-        return cityTileHashMap;
-    }
-
-    public void setCityTileHashMap(HashMap<String, CityTile> cityTileHashMap) {
-        this.cityTileHashMap = cityTileHashMap;
-    }
-
-    public HashMap<Line2D,Route> getRoutePath() {
-        return routePath;
-    }
-
+    /**
+     * ajoute un action listener sur les boutons du panel
+     *
+     * @param gc le listener
+     */
     public void setActionListener(JButtonController gc){
         for(Map.Entry city : cityTileHashMap.entrySet()){
             ((CityTile)city.getValue()).addActionListener(gc);
         }
     }
+
+    /**
+     * ajoute un mouselistener sur les routes du panel
+     *
+     * @param mc le listener
+     */
     public void setMouseListener(RouteController mc){
         addMouseListener(mc);
     }
@@ -185,12 +184,20 @@ public class BoardPane extends JPanel {
         repaint();
     }
 
+    /**
+     * fonction qui retourne la route la plus proche de là où on clique
+     *
+     * @param e MouseEvent
+     *
+     * @return Route la route cliquée
+     */
     public Route getRouteClicked(MouseEvent e){
         int x = e.getX();
         int y = e.getY();
         int boxX = x - HIT_BOX_SIZE / 2;
         int boxY = y - HIT_BOX_SIZE / 2;
 
+        //on met une hitbox pour ne pas avoir à cliquer au pixel près sur la route
         int width = HIT_BOX_SIZE;
         int height = HIT_BOX_SIZE;
 
