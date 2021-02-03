@@ -48,6 +48,10 @@ public class GameView extends JFrame{
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                // Modifier l'icône de JFrame
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                Image img = kit.getImage(Thread.currentThread().getContextClassLoader().getResource("icon.jpg").getPath());
+                setIconImage(img);
                 setTitle("Ticket to ride");
                 g = ga;
                 gbc.fill = GridBagConstraints.BOTH;
