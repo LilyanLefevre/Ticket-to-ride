@@ -1,4 +1,4 @@
-package View;
+package View.PlayView;
 
 import javax.swing.*;
 import java.awt.*;

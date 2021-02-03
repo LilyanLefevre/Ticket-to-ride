@@ -94,7 +94,7 @@ public class Game{
         couleurJoueur.put(1, new java.awt.Color(145,205,253));
         couleurJoueur.put(2, new java.awt.Color(165,102,12));
         couleurJoueur.put(3, new java.awt.Color(160,189,138));
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < names.size(); i++){
             players.add(i,new Player(names.get(i),couleurJoueur.get(i), drawDestinationCards, drawWagonCards));
         }
 

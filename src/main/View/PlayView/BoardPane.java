@@ -1,4 +1,4 @@
-package View;
+package View.PlayView;
 
 import Controller.JButtonController;
 import Controller.RouteController;
@@ -37,7 +37,7 @@ public class BoardPane extends JPanel {
         setBackground(Color.lightGray);
         setBorder(BorderFactory.createLineBorder(Color.black));
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(1250,800));
+        setPreferredSize(new Dimension(1250,795));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1;
         gbc.weighty = 1;

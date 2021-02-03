@@ -3,9 +3,9 @@ package Controller;
 import Model.Enum.Color;
 import Model.Game;
 import Model.GameElements.*;
-import View.CardButtonPane;
-import View.CityTile;
-import View.GameView;
+import View.PlayView.CardButtonPane;
+import View.PlayView.CityTile;
+import View.PlayView.GameView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,18 +1,41 @@
 import Controller.JButtonController;
 import Controller.RouteController;
+import Controller.WelcomeButtonController;
 import Model.Game;
-import Model.GameElements.Player;
-import View.GameView;
+import View.PlayView.GameView;
+import View.MenuView.WelcomeFrame;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import static java.lang.System.exit;
 
 public class TicketToRide {
-    public static void main (String [] args) throws IOException {
+    public static void main (String [] args){
+        /**
+         * première fenetre qui demande de saisir les paramètres
+         */
+        WelcomeFrame view1 = new WelcomeFrame();
+        while(!view1.fini){
+            System.out.print("");
+        }
+        WelcomeButtonController welcomeController = new WelcomeButtonController(view1);
+        view1.setActionListener(welcomeController);
 
+        while(welcomeController.getStatus() == 0 && view1.getStatus() == 0){
+            System.out.print("");
+        }
+        if(view1.getStatus() == -1){
+            exit(0);
+        }else{
+            view1.setVisible(false);
+            System.out.println("il y a "+welcomeController.getNbJoueurs()+" joueurs");
+        }
+
+        /**
+         * deuxième fenetre qui lance le jeu
+         */
         //on créé le jeu
-        Game g = new Game(new ArrayList<>(Arrays.asList("lilyan", "eros", "loic", "View")));
+        Game g = new Game(new ArrayList<>(welcomeController.getNomJoueurs()));
 
         //on créé la vue
         GameView gv = new GameView(g);

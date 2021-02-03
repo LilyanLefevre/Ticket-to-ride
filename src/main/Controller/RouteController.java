@@ -1,7 +1,7 @@
 package Controller;
 
 import Model.GameElements.Route;
-import View.GameView;
+import View.PlayView.GameView;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

@@ -1,7 +1,6 @@
-package View;
+package View.PlayView;
 
 import Controller.JButtonController;
-import Controller.RouteController;
 import Model.GameElements.Player;
 import Model.GameElements.WagonCard;
 
