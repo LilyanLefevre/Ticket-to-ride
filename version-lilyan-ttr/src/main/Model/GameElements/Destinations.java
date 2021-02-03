@@ -190,7 +190,7 @@ public class Destinations {
 
         int k = 0;
         //on complete les routes pour avoir deux fois plus de routes que de villes
-        while(/*routes.size() != 2*destinations.size()*/ k != 10){
+        while(k < 10){
             Route cur = routes.get(k);
 
             //on prend une couleur au hasard différente de celle de la premiere

@@ -212,10 +212,18 @@ public class JButtonController implements ActionListener {
                         choixCity2 = (CityTile)src;
                         choixCity2.setEnabled(false);
 
-                        Route routeChoix = model.getD().getRouteFromString(choixCity1.getCity().getName() +" - "+choixCity2.getCity().getName());
-                        //si la route n'existe pas elle est peut etre dans l'autre sens
-                        if(routeChoix == null){
-                            routeChoix = model.getD().getRouteFromString(choixCity2.getCity().getName() +" - "+choixCity1.getCity().getName());
+                        Route route1 = model.getD().getRouteFromString(choixCity1.getCity().getName() +" - "+choixCity2.getCity().getName());
+                        Route route2 = model.getD().getRouteFromString(choixCity2.getCity().getName() +" - "+choixCity1.getCity().getName());
+                        Route routeChoix = null;
+                        if(route1 != null && route2 != null){
+                            routeChoix = chooseDoubleRoute(route1,route2);
+                        }
+                        else{
+                            if(route1 != null){
+                                routeChoix = route1;
+                            }else{
+                                routeChoix = route2;
+                            }
                         }
 
                         //si elle n'existe toujours pas c'est qu'il n'y a pas de route entre ces villes
@@ -519,8 +527,26 @@ public class JButtonController implements ActionListener {
         colorList.setSelectedIndex(0);
         params[1] = colorList;
         int input = JOptionPane.showConfirmDialog(null ,params,
-                "Erreur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                "Choix d'une couleur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
         return (Color) colorList.getSelectedItem();
+    }
+    /**
+     * fonction qui permet de choisir une couleur graphiquement
+     * @return Color la couleur choisie
+     */
+    public Route chooseDoubleRoute(Route r1, Route r2){
+        //on fait choisir une couleur pour prendre le tunnel
+        Object[] params = new Object[2];
+        params[0] = "Choisissez une route à prendre pour relier ces deux villes :";
+        Route[] r = new Route[2];
+        r[0] = r1;
+        r[1] = r2;
+        JComboBox routeList = new JComboBox<>(r);
+        routeList.setSelectedIndex(0);
+        params[1] = routeList;
+        int input = JOptionPane.showConfirmDialog(null ,params,
+                "Choix d'une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        return (Route) routeList.getSelectedItem();
     }
 
 }

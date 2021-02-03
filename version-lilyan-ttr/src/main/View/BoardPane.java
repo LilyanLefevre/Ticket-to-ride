@@ -124,12 +124,6 @@ public class BoardPane extends JPanel {
                         larg2 = (c2.getWidth())/2+4;
                         hau1 = (c1.getHeight())/2+4;
                         hau2 = (c2.getHeight())/2+4;
-                        if(ct1.getCoordonnees().getX() < ct2.getCoordonnees().getX()){
-                            larg1 = (c1.getWidth())/2+6;
-                            larg2 = (c2.getWidth())/2+6;
-                            hau1 = (c1.getHeight())/2+6;
-                            hau2 = (c2.getHeight())/2+6;
-                        }
                         if(ct1.getCoordonnees().getX() > ct2.getCoordonnees().getX()
                                 && ct1.getCoordonnees().getY() > ct2.getCoordonnees().getY() ){
                             larg1 = (c1.getWidth())/2+10;
