@@ -1,7 +1,6 @@
 package Model.GameElements;
 import Model.Enum.*;
 import Model.Game;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -99,7 +98,7 @@ public class Route implements Comparable{
 
 
     @Override
-    public int compareTo(@NotNull Object o) {
+    public int compareTo(Object o) {
         return ((Route)o).getFreqUtilisation() - this.getFreqUtilisation();
     }
 
