@@ -2,10 +2,14 @@ package Model.GameElements;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import Model.Enum.Color;
 
@@ -63,8 +67,8 @@ public class Destinations {
      */
     private void genererDestination() {
         /* fichier où se trouvent les prefixes et les suffixes */
-        String prefixe = "./txt/prefixes.txt";
-        String suffixe = "./txt/suffixes.txt";
+        String prefixe = "/prefixes.txt";
+        String suffixe = "/suffixes.txt";
 
         List<String> lines = new ArrayList<>();
         List<String> linessuff = new ArrayList<>();
@@ -72,7 +76,7 @@ public class Destinations {
 
         //on lit toutes les lignes dans le fichier de prefixes
         try {
-            lines = Files.readAllLines(Paths.get(Thread.currentThread().getContextClassLoader().getResource(prefixe).getPath()), Charset.defaultCharset());
+            lines = new BufferedReader(new InputStreamReader( getClass().getResourceAsStream(prefixe), StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
             for (String line : lines) {
                 count++;
             }
@@ -82,7 +86,7 @@ public class Destinations {
 
         //on lit toutes les lignes dans le fichier de suffixes
         try {
-            linessuff = Files.readAllLines(Paths.get(Thread.currentThread().getContextClassLoader().getResource(suffixe).getPath()),Charset.defaultCharset());
+            linessuff = new BufferedReader(new InputStreamReader( getClass().getResourceAsStream(suffixe), StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -72,6 +72,7 @@ public class ChoixJoueursPane extends JPanel {
         r[3] = 4;
         choixJoueurs = new JComboBox<>(r);
         choixJoueurs.setPreferredSize(new Dimension(300,50));
+        choixJoueurs.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         choixJoueurs.setSelectedIndex(0);
 
         nom = new JTextField();
@@ -79,9 +80,12 @@ public class ChoixJoueursPane extends JPanel {
         nom.setVisible(false);
 
         confirm = new JButton("Confirmer");
+        confirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         confirm2 = new JButton("Confirmer");
+        confirm2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         confirm2.setVisible(false);
         quit = new JButton("Annuler");
+        quit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         quit.setVisible(false);
 
         gbc.gridx = 0;

@@ -38,9 +38,17 @@ public class ButtonPane extends JPanel {
 
 
         piocherW = new JButton("Piocher des wagons");
+        piocherW.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         piocherD = new JButton("Piocher des destinations");
+        piocherD.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         prendreR = new JButton("Prendre une route");
+        prendreR.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         quitter = new JButton("Quitter");
+        quitter.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         add(new JLabel());
         add(piocherW);
         add(new JLabel());

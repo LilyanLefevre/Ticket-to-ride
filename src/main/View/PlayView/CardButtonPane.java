@@ -29,7 +29,7 @@ public class CardButtonPane extends JButton {
         setHorizontalTextPosition(SwingConstants.CENTER);
 
         //on récupère l'image du wagon de la bonne couleur
-        buffer = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(name).getPath());
+        buffer = new ImageIcon(getClass().getResource(name));
 
         //on modifie sa taille
         Image image = buffer.getImage();

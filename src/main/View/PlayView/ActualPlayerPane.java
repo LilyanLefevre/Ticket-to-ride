@@ -55,39 +55,39 @@ public class ActualPlayerPane extends JPanel {
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
-                    CardImagePane im = new CardImagePane("wagon-rouge.jpg",((Integer)couleur.getValue()));
+                    CardImagePane im = new CardImagePane("/wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLACK:
-                    im = new CardImagePane("wagon-noir.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-noir.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLUE:
-                    im = new CardImagePane("wagon-bleu.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-bleu.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case GREEN:
-                    im = new CardImagePane("wagon-vert.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-vert.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case WHITE:
-                    im = new CardImagePane("wagon-blanc.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-blanc.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case ORANGE:
-                    im = new CardImagePane("wagon-orange.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-orange.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case PURPLE:
-                    im = new CardImagePane("wagon-violet.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-violet.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case YELLOW:
-                    im = new CardImagePane("wagon-jaune.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-jaune.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case RAINBOW:
-                    im = new CardImagePane("locomotive.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/locomotive.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 default:
@@ -100,6 +100,8 @@ public class ActualPlayerPane extends JPanel {
         cardDestinationPanel = new JPanel();
         cardDestinationPanel.setBackground(new Color(0.0f, 0.0f, 0.0f, 0));
         objButton = new JButton("Voir les objectifs");
+        objButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         cardDestinationPanel.add(objButton);
         add(cardDestinationPanel,BorderLayout.SOUTH);
     }
@@ -136,39 +138,39 @@ public class ActualPlayerPane extends JPanel {
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.Enum.Color)couleur.getKey()){
                 case RED:
-                    CardImagePane im = new CardImagePane("wagon-rouge.jpg",((Integer)couleur.getValue()));
+                    CardImagePane im = new CardImagePane("/wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLACK:
-                    im = new CardImagePane("wagon-noir.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-noir.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case BLUE:
-                    im = new CardImagePane("wagon-bleu.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-bleu.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case GREEN:
-                    im = new CardImagePane("wagon-vert.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-vert.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case WHITE:
-                    im = new CardImagePane("wagon-blanc.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-blanc.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case ORANGE:
-                    im = new CardImagePane("wagon-orange.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-orange.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case PURPLE:
-                    im = new CardImagePane("wagon-violet.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-violet.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case YELLOW:
-                    im = new CardImagePane("wagon-jaune.jpg", ((Integer)couleur.getValue()));
+                    im = new CardImagePane("/wagon-jaune.jpg", ((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 case RAINBOW:
-                    im = new CardImagePane("locomotive.jpg",((Integer)couleur.getValue()));
+                    im = new CardImagePane("/locomotive.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
                 default:

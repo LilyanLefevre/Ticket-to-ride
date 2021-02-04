@@ -13,6 +13,7 @@ public class CityTile extends JButton {
 
     public CityTile(City city) {
         super(city.getName());
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         this.setFont(new Font("Arial", Font.BOLD, 11));
         c = city;
     }
