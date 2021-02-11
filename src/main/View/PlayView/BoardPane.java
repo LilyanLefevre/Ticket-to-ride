@@ -46,7 +46,6 @@ public class BoardPane extends JPanel {
         for (int y = 0; y < 20; y++) {
             gbc.gridy = y;
             for (int x = 0; x < 20; x++) {
-                Coordonnees coordonnees = new Coordonnees(0,0);
                 gbc.gridx = x;
 
                 //on prepare l'affichage du nom (ou pas) de la ville (s'il y a)

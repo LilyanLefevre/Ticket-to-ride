@@ -19,15 +19,17 @@ import Model.Enum.Color;
 public class Destinations {
     private HashMap<String, City> destinations;
     private ArrayList<Route> routes;
+    private Random random;
 
     /* variables servant aux différents appels récursifs pour la fonction construireChemin */
     private ArrayList<String> names;
     private ArrayList<Route> rEmpruntees;
 
-    public Destinations(){
+    public Destinations(Random random){
         destinations = new HashMap<>();
         routes = new ArrayList<>();
         rEmpruntees = new ArrayList<>();
+        this.random = random;
         genererDestination();
         genererRoutes();
     }
@@ -92,7 +94,6 @@ public class Destinations {
         }
 
         //on tire un nb de villes au hasard
-        Random random = new Random();
         count--;
         int nbvilles = 35+random.nextInt(40-35);
 
@@ -109,7 +110,7 @@ public class Destinations {
                 name = lines.get(nbpref)+linessuff.get(nbsuff);
             }
             System.out.println(name);
-            City c1 = new City(name);
+            City c1 = new City(name, random);
 
             //on récupère toutes les positions générées
             ArrayList<Coordonnees> cvilles = new ArrayList<>();
@@ -121,7 +122,7 @@ public class Destinations {
             //il faut mini une case libre entre chaque ville
             for(int y=0;y<cvilles.size();y++){
                 if(cvilles.get(y).distance(c1.getCoordonnees()) < 2){
-                    c1 = new City(name);
+                    c1 = new City(name, random);
                     y=0;
                 }
             }
@@ -212,7 +213,6 @@ public class Destinations {
             Route cur = routes.get(k);
 
             //on prend une couleur au hasard différente de celle de la premiere
-            Random random = new Random();
             int r = 0+random.nextInt(9-0);
             while(randomColor.get(r) == cur.getColor()){
                 r = 0+random.nextInt(9-0);
@@ -277,7 +277,6 @@ public class Destinations {
             }
         }
         if(enter) {
-            Random random = new Random();
             int r = 0+random.nextInt(9-0);
             while (CountColor.get(r)>6){
                 r = 0+random.nextInt(9-0);
@@ -344,7 +343,6 @@ public class Destinations {
             }
         }
         if(enter&&count<((destinations.size()*2)/3)) {
-            Random random = new Random();
             int r = 0+random.nextInt(9-0);
             int cc = 0;
             boolean b = false;

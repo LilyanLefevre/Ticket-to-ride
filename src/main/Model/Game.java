@@ -9,6 +9,7 @@ import Model.Enum.*;
  * classe qui représente le moteur du jeu
  */
 public class Game{
+    private Random random;
     // l'ensemble des joueurs
     private final ArrayList<Player> players;
 
@@ -57,7 +58,8 @@ public class Game{
         return d;
     }
 
-    public Game(ArrayList<String> names) {
+    public Game(ArrayList<String> names, Random r) {
+        this.random = r;
 
         // initialisation des cartes wagons
         drawWagonCards = new ArrayList<>(Color.values().length*14);
@@ -82,7 +84,7 @@ public class Game{
         }
 
         //initialisation des destinations et des routes
-        d = new Destinations();
+        d = new Destinations(random);
 
         //initialisation des cartes destination
         drawDestinationCards = DestinationCard.genererCarteDestination(d);

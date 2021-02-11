@@ -9,8 +9,10 @@ import java.util.Random;
 public class Coordonnees {
     final private int x;
     final private int y;
+    private Random random;
 
-    public Coordonnees(int x, int y) {
+
+    private Coordonnees(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -18,10 +20,11 @@ public class Coordonnees {
     /**
      * constructeur qui génère des coordonnées aléatoire entre 0 et 19
      */
-    public Coordonnees(){
-        Coordonnees tmp = genererCoordonnees(0,19);
+    public Coordonnees(Random r){
+        Coordonnees tmp = genererCoordonnees(0,19, r);
         this.x = tmp.getX();
         this.y = tmp.getY();
+        this.random = r;
     }
 
     public int getX() {
@@ -58,11 +61,11 @@ public class Coordonnees {
      *
      * @return Coordonnees les coordonnées générées
      */
-    public Coordonnees genererCoordonnees(int borneInf, int borneSup){
+    public Coordonnees genererCoordonnees(int borneInf, int borneSup, Random random){
         int cx,cy;
-        Random random = new Random();
         cx = borneInf+random.nextInt(borneSup-borneInf);
         cy = borneInf+random.nextInt(borneSup-borneInf);
+        System.out.println("coo generees "+x+" "+y);
         return new Coordonnees(cx,cy);
     }
 

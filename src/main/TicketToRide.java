@@ -6,10 +6,13 @@ import View.PlayView.GameView;
 import View.MenuView.WelcomeFrame;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.System.exit;
 
 public class TicketToRide {
+    private static long SEED = 100009009L;
+
     public static void main (String [] args){
         /**
          * première fenetre qui demande de saisir les paramètres
@@ -35,7 +38,8 @@ public class TicketToRide {
          * deuxième fenetre qui lance le jeu
          */
         //on créé le jeu
-        Game g = new Game(new ArrayList<>(welcomeController.getNomJoueurs()));
+        Random r = new Random(SEED);
+        Game g = new Game(new ArrayList<>(welcomeController.getNomJoueurs()), r);
 
         //on créé la vue
         GameView gv = new GameView(g);

@@ -8,6 +8,7 @@ import java.util.*;
 public class City {
     private String name;
     private Coordonnees c;
+    private Random random;
 
     /**
      * cet attibrut contient toutes les villes reliées par la ville courante
@@ -16,10 +17,11 @@ public class City {
      */
     private HashMap<City, Route> routesFrom;
 
-    public City(String name){
+    public City(String name, Random r){
         this.name = name;
         this.routesFrom = new HashMap<>();
-        c = new Coordonnees();
+        this.random = r;
+        c = new Coordonnees(r);
     }
 
     public String getName() {
