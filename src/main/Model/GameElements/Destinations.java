@@ -1,5 +1,6 @@
 package Model.GameElements;
 
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
@@ -9,9 +10,22 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import Model.Enum.Color;
+import View.PlayView.CityTile;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.AStarShortestPath;
+import org.jgrapht.alg.shortestpath.BFSShortestPath;
+import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultUndirectedGraph;
+import org.jgrapht.graph.SimpleGraph;
 
 /**
  * classe qui représente un ensemble de villes composant le jeu
@@ -160,7 +174,6 @@ public class Destinations {
             GenererFirstRoute((City)from.getValue(),TabRoutes,CountColor,randomColor,1, compteur);
         }
         System.out.println(TabRoutes.size());
-        genererDoubleRoute();
 
         int count = 0;
 
@@ -168,6 +181,8 @@ public class Destinations {
             GenererLastRoute((City)from.getValue(),TabRoutes,CountColor,randomColor,count);
         }
         System.out.println(TabRoutes.size());
+        genererDoubleRoute();
+
         System.out.println("routes generated...");
     }
 
@@ -175,26 +190,52 @@ public class Destinations {
      * double 10 routes suivant leur fréquence d'utilisation
      */
     public void genererDoubleRoute(){
-        //on construit tous les couples v1-v2 afin de relier chaque villes entre elles
-        HashMap<City,City> couples = new HashMap<>();
-        for(Map.Entry v1 : destinations.entrySet()) {
-            for (Map.Entry v2 : destinations.entrySet()) {
-                //pour chacun des couples on trace le chemin et on incrémente la frequence d'utilisation
-                //des routes utilisées
-                if(v1 != v2) {
-                    names = new ArrayList<>();
-                    rEmpruntees = new ArrayList<>();
-                    construireChemin((City)v1.getValue(), (City)v2.getValue());
-                    construireChemin((City)v2.getValue(), (City)v1.getValue());
-                    for(Route r : rEmpruntees){
-                        r.setFreqUtilisation(r.getFreqUtilisation()+1);
+        Graph<City, DefaultEdge> g = new DefaultUndirectedGraph<>(DefaultEdge.class);
+
+        //on ajoute toutes les villes au graph
+        for (Map.Entry city : destinations.entrySet()) {
+            City c1 = (City)city.getValue();
+            g.addVertex(c1);
+        }
+
+        //on ajoute tous les arcs entre les villes
+        for (Route r : routes){
+            g.addEdge(r.getDest1(), r.getDest2());
+        }
+        BellmanFordShortestPath<City, DefaultEdge> belmanFordAlg = new BellmanFordShortestPath<>(g);
+
+
+        for(City c1 : g.vertexSet()){
+            for(City c2 : g.vertexSet()) {
+                if(c1 != c2) {
+                    //on cherche le chemin le plus court qui relie les deux villes
+                    ShortestPathAlgorithm.SingleSourcePaths<City, DefaultEdge> iPaths = belmanFordAlg.getPaths(c1);
+
+                    //on récupère les villes parcourues par le chemin (il y en a forcément un)
+                    GraphPath<City, DefaultEdge> path = iPaths.getPath(c2);
+                    if(path != null) {
+                        List<City> listCities = path.getVertexList();
+                        if (!listCities.isEmpty()) {
+                            for(int i = 0; i < listCities.size() - 1 ; i++){
+                                City v1 = listCities.get(i);
+                                City v2 = listCities.get(i+1);
+                                Route r = getRouteFromString(v1.getName()+" - "+v2.getName());
+                                if(r == null){
+                                    r = getRouteFromString(v2.getName()+" - "+v1.getName());
+                                }
+                                r.setFreqUtilisation(r.getFreqUtilisation()+1);
+
+                            }
+                        }
                     }
                 }
             }
         }
-
         //on trie les routes de la plus utilisée à la moins utilisée
         Collections.sort(routes);
+        for(Route r : routes){
+            System.out.println("La route "+r.getDest1()+" vers "+r.getDest2()+" a été utilisée "+r.getFreqUtilisation()+" fois.");
+        }
 
         HashMap<Integer, Color> randomColor = new HashMap<>();
         randomColor.put(0,Color.WHITE);
@@ -209,7 +250,7 @@ public class Destinations {
 
         int k = 0;
         //on complete les routes pour avoir deux fois plus de routes que de villes
-        while(k < 10){
+        while(routes.size() != destinations.size() * 2){
             Route cur = routes.get(k);
 
             //on prend une couleur au hasard différente de celle de la premiere
@@ -220,11 +261,8 @@ public class Destinations {
             //on ajoute la double route
             Route tmp = new Route(cur.getDest2(), cur.getDest1(), cur.getRequire(), randomColor.get(r), cur.isTunel(), cur.getLocomotive());
             addRoute(tmp);
+            System.out.println("la route de "+tmp.getDest1()+" à "+tmp.getDest2()+" a été doublée.");
             k++;
-        }
-
-        for(Route r : routes){
-            System.out.println("La route "+r.getDest1()+" vers "+r.getDest2()+" a été utilisée "+r.getFreqUtilisation()+" fois.");
         }
     }
 
@@ -294,8 +332,9 @@ public class Destinations {
         }
         else{
             compteur++;
-            if(compteur!=1000)
-                GenererFirstRoute(from, TabRoutes,CountColor,randomColor,2, compteur);
+            if(compteur!=1000) {
+                GenererFirstRoute(from, TabRoutes, CountColor, randomColor, 2, compteur);
+            }
         }
     }
 
@@ -403,9 +442,6 @@ public class Destinations {
         String [] parts = saisie.split("-");
         //si la saisie est mauvaise
         if(parts.length != 2){
-            if(!saisie.equals("Cancel")){
-                System.out.println("Bad syntax. Try again.");
-            }
             return null;
         }
         String v1 = parts[0].trim();
@@ -413,15 +449,11 @@ public class Destinations {
 
         //si les villes n'existent pas
         if(!destinations.containsKey(v1) || !destinations.containsKey(v2)){
-            if(!v1.equals("Cancel") || !v2.equals("Cancel")){
-                System.out.println("Bad city(ies). Try again.");
-            }
             return null;
         }
 
         //s'il n'y a pas de route entre ces destinations
         if(!destinations.get(v1).getRoutesFrom().containsKey(destinations.get(v2))){
-            System.out.println("Bad route. Try again.");
             return null;
         }
 

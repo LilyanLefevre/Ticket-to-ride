@@ -2,8 +2,8 @@ import Controller.JButtonController;
 import Controller.RouteController;
 import Controller.WelcomeButtonController;
 import Model.Game;
-import View.PlayView.GameView;
 import View.MenuView.WelcomeFrame;
+import View.PlayView.GameView;
 
 import java.util.ArrayList;
 import java.util.Random;
