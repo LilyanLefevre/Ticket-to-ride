@@ -1,6 +1,7 @@
 package Model.GameElements;
 import Model.Enum.*;
 import Model.Game;
+import Model.Player.HumanPlayer;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class Route implements Comparable{
     private final int locomotive;
 
     //enregistre le joueur qui a éventuellement posé ses wagons dessus
-    private Player hasPlayerOn;
+    private HumanPlayer hasPlayerOn;
 
     //enregistre le nombre de fois où on utilise la route pour rejoindre deux villes
     private int freqUtilisation;
@@ -64,10 +65,10 @@ public class Route implements Comparable{
     public int getLocomotive() {
         return locomotive;
     }
-    public Player getPlayer() {
+    public HumanPlayer getPlayer() {
         return hasPlayerOn;
     }
-    public void setPlayer(Player p) {
+    public void setPlayer(HumanPlayer p) {
         this.hasPlayerOn = p;
     }
     public void setFreqUtilisation(int freqUtilisation) {
@@ -107,7 +108,7 @@ public class Route implements Comparable{
      * @param c Color la couleur désirée
      *
      */
-    public void getTunnel(Color c, Game model, Player currentPlayer){
+    public void getTunnel(Color c, Game model, HumanPlayer currentPlayer){
         //on tire trois cartes de la pioche
         ArrayList<WagonCard> tctmp = new ArrayList<>();
         int k = 0;
@@ -178,7 +179,7 @@ public class Route implements Comparable{
      *
      * @return int -1 si le joueur ne pouvait prendre la route, 0 s'il l'a prise
      */
-    public int getFerrie(Color c, Game model, Player currentPlayer){
+    public int getFerrie(Color c, Game model, HumanPlayer currentPlayer){
 
         //on verifie qu'on a assez de locomotives
         int nbLocos = currentPlayer.countOccurencesOf(Color.RAINBOW);
@@ -237,7 +238,7 @@ public class Route implements Comparable{
      *
      * @return int -1 si le joueur ne pouvait prendre la route, 0 s'il l'a prise
      */
-    public int getRoute(Color c, Game model, Player currentPlayer) {
+    public int getRoute(Color c, Game model, HumanPlayer currentPlayer) {
         //si le joueur n'a pas assez de cartes on s'arrete la
         if(currentPlayer.countOccurencesOf(c) < this.getRequire()){
             JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de cartes pour posséder " +

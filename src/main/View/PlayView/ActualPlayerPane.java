@@ -1,7 +1,7 @@
 package View.PlayView;
 
 import Controller.JButtonController;
-import Model.GameElements.Player;
+import Model.Player.HumanPlayer;
 import Model.GameElements.WagonCard;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ public class ActualPlayerPane extends JPanel {
         return objButton;
     }
 
-    public ActualPlayerPane(Player p) {
+    public ActualPlayerPane(HumanPlayer p) {
         setLayout(new BorderLayout(0,50));
         setBorder(BorderFactory.createLineBorder(Color.black));
 
@@ -120,7 +120,7 @@ public class ActualPlayerPane extends JPanel {
      *
      * @param p le joueur à actualiser
      */
-    public void updateCard(Player p){
+    public void updateCard(HumanPlayer p){
         name.setText("<html><u>Tour de "+p.getName()+"</u></html>");
 
         occurencesCouleur = new HashMap<>();

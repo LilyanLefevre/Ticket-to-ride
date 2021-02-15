@@ -4,6 +4,7 @@ import java.util.*;
 
 import Model.GameElements.*;
 import Model.Enum.*;
+import Model.Player.HumanPlayer;
 
 /**
  * classe qui représente le moteur du jeu
@@ -11,10 +12,10 @@ import Model.Enum.*;
 public class Game{
     private Random random;
     // l'ensemble des joueurs
-    private final ArrayList<Player> players;
+    private final ArrayList<HumanPlayer> players;
 
     //joueur actuel
-    private Player currentPlayer;
+    private HumanPlayer currentPlayer;
     private int indexCurrentPlayer;
 
     // pioche de cartes de couleurs
@@ -34,7 +35,7 @@ public class Game{
 
     private ArrayList<String> names;
 
-    public Player getCurrentPlayer() {
+    public HumanPlayer getCurrentPlayer() {
         return currentPlayer;
     }
 
@@ -42,7 +43,7 @@ public class Game{
         return drawWagonCards;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public ArrayList<HumanPlayer> getPlayers() {
         return players;
     }
 
@@ -101,7 +102,7 @@ public class Game{
         couleurJoueur.put(2, new java.awt.Color(165,102,12));
         couleurJoueur.put(3, new java.awt.Color(160,189,138));
         for(int i = 0; i < names.size(); i++){
-            players.add(i,new Player(names.get(i),couleurJoueur.get(i), drawDestinationCards, drawWagonCards));
+            players.add(i,new HumanPlayer(names.get(i),couleurJoueur.get(i), drawDestinationCards, drawWagonCards));
         }
 
         alreadyCalled = 0;
@@ -126,7 +127,7 @@ public class Game{
 
         //on affiche les joueurs
         str.append("PLAYERS :\n");
-        for (Player player : players) {
+        for (HumanPlayer player : players) {
             str.append(player.toString());
         }
         return str.toString();
@@ -139,7 +140,7 @@ public class Game{
      * @return true if a player has less than 3 wagons, false otherwise
      */
     public boolean gameIsOver(){
-        for (Player p : players) {
+        for (HumanPlayer p : players) {
             if( p.getWagons() < 3 ) {
                 return true;
             }
@@ -187,14 +188,14 @@ public class Game{
      */
     public String scoreToString(){
         String res = "";
-        for(Player p : players){
+        for(HumanPlayer p : players){
             res += p.toString();
         }
         return res;
     }
 
-    public Player getWinner(){
-        Player max = players.get(0);
+    public HumanPlayer getWinner(){
+        HumanPlayer max = players.get(0);
         for(int i = 1; i < players.size(); i++){
             if(players.get(i).getPoints() > max.getPoints()){
                 max = players.get(i);
@@ -209,7 +210,7 @@ public class Game{
      */
     public void determineScore(){
         //on parcoure les joueurs
-        for (Player p : players){
+        for (HumanPlayer p : players){
             //tableau qui va servir à enregistrer les noms des villes déjà visitées
             names = new ArrayList<>();
 
@@ -251,7 +252,7 @@ public class Game{
      *
      * @return boolean true si le joueur a relié les deux villes, false sinon
      */
-    public boolean findDest(City dest, City destFinal, Player p){
+    public boolean findDest(City dest, City destFinal, HumanPlayer p){
         if(!names.contains(dest.getName())){
             names.add(dest.getName());
         }
@@ -275,7 +276,7 @@ public class Game{
      *
      * @return Player le prochain joueur à jouer
      */
-    public Player nextPlayer(){
+    public HumanPlayer nextPlayer(){
         //si on est actuellement sur le dernier joueur
         if(indexCurrentPlayer == players.size()-1){
             //on retourne le premier

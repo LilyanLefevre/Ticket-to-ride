@@ -1,13 +1,15 @@
-package Model.GameElements;
-import Model.Game;
+package Model.Player;
 
-import java.awt.Color;
+import Model.Game;
+import Model.GameElements.DestinationCard;
+import Model.GameElements.Route;
+import Model.GameElements.WagonCard;
+import View.PlayView.GameView;
+
+import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * classe représentant un joueur du jeu
- */
-public class Player {
+public abstract class EveryPlayer {
     private final String name; //son nom
     private ArrayList<Route> routesEmpruntes; //les routes qu'il possède
     private ArrayList<WagonCard> wCards; //ses cartes wagons
@@ -15,6 +17,26 @@ public class Player {
     private int points; //ses points
     private int wagons; //son nombre de wagons restants
     private final Color color; //sa couleur
+
+    public EveryPlayer(String name, Color color, ArrayList<DestinationCard> dc, ArrayList<WagonCard> tc) {
+        this.name = name;
+        this.color = color;
+        points = 0;
+        wagons = 45;
+        wCards = new ArrayList<>();
+        dCards = new ArrayList<>();
+        routesEmpruntes = new ArrayList<>();
+
+        // tire 4 cartes destination au hasard
+        for(int i = 0 ; i < 4; i++){
+            drawTrainCard(tc);
+        }
+
+        // tire 4 cartes colorées au hasard
+        for(int i = 0 ; i < 4; i++){
+            drawDestinationCard(dc);
+        }
+    }
 
     public String getName() {
         return name;
@@ -50,26 +72,6 @@ public class Player {
         this.wagons = wagons;
     }
 
-    public Player(String name, Color color, ArrayList<DestinationCard> dc, ArrayList<WagonCard> tc) {
-        this.name = name;
-        this.color = color;
-        points = 0;
-        wagons = 45;
-        wCards = new ArrayList<>();
-        dCards = new ArrayList<>();
-        routesEmpruntes = new ArrayList<>();
-
-        // tire 4 cartes destination au hasard
-        for(int i = 0 ; i < 4; i++){
-            drawTrainCard(tc);
-        }
-
-        // tire 4 cartes colorées au hasard
-        for(int i = 0 ; i < 4; i++){
-            drawDestinationCard(dc);
-        }
-    }
-
     /**
      * Answers a string containing a concise, human-readable
      * description of the receiver.
@@ -90,7 +92,6 @@ public class Player {
         }
         return "\n"+name+":\nDestination cards :\n"+dc+"Train cards :\n"+tc+"Color : "+color+", points = "+points+", wagons = "+wagons+"\n";
     }
-
 
     /**
      * fonction qui ajoute une route au tableau de routes empruntées par le joueur
@@ -226,4 +227,7 @@ public class Player {
 
         return ret;
     }
+
+    public abstract void playTurn(GameView gv);
+
 }

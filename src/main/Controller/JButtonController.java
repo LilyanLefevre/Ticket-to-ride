@@ -3,6 +3,7 @@ package Controller;
 import Model.Enum.Color;
 import Model.Game;
 import Model.GameElements.*;
+import Model.Player.HumanPlayer;
 import View.PlayView.CardButtonPane;
 import View.PlayView.CityTile;
 import View.PlayView.GameView;
@@ -11,10 +12,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Random;
 
 import static java.lang.System.exit;
-import static java.lang.System.in;
 
 /**
  * classe du controller des boutons du jeu
@@ -23,7 +22,7 @@ public class JButtonController implements ActionListener {
     private Game model;
     private GameView view;
 
-    private Player currentPlayer;
+    private HumanPlayer currentPlayer;
     private int currentAction = 0;
     private int nbCardTaken = 0;
     private int lastIndexTaken = -3;
@@ -39,6 +38,7 @@ public class JButtonController implements ActionListener {
         view = gv;
         currentPlayer = g.getPlayers().get(0);
         finPartie = 0;
+        currentPlayer.playTurn(view);
     }
 
     /**
@@ -121,6 +121,7 @@ public class JButtonController implements ActionListener {
                     currentAction = 0;
                     nbCardTaken = 0;
                     checkFinPartie();
+                    currentPlayer.playTurn(view);
                 }
             }
         }
@@ -182,6 +183,7 @@ public class JButtonController implements ActionListener {
                 currentAction = 0;
                 nbCardTaken = 0;
                 checkFinPartie();
+                currentPlayer.playTurn(view);
 
             }else{
                 int input = JOptionPane.showConfirmDialog(null ,"Il n'y a plus de carte detination disponible.",
@@ -311,7 +313,7 @@ public class JButtonController implements ActionListener {
                         choixCity1 = null;
                         choixCity2 = null;
                         checkFinPartie();
-
+                        currentPlayer.playTurn(view);
                     }
                 }
             }
@@ -395,10 +397,10 @@ public class JButtonController implements ActionListener {
             model.determineScore();
 
             //on récupère le vainqueur
-            Player p = model.getWinner();
+            HumanPlayer p = model.getWinner();
 
             String scoresWithNames = p.getName()+" a gagné\n";
-            for(Player pl : model.getPlayers()){
+            for(HumanPlayer pl : model.getPlayers()){
                 scoresWithNames += pl.getName()+" - "+pl.getPoints()+"\n";
             }
 
