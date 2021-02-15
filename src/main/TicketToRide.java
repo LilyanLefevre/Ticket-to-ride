@@ -11,7 +11,7 @@ import java.util.Random;
 import static java.lang.System.exit;
 
 public class TicketToRide {
-    private static long SEED = 100009009L;
+    private static long SEED = System.currentTimeMillis();
 
     public static void main (String [] args){
         /**
