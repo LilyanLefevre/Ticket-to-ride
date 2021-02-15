@@ -1,31 +1,20 @@
 package Model.GameElements;
 
-import java.awt.*;
+import Model.Enum.Color;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultUndirectedGraph;
+
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
-
-import Model.Enum.Color;
-import View.PlayView.CityTile;
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
-import org.jgrapht.alg.shortestpath.AStarShortestPath;
-import org.jgrapht.alg.shortestpath.BFSShortestPath;
-import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultUndirectedGraph;
-import org.jgrapht.graph.SimpleGraph;
 
 /**
  * classe qui représente un ensemble de villes composant le jeu
@@ -38,6 +27,7 @@ public class Destinations {
     /* variables servant aux différents appels récursifs pour la fonction construireChemin */
     private ArrayList<String> names;
     private ArrayList<Route> rEmpruntees;
+    private ArrayList<Integer>NbRails = new ArrayList<>();
 
     public Destinations(Random random){
         destinations = new HashMap<>();
@@ -123,7 +113,6 @@ public class Destinations {
                 nbsuff = 0+random.nextInt(count-0);
                 name = lines.get(nbpref)+linessuff.get(nbsuff);
             }
-            System.out.println(name);
             City c1 = new City(name, random);
 
             //on récupère toutes les positions générées
@@ -142,7 +131,6 @@ public class Destinations {
             }
             addDestination(c1);
         }
-        System.out.println(nbvilles+" destinations generated...");
     }
 
     /**
@@ -167,23 +155,21 @@ public class Destinations {
         ArrayList<Integer>CountColor = new ArrayList<>();
         for (int i=0;i<9;i++){
             CountColor.add(0);
+            NbRails.add(0);
         }
 
         int compteur = 0;
         for (Map.Entry from : destinations.entrySet()){
             GenererFirstRoute((City)from.getValue(),TabRoutes,CountColor,randomColor,1, compteur);
         }
-        System.out.println(TabRoutes.size());
 
         int count = 0;
 
         for (Map.Entry from : destinations.entrySet()){
-            GenererLastRoute((City)from.getValue(),TabRoutes,CountColor,randomColor,count);
+            if(count<(destinations.size()*2)/3&&GenererLastRoute((City)from.getValue(),TabRoutes,CountColor,randomColor)==true)
+                count++;
         }
-        System.out.println(TabRoutes.size());
         genererDoubleRoute();
-
-        System.out.println("routes generated...");
     }
 
     /**
@@ -233,9 +219,6 @@ public class Destinations {
         }
         //on trie les routes de la plus utilisée à la moins utilisée
         Collections.sort(routes);
-        for(Route r : routes){
-            System.out.println("La route "+r.getDest1()+" vers "+r.getDest2()+" a été utilisée "+r.getFreqUtilisation()+" fois.");
-        }
 
         HashMap<Integer, Color> randomColor = new HashMap<>();
         randomColor.put(0,Color.WHITE);
@@ -261,7 +244,6 @@ public class Destinations {
             //on ajoute la double route
             Route tmp = new Route(cur.getDest2(), cur.getDest1(), cur.getRequire(), randomColor.get(r), cur.isTunel(), cur.getLocomotive());
             addRoute(tmp);
-            System.out.println("la route de "+tmp.getDest1()+" à "+tmp.getDest2()+" a été doublée.");
             k++;
         }
     }
@@ -324,10 +306,13 @@ public class Destinations {
             //A MODIFIER
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
+            System.out.println("Distance : "+distance);
+            int taille = CheckTaille(distance);
+            System.out.println("Taille : "+taille);
             if(c == Color.GRAY){
-                addRoute(new Route((City)from,destination,1, c, true, 0));
+                addRoute(new Route((City)from,destination,taille, c, true, 0));
             }else{
-                addRoute(new Route((City)from,destination,1, c, false, 0));
+                addRoute(new Route((City)from,destination,taille, c, false, 0));
             }
         }
         else{
@@ -344,9 +329,8 @@ public class Destinations {
      * @param TabRoutes
      * @param CountColor
      * @param randomColor
-     * @param count
      */
-    public void GenererLastRoute(City from, ArrayList<Line2D>TabRoutes,ArrayList<Integer>CountColor,HashMap<Integer, Color> randomColor, int count){
+    public boolean GenererLastRoute(City from, ArrayList<Line2D>TabRoutes,ArrayList<Integer>CountColor,HashMap<Integer, Color> randomColor){
         boolean enter = false;
         Line2D lenreg = null;
         Line2D l = null;
@@ -381,7 +365,7 @@ public class Destinations {
                 }
             }
         }
-        if(enter&&count<((destinations.size()*2)/3)) {
+        if(enter) {
             int r = 0+random.nextInt(9-0);
             int cc = 0;
             boolean b = false;
@@ -396,13 +380,17 @@ public class Destinations {
             //A MODIFIER
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
-            count++;
+            System.out.println("Distance : "+distance);
+            int taille = CheckTaille(distance);
+            System.out.println("Taille : "+taille);
             if(c == Color.GRAY){
-                addRoute(new Route((City)from,destination,1, c, true, 0));
+                addRoute(new Route((City)from,destination,taille, c, true, 0));
             }else{
-                addRoute(new Route((City)from,destination,1, c, false, 0));
+                addRoute(new Route((City)from,destination,taille, c, false, 0));
             }
+            return true;
         }
+        return false;
     }
 
 
@@ -431,6 +419,50 @@ public class Destinations {
     }
 
 
+    public int CheckTaille(double distance){
+        int nbroutes = destinations.size()*2;
+        if(distance<2 || (distance>=2 && distance<=3)) {
+            if(NbRails.get(1)+1<nbroutes*0.1) {
+                NbRails.set(1, NbRails.get(1) + 1);
+                return 1;
+            }
+        }
+        if(distance>=3 && distance<=4 || (NbRails.get(1)+1>nbroutes*0.1 && distance<=4)){
+            if(NbRails.get(2)+1<nbroutes*0.3){
+                NbRails.set(2, NbRails.get(2)+1);
+                return 2;
+            }
+        }
+        if(distance>=4 && distance<=5 || (NbRails.get(2)+1>nbroutes*0.3 && distance<=5)){
+            if(NbRails.get(3)+1<nbroutes*0.3){
+                NbRails.set(3, NbRails.get(3)+1);
+                return 3;
+            }
+        }
+        if(distance>=5 && distance<=6 || (NbRails.get(3)+1>nbroutes*0.3 && distance<=6)){
+            if(NbRails.get(4)+1<nbroutes*0.2){
+                NbRails.set(4, NbRails.get(4)+1);
+                return 4;
+            }
+        }
+        if(distance>=6 && distance <=7 || (NbRails.get(4)+1>nbroutes*0.2 && distance<=7)) {
+            if(NbRails.get(5)+1<nbroutes*0.04){
+                NbRails.set(5, NbRails.get(5)+1);
+                return 5;
+            }
+        }
+        if(distance>=7 && distance<=8 || NbRails.get(5)+1>nbroutes*0.04 && distance<=8){
+            if(NbRails.get(6)+1<nbroutes*0.07){
+                NbRails.set(6, NbRails.get(6)+1);
+                return 6;
+            }
+        }
+        if(distance>=8 || NbRails.get(6)+1>nbroutes*0.07){
+            NbRails.set(8, NbRails.get(8)+1);
+            return 8;
+        }
+        return 0;
+    }
 
 
     /**
