@@ -272,12 +272,13 @@ public class Destinations {
             double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
             Line2D l = new Line2D.Double(x1,y1,x2,y2);
 
-            if(distance1<distance
-                    && from.getName()!=((City) to.getValue()).getName()
+            if(!(from.getCoordonnees().equals(((City)to.getValue()).getCoordonnees()))
+                    && distance1<distance
                     && !((City)to.getValue()).getRoutesFrom().containsKey(from.getName())) {
                 if ((nbtour == 1 && ((City) to.getValue()).getRoutesFrom().size() == 0) || nbtour == 2) {
                     for (int i = 0; i < TabRoutes.size(); i++) {
                         if (l.intersectsLine(TabRoutes.get(i)) && l != TabRoutes.get(i)) {
+                            System.out.println(from);
                             Point2D p = new Point2D.Double(x2, y2);
                             Point2D p1 = new Point2D.Double(x1, y1);
                             Point2D inter = intersection(TabRoutes.get(i), l);
@@ -317,9 +318,8 @@ public class Destinations {
         }
         else{
             compteur++;
-            if(compteur!=1000) {
+            if(compteur!=1000)
                 GenererFirstRoute(from, TabRoutes, CountColor, randomColor, 2, compteur);
-            }
         }
     }
 
@@ -345,7 +345,7 @@ public class Destinations {
             l = new Line2D.Double(x1, y1, x2, y2);
             double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
             if (distance1<distance
-                    &&(from.getName() != ((City) to.getValue()).getName())
+                    &&!(from.getCoordonnees().equals(((City)to.getValue()).getCoordonnees()))
                     && !(from.getRoutesFrom().containsKey((to.getValue())))
                     && !(((City) to.getValue()).getRoutesFrom().containsKey(from))){
                 for (int i = 0; i < TabRoutes.size(); i++) {
