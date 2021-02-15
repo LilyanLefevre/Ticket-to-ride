@@ -42,6 +42,9 @@ public class GameView extends JFrame{
         this.gbc = gbc;
     }
 
+    public void setG(Game g) {
+        this.g = g;
+    }
 
     public GameView(final Game ga){
         SwingUtilities.invokeLater(new Runnable() {

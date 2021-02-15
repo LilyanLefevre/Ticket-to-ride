@@ -11,8 +11,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.System.exit;
+import static java.lang.System.in;
 
 /**
  * classe du controller des boutons du jeu
@@ -29,11 +31,14 @@ public class JButtonController implements ActionListener {
     private CityTile choixCity1 = null;
     private CityTile choixCity2 = null;
 
+    private int finPartie;
+
 
     public JButtonController(Game g, GameView gv) {
         model = g;
         view = gv;
         currentPlayer = g.getPlayers().get(0);
+        finPartie = 0;
     }
 
     /**
@@ -115,6 +120,7 @@ public class JButtonController implements ActionListener {
                     currentPlayer = model.nextPlayer();
                     currentAction = 0;
                     nbCardTaken = 0;
+                    checkFinPartie();
                 }
             }
         }
@@ -175,6 +181,8 @@ public class JButtonController implements ActionListener {
                 currentPlayer = model.nextPlayer();
                 currentAction = 0;
                 nbCardTaken = 0;
+                checkFinPartie();
+
             }else{
                 int input = JOptionPane.showConfirmDialog(null ,"Il n'y a plus de carte detination disponible.",
                         "Piocher des cartes destinations",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -302,6 +310,8 @@ public class JButtonController implements ActionListener {
                         choixCity2.setEnabled(true);
                         choixCity1 = null;
                         choixCity2 = null;
+                        checkFinPartie();
+
                     }
                 }
             }
@@ -376,6 +386,29 @@ public class JButtonController implements ActionListener {
         int input = JOptionPane.showConfirmDialog(null ,params,
                 "Choix d'une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
         return (Route) routeList.getSelectedItem();
+    }
+
+
+    private void checkFinPartie(){
+        if(model.gameIsOver()){
+            //on calcule les points de chaque joueur avec les objectifs
+            model.determineScore();
+
+            //on récupère le vainqueur
+            Player p = model.getWinner();
+
+            String scoresWithNames = p.getName()+" a gagné\n";
+            for(Player pl : model.getPlayers()){
+                scoresWithNames += pl.getName()+" - "+pl.getPoints()+"\n";
+            }
+
+            Object[] options1 = { "Jouer une autre partie", "Quitter"};
+            int input = JOptionPane.showOptionDialog(null, scoresWithNames,"Fin de partie",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,null,options1,options1[0]);
+            if(input == JOptionPane.NO_OPTION){
+                System.exit(0);
+            }
+        }
     }
 
 }

@@ -30,10 +30,9 @@ public class TicketToRide {
         if(view1.getStatus() == -1){
             exit(0);
         }else{
-            view1.setVisible(false);
+            view1.dispose();
             System.out.println("il y a "+welcomeController.getNbJoueurs()+" joueurs");
         }
-
         /**
          * deuxième fenetre qui lance le jeu
          */
@@ -67,5 +66,6 @@ public class TicketToRide {
         //quand on détecte la fin d'une partie on calcule les points des joueurs suivant leur objectif
         g.determineScore();
         System.out.println(g.scoreToString());*/
+        System.out.println("Seed = "+SEED);
     }
 }

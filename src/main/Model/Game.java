@@ -58,6 +58,10 @@ public class Game{
         return d;
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
     public Game(ArrayList<String> names, Random r) {
         this.random = r;
 
