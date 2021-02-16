@@ -30,15 +30,10 @@ public class JButtonController implements ActionListener {
     private CityTile choixCity1 = null;
     private CityTile choixCity2 = null;
 
-    private int finPartie;
-
-
     public JButtonController(Game g, GameView gv) {
         model = g;
         view = gv;
         currentPlayer = g.getPlayers().get(0);
-        finPartie = 0;
-        currentPlayer.playTurn(view);
     }
 
     /**
@@ -115,13 +110,13 @@ public class JButtonController implements ActionListener {
                 view.getPlayerView().updateCard(currentPlayer);
                 view.repaint();
                 if(nbCardTaken > 1){
-                    int input = JOptionPane.showConfirmDialog(null ,"Fin de votre tour",
-                            "Fin du tour",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    /*int input = JOptionPane.showConfirmDialog(null ,"Fin de votre tour",
+                            "Fin du tour",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);*/
                     currentPlayer = model.nextPlayer();
                     currentAction = 0;
                     nbCardTaken = 0;
                     checkFinPartie();
-                    currentPlayer.playTurn(view);
+                    playIALevel1();
                 }
             }
         }
@@ -177,13 +172,13 @@ public class JButtonController implements ActionListener {
                     System.out.print(dctmp.get(2).toString());
                     currentPlayer.addDestinationCard(dctmp.get(2));
                 }
-                input = JOptionPane.showConfirmDialog(null ,"Fin de votre tour",
-                        "Fin du tour",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                /*input = JOptionPane.showConfirmDialog(null ,"Fin de votre tour",
+                        "Fin du tour",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);*/
                 currentPlayer = model.nextPlayer();
                 currentAction = 0;
                 nbCardTaken = 0;
                 checkFinPartie();
-                currentPlayer.playTurn(view);
+                playIALevel1();
 
             }else{
                 int input = JOptionPane.showConfirmDialog(null ,"Il n'y a plus de carte detination disponible.",
@@ -313,7 +308,8 @@ public class JButtonController implements ActionListener {
                         choixCity1 = null;
                         choixCity2 = null;
                         checkFinPartie();
-                        currentPlayer.playTurn(view);
+                        playIALevel1();
+
                     }
                 }
             }
@@ -410,6 +406,76 @@ public class JButtonController implements ActionListener {
             if(input == JOptionPane.NO_OPTION){
                 System.exit(0);
             }
+        }
+    }
+
+    public void playIALevel1(){
+        if(currentPlayer.getLevel() != 0) {
+            ArrayList<Route> routes = model.getD().getRoutes();
+            Route desiredRoute = null;
+            for (Route r : routes) {
+                Model.Enum.Color color = r.getColor();
+                int nbCard = r.getRequire();
+                if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                    desiredRoute = r;
+                }
+            }
+
+            //si on a trouvé une route à prendre
+            if (desiredRoute != null) {
+                if (desiredRoute.isTunel()) {
+                    //si la route n'a pas de couleur
+                    if (desiredRoute.getColor() == Color.GRAY) {
+
+                        Color choixColor = chooseColor();
+
+                        desiredRoute.getTunnel(choixColor, model, currentPlayer);
+                    }
+                    //si la route a une couleur
+                    else {
+                        desiredRoute.getTunnel(desiredRoute.getColor(), model, currentPlayer);
+                    }
+                }
+                //si c'est pas un tunnel
+                else {
+                    //si c'est un ferrie
+                    if (desiredRoute.getColor() == Color.GRAY) {
+
+                        Color choixColor = chooseColor();
+
+                        //si le joueur a pas pu prendre le ferrie
+                        if (desiredRoute.getFerrie(choixColor, model, currentPlayer) == -1) {
+                            currentAction = 0;
+                            choixCity1.setEnabled(true);
+                            choixCity2.setEnabled(true);
+                            choixCity1 = null;
+                            choixCity2 = null;
+                            return;
+                        }
+                    } else {
+                        //si le joueur a pas pu prendre la route
+                        if (desiredRoute.getRoute(desiredRoute.getColor(), model, currentPlayer) == -1) {
+                            currentAction = 0;
+                            choixCity1.setEnabled(true);
+                            choixCity2.setEnabled(true);
+                            choixCity1 = null;
+                            choixCity2 = null;
+                            return;
+                        }
+                    }
+                }
+            }
+            //sinon on pioche des cartes
+            else {
+                currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                currentPlayer.drawTrainCard(model.getDrawWagonCards());
+            }
+            checkFinPartie();
+            currentPlayer = model.nextPlayer();
+            view.updateView(model, this);
+            view.getPlayerView().updateCard(currentPlayer);
+            view.repaint();
+            playIALevel1();
         }
     }
 
