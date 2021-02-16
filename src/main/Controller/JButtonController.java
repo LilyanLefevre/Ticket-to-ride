@@ -76,9 +76,11 @@ public class JButtonController implements ActionListener {
             if(currentAction == 1){
                 //s'il tente de prendre une carte loco et qu'il a déjà pris une autre carte -> erreur
                 if(lastIndexTaken != -1 && card.getCouleur() == Color.RAINBOW && nbCardTaken > 0){
-                    int input = JOptionPane.showConfirmDialog(null ,"Si vous prenez une carte " +
-                            "locomotive visible lors d'un tour, vous ne pouvez pas prendre d'autre carte !",
-                            "Erreur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    if(currentPlayer.getLevel() == 0) {
+                        int input = JOptionPane.showConfirmDialog(null, "Si vous prenez une carte " +
+                                        "locomotive visible lors d'un tour, vous ne pouvez pas prendre d'autre carte !",
+                                "Erreur", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    }
                     return;
                 }
 
@@ -86,10 +88,12 @@ public class JButtonController implements ActionListener {
                 if(card.getIndex() >= 0){
 
                     WagonCard tmp = model.getDrawVisibleTrainCards().get(card.getIndex());
-                    int input = JOptionPane.showConfirmDialog(null ,"Vous avez pioché une carte "
-                            +tmp.getColor(),"Prendre une carte",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                    if(input == 2){
-                        return;
+                    if(currentPlayer.getLevel() == 0) {
+                        int input = JOptionPane.showConfirmDialog(null, "Vous avez pioché une carte "
+                                + tmp.getColor(), "Prendre une carte", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        if (input == 2) {
+                            return;
+                        }
                     }
                     nbCardTaken++;
                     //on retire la carte de la pioche de cartes visibles
@@ -113,15 +117,19 @@ public class JButtonController implements ActionListener {
                     nbCardTaken++;
 
                     WagonCard newCard = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                    int input = JOptionPane.showConfirmDialog(null ,"Vous avez pioché une carte "
-                            +newCard.getColor(),"Prendre une carte",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    if(currentPlayer.getLevel() == 0) {
+                        int input = JOptionPane.showConfirmDialog(null, "Vous avez pioché une carte "
+                                + newCard.getColor(), "Prendre une carte", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 view.updateView(model,this);
                 view.getPlayerView().updateCard(currentPlayer);
                 view.repaint();
                 if(nbCardTaken > 1){
-                    /*int input = JOptionPane.showConfirmDialog(null ,"Fin de votre tour",
-                            "Fin du tour",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);*/
+                    if(currentPlayer.getLevel() == 0) {
+                        int input = JOptionPane.showConfirmDialog(null, "Fin de votre tour",
+                                "Fin du tour", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    }
                     currentPlayer = model.nextPlayer();
                     currentAction = 0;
                     nbCardTaken = 0;
@@ -134,7 +142,7 @@ public class JButtonController implements ActionListener {
 
 
         // si on souhaite piocher des cartes destination
-        if(src == view.getButtons().getPiocherD() /*|| src == view.getDraw().getPiocheDestination()*/){
+        if(src == view.getButtons().getPiocherD()){
             //s'il reste au moins une carte destination
             if(model.getDrawDestinationCards().size() > 0) {
                 System.out.println("Vous avez pioché les trois cartes Destination suivantes: ");
@@ -164,9 +172,10 @@ public class JButtonController implements ActionListener {
                     params[3] = cb3;
 
                 }
-
-                int input = JOptionPane.showConfirmDialog(null ,params,
-                        "Piocher des cartes destinations",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if(currentPlayer.getLevel() == 0) {
+                    int input = JOptionPane.showConfirmDialog(null, params,
+                            "Piocher des cartes destinations", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                }
 
                 //on met les cartes dans le jeu du joueur
                 System.out.println("Vous avez conservé les cartes suivantes :");
@@ -182,8 +191,10 @@ public class JButtonController implements ActionListener {
                     System.out.print(dctmp.get(2).toString());
                     currentPlayer.addDestinationCard(dctmp.get(2));
                 }
-                /*input = JOptionPane.showConfirmDialog(null ,"Fin de votre tour",
-                        "Fin du tour",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);*/
+                if(currentPlayer.getLevel() == 0) {
+                    int input = JOptionPane.showConfirmDialog(null, "Fin de votre tour",
+                            "Fin du tour", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                }
                 currentPlayer = model.nextPlayer();
                 currentAction = 0;
                 nbCardTaken = 0;
@@ -191,8 +202,10 @@ public class JButtonController implements ActionListener {
                 playIA();
 
             }else{
-                int input = JOptionPane.showConfirmDialog(null ,"Il n'y a plus de carte detination disponible.",
-                        "Piocher des cartes destinations",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if(currentPlayer.getLevel() == 0) {
+                    int input = JOptionPane.showConfirmDialog(null, "Il n'y a plus de carte detination disponible.",
+                            "Piocher des cartes destinations", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         }
 
@@ -454,10 +467,23 @@ public class JButtonController implements ActionListener {
             }
             //sinon on pioche des cartes
             else {
-                WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.print("Le bot a pioché les cartes : "+wc.getColor());
-                wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.println(" et "+wc.getColor());
+                if(model.getDrawWagonCards().size() > 0) {
+                    WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    System.out.println(" et " + wc.getColor());
+                }else{
+                    if(model.getDrawDestinationCards().size() > 0) {
+                        System.out.print("Le bot a pioché les cartes destination : " );
+                        for (int i = 0; i < 3; i++) {
+                            if (model.getDrawDestinationCards().size() > 0) {
+                                DestinationCard tmpd = model.drawDestinationCard();
+                                currentPlayer.addDestinationCard(tmpd);
+                                System.out.print(tmpd+"  ");
+                            }
+                        }
+                    }
+                }
             }
             checkFinPartie();
             currentPlayer = model.nextPlayer();
@@ -525,10 +551,21 @@ public class JButtonController implements ActionListener {
             }
             //sinon on pioche des cartes
             else {
-                WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.print("Le bot a pioché les cartes : " + wc.getColor());
-                wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.println(" et " + wc.getColor());
+                if(model.getDrawWagonCards().size() > 0) {
+                    WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    System.out.println(" et " + wc.getColor());
+                }else{
+                    if(model.getDrawDestinationCards().size() > 0) {
+                        for (int i = 0; i < 3; i++) {
+                            if (model.getDrawDestinationCards().size() > 0) {
+                                DestinationCard tmpd = model.drawDestinationCard();
+                                currentPlayer.addDestinationCard(tmpd);
+                            }
+                        }
+                    }
+                }
             }
             checkFinPartie();
             currentPlayer = model.nextPlayer();
@@ -598,12 +635,26 @@ public class JButtonController implements ActionListener {
             if (desiredRoute != null) {
                 tryGetRoute(desiredRoute);
             }
+
             //sinon on pioche des cartes
             else {
-                WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.print("Le bot a pioché les cartes : " + wc.getColor());
-                wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.println(" et " + wc.getColor());
+                if(model.getDrawWagonCards().size() > 0) {
+                    WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    System.out.println(" et " + wc.getColor());
+                }else{
+                    if(model.getDrawDestinationCards().size() > 0) {
+                        System.out.print("Le bot a pioché les cartes destination : " );
+                        for (int i = 0; i < 3; i++) {
+                            if (model.getDrawDestinationCards().size() > 0) {
+                                DestinationCard tmpd = model.drawDestinationCard();
+                                currentPlayer.addDestinationCard(tmpd);
+                                System.out.print(tmpd+"  ");
+                            }
+                        }
+                    }
+                }
             }
             checkFinPartie();
             currentPlayer = model.nextPlayer();
@@ -617,7 +668,7 @@ public class JButtonController implements ActionListener {
 
     /**
      * try to get a given route
-     * 
+     *
      * @param desiredRoute
      */
     public void tryGetRoute(Route desiredRoute){
