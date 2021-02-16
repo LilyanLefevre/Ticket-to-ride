@@ -119,7 +119,11 @@ public class DrawPane extends JPanel {
      * @param gc l'action listener
      */
     public void setActionListener(JButtonController gc){
-        piocheWagon.addActionListener(gc);
+        if(piocheWagon.getActionListeners().length == 0) {
+            piocheWagon.addActionListener(gc);
+            System.out.println("foutu l'action listener");
+
+        }
         for(CardButtonPane c : cartesVisibles){
             c.addActionListener(gc);
         }

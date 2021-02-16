@@ -54,6 +54,10 @@ public class JButtonController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
+        if(src == view.getDraw().getPiocheWagon()){
+            System.out.println("appuie sur bouton carte aleatoire");
+
+        }
 
 
 
@@ -100,7 +104,7 @@ public class JButtonController implements ActionListener {
                     model.getDrawVisibleTrainCards().remove(tmp);
 
                     //on remet une nouvelle carte tiree au hasard dans la pioche
-                    int nCard = (int) (Math.random() * (model.getDrawVisibleTrainCards().size()));
+                    int nCard = (int) (Math.random() * (model.getDrawWagonCards().size()));
                     model.getDrawVisibleTrainCards().add(model.getDrawWagonCards().get(nCard));
                     model.getDrawWagonCards().remove(nCard);
 
@@ -433,14 +437,18 @@ public class JButtonController implements ActionListener {
     }
 
     private void playIA(){
-
         if(currentPlayer.getLevel() == 2){
+            System.out.println("coup de l'ia2");
             playIALevel2();
         }
         if(currentPlayer.getLevel() == 3){
+            System.out.println("coup de l'ia3");
+
             playIALevel3();
         }
         if(currentPlayer.getLevel() != 0){
+            System.out.println("coup de l'ia");
+
             playIALevel1();
         }
     }
