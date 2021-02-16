@@ -100,9 +100,28 @@ public class BoardPane extends JPanel {
                     c = Model.Enum.Color.getAwtColor(((Route)route.getValue()).getColor());
                 }
                 g.setColor(c);
+                Coordonnees cooCt1 = new Coordonnees(c1.getX(),c1.getY());
+                Coordonnees cooCt2 = new Coordonnees(c2.getX(),c2.getY());
+                double dist = cooCt1.distance(cooCt2);
+                double tailleTrait = dist/((Route)route.getValue()).getRequire();
+                float[] dash1 = { (float)tailleTrait, 3f};
+
 
                 //on affiche une ligne entre ct1 et ct2
-                ((Graphics2D)g).setStroke(new BasicStroke(5));
+                //((Graphics2D)g).setStroke(new BasicStroke(5));
+                if(!((Route)route.getValue()).isAlreadyTakenRoute()) {
+                    BasicStroke bs1 = new BasicStroke(5,
+                            BasicStroke.CAP_BUTT,
+                            BasicStroke.JOIN_ROUND,
+                            1f,
+                            dash1,
+                            1f);
+                    ((Graphics2D) g).setStroke(bs1);
+                }else{
+                    BasicStroke bs1 = new BasicStroke(5);
+                    ((Graphics2D) g).setStroke(bs1);
+
+                }
 
                 //on initialise les points qui vont être reliés par une ligne
                 Line2D line;
@@ -153,6 +172,7 @@ public class BoardPane extends JPanel {
 
                 ((Graphics2D) g).draw(line);
                 routePath.put(line, ((Route) route.getValue()));
+                ((Graphics2D)g).setStroke(new BasicStroke(0f));
             }
         }
     }

@@ -12,7 +12,7 @@ public class Coordonnees {
     private Random random;
 
 
-    private Coordonnees(int x, int y) {
+    public Coordonnees(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -65,7 +65,6 @@ public class Coordonnees {
         int cx,cy;
         cx = borneInf+random.nextInt(borneSup-borneInf);
         cy = borneInf+random.nextInt(borneSup-borneInf);
-        System.out.println("coo generees "+x+" "+y);
         return new Coordonnees(cx,cy);
     }
 
