@@ -65,11 +65,13 @@ public class ChoixJoueursPane extends JPanel {
         consigne2.setVisible(false);
 
         //on ajoute le choix du nb de joueurs
-        Integer[] r = new Integer[4];
-        r[0] = 1;
-        r[1] = 2;
-        r[2] = 3;
-        r[3] = 4;
+        Integer[] r = new Integer[5];
+        r[0] = 0;
+        r[1] = 1;
+        r[2] = 2;
+        r[3] = 3;
+        r[4] = 4;
+
         choixJoueurs = new JComboBox<>(r);
         choixJoueurs.setPreferredSize(new Dimension(300,50));
         choixJoueurs.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

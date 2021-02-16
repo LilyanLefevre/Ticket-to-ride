@@ -34,6 +34,7 @@ public class JButtonController implements ActionListener {
         model = g;
         view = gv;
         currentPlayer = g.getPlayers().get(0);
+        playIALevel1();
     }
 
     /**
@@ -427,9 +428,9 @@ public class JButtonController implements ActionListener {
                     //si la route n'a pas de couleur
                     if (desiredRoute.getColor() == Color.GRAY) {
 
-                        Color choixColor = chooseColor();
+                        //Color choixColor = chooseColor();
 
-                        desiredRoute.getTunnel(choixColor, model, currentPlayer);
+                        desiredRoute.getTunnel(Color.RED, model, currentPlayer);
                     }
                     //si la route a une couleur
                     else {
@@ -441,15 +442,16 @@ public class JButtonController implements ActionListener {
                     //si c'est un ferrie
                     if (desiredRoute.getColor() == Color.GRAY) {
 
-                        Color choixColor = chooseColor();
+                        //Color choixColor = chooseColor();
 
                         //si le joueur a pas pu prendre le ferrie
-                        if (desiredRoute.getFerrie(choixColor, model, currentPlayer) == -1) {
+                        if (desiredRoute.getFerrie(Color.RED, model, currentPlayer) == -1) {
                             currentAction = 0;
                             choixCity1.setEnabled(true);
                             choixCity2.setEnabled(true);
                             choixCity1 = null;
                             choixCity2 = null;
+                            System.out.println("Le bot n'a pas pu prendre le ferrie");
                             return;
                         }
                     } else {
@@ -460,6 +462,7 @@ public class JButtonController implements ActionListener {
                             choixCity2.setEnabled(true);
                             choixCity1 = null;
                             choixCity2 = null;
+                            System.out.println("Le bot n'a pas pu prendre la route");
                             return;
                         }
                     }
@@ -467,8 +470,10 @@ public class JButtonController implements ActionListener {
             }
             //sinon on pioche des cartes
             else {
-                currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                System.out.print("Le bot a pioché les cartes : "+wc.getColor());
+                wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                System.out.println(" et "+wc.getColor());
             }
             checkFinPartie();
             currentPlayer = model.nextPlayer();
