@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * classe qui représente une carte destination
  */
-public class DestinationCard {
+public class DestinationCard implements Comparable{
     private final City dest1;
     private final City dest2;
     private final int points;
@@ -96,5 +96,10 @@ public class DestinationCard {
         }
 
         return ret;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return ((DestinationCard)o).getPoints() - this.getPoints();
     }
 }

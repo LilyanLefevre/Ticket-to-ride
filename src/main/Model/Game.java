@@ -106,7 +106,7 @@ public class Game{
         }
 
         for(int i = names.size(); i < 4; i++){
-            players.add(i,new HumanPlayer("bot "+i, couleurJoueur.get(i), drawDestinationCards,drawWagonCards, 1));
+            players.add(i,new HumanPlayer("bot "+i, couleurJoueur.get(i), drawDestinationCards,drawWagonCards, i+1));
         }
 
         alreadyCalled = 0;
