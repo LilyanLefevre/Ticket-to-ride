@@ -424,6 +424,9 @@ public class JButtonController implements ActionListener {
         if(currentPlayer.getLevel() == 2){
             playIALevel2();
         }
+        if(currentPlayer.getLevel() == 3){
+            playIALevel3();
+        }
         if(currentPlayer.getLevel() != 0){
             playIALevel1();
         }
@@ -466,13 +469,86 @@ public class JButtonController implements ActionListener {
     }
 
     /**
-     * ia qui essaie de faire son objectif qui vaut le plus de points
+     * ia qui essaie de faire son objectif qui vaut le plus de points en priorité
      */
     private void playIALevel2() {
         if(currentPlayer.getLevel() != 0) {
             ArrayList<Route> routes = model.getD().getRoutes();
             ArrayList<DestinationCard> objectifs = currentPlayer.getdCards();
             Collections.sort(objectifs);
+            Route desiredRoute = null;
+
+            Graph<City, DefaultEdge> g = new DefaultUndirectedGraph<>(DefaultEdge.class);
+
+            //on ajoute toutes les villes au graph
+            for (Map.Entry city : model.getD().getDestinations().entrySet()) {
+                City c1 = (City)city.getValue();
+                g.addVertex(c1);
+            }
+
+            //on ajoute tous les arcs entre les villes
+            for (Route r : routes){
+                g.addEdge(r.getDest1(), r.getDest2());
+            }
+            BellmanFordShortestPath<City, DefaultEdge> belmanFordAlg = new BellmanFordShortestPath<>(g);
+
+            for(DestinationCard dc : objectifs) {
+                if (desiredRoute == null) {
+                    //on cherche le chemin le plus court qui relie les deux villes
+                    ShortestPathAlgorithm.SingleSourcePaths<City, DefaultEdge> iPaths = belmanFordAlg.getPaths(dc.getDest1());
+
+                    //on récupère les villes parcourues par le chemin (il y en a forcément un)
+                    GraphPath<City, DefaultEdge> path = iPaths.getPath(dc.getDest2());
+                    if (path != null) {
+                        List<City> listCities = path.getVertexList();
+                        if (!listCities.isEmpty()) {
+                            for (int i = 0; i < listCities.size() - 1; i++) {
+                                City v1 = listCities.get(i);
+                                City v2 = listCities.get(i + 1);
+                                Route r = model.getD().getRouteFromString(v1.getName() + " - " + v2.getName());
+                                if (r == null) {
+                                    r = model.getD().getRouteFromString(v2.getName() + " - " + v1.getName());
+                                }
+                                Model.Enum.Color color = r.getColor();
+                                int nbCard = r.getRequire();
+                                if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                                    desiredRoute = r;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //si on a trouvé une route à prendre
+            if (desiredRoute != null) {
+                tryGetRoute(desiredRoute);
+            }
+            //sinon on pioche des cartes
+            else {
+                WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                System.out.println(" et " + wc.getColor());
+            }
+            checkFinPartie();
+            currentPlayer = model.nextPlayer();
+            view.updateView(model, this);
+            view.getPlayerView().updateCard(currentPlayer);
+            view.repaint();
+            playIA();
+        }
+    }
+
+
+    /**
+     * ia qui essaie de faire son objectif qui vaut le moins de points en priorité
+     */
+    private void playIALevel3() {
+        if(currentPlayer.getLevel() != 0) {
+            ArrayList<Route> routes = model.getD().getRoutes();
+            ArrayList<DestinationCard> objectifs = currentPlayer.getdCards();
+            Collections.sort(objectifs);
+            Collections.reverse(objectifs);
             Route desiredRoute = null;
 
             Graph<City, DefaultEdge> g = new DefaultUndirectedGraph<>(DefaultEdge.class);
@@ -538,6 +614,12 @@ public class JButtonController implements ActionListener {
         }
     }
 
+
+    /**
+     * try to get a given route
+     * 
+     * @param desiredRoute
+     */
     public void tryGetRoute(Route desiredRoute){
         if (desiredRoute.isTunel()) {
             //si la route n'a pas de couleur
@@ -583,4 +665,5 @@ public class JButtonController implements ActionListener {
             }
         }
     }
+
 }
