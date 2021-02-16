@@ -35,6 +35,8 @@ public class Game{
 
     private ArrayList<String> names;
 
+    private boolean onlyIA;
+
     public HumanPlayer getCurrentPlayer() {
         return currentPlayer;
     }
@@ -59,8 +61,8 @@ public class Game{
         return d;
     }
 
-    public Random getRandom() {
-        return random;
+    public boolean isOnlyIA() {
+        return onlyIA;
     }
 
     public Game(ArrayList<String> names, Random r) {
@@ -96,6 +98,11 @@ public class Game{
 
         // initialisation des joueurs
         players = new ArrayList<>();
+        if(names.size() == 0){
+            onlyIA = true;
+        }else{
+            onlyIA = false;
+        }
         HashMap<Integer, java.awt.Color> couleurJoueur = new HashMap<>();
         couleurJoueur.put(0, new java.awt.Color(248,160,141));
         couleurJoueur.put(1, new java.awt.Color(145,205,253));

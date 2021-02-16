@@ -17,6 +17,8 @@ import org.jgrapht.graph.DefaultUndirectedGraph;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -421,34 +423,39 @@ public class JButtonController implements ActionListener {
 
             //on récupère le vainqueur
             HumanPlayer p = model.getWinner();
+            FileWriter writer = null;
+            try {
+                writer = new FileWriter("./resultats.txt",true);
+                writer.write(p.getName()+"\n");
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             String scoresWithNames = p.getName()+" a gagné\n";
             for(HumanPlayer pl : model.getPlayers()){
                 scoresWithNames += pl.getName()+" - "+pl.getPoints()+" lvl = "+pl.getLevel()+"\n";
             }
-
-            Object[] options1 = { "Jouer une autre partie", "Quitter"};
-            int input = JOptionPane.showOptionDialog(null, scoresWithNames,"Fin de partie",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,null,options1,options1[0]);
-            if(input == JOptionPane.NO_OPTION){
-                System.exit(0);
+            if(!model.isOnlyIA()) {
+                Object[] options1 = {"Jouer une autre partie", "Quitter"};
+                int input = JOptionPane.showOptionDialog(null, scoresWithNames, "Fin de partie",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, options1[0]);
+                if (input == JOptionPane.NO_OPTION) {
+                    System.exit(0);
+                }
             }
+            System.exit(0);
         }
     }
 
     private void playIA(){
         if(currentPlayer.getLevel() == 2){
-            System.out.println("coup de l'ia2");
             playIALevel2();
         }
         if(currentPlayer.getLevel() == 3){
-            System.out.println("coup de l'ia3");
-
             playIALevel3();
         }
         if(currentPlayer.getLevel() != 0){
-            System.out.println("coup de l'ia");
-
             playIALevel1();
         }
     }
