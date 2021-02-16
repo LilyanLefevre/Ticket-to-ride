@@ -447,49 +447,7 @@ public class JButtonController implements ActionListener {
 
             //si on a trouvé une route à prendre
             if (desiredRoute != null) {
-                if (desiredRoute.isTunel()) {
-                    //si la route n'a pas de couleur
-                    if (desiredRoute.getColor() == Color.GRAY) {
-
-                        //Color choixColor = chooseColor();
-
-                        desiredRoute.getTunnel(Color.RED, model, currentPlayer);
-                    }
-                    //si la route a une couleur
-                    else {
-                        desiredRoute.getTunnel(desiredRoute.getColor(), model, currentPlayer);
-                    }
-                }
-                //si c'est pas un tunnel
-                else {
-                    //si c'est un ferrie
-                    if (desiredRoute.getColor() == Color.GRAY) {
-
-                        //Color choixColor = chooseColor();
-
-                        //si le joueur a pas pu prendre le ferrie
-                        if (desiredRoute.getFerrie(Color.RED, model, currentPlayer) == -1) {
-                            currentAction = 0;
-                            choixCity1.setEnabled(true);
-                            choixCity2.setEnabled(true);
-                            choixCity1 = null;
-                            choixCity2 = null;
-                            System.out.println("Le bot n'a pas pu prendre le ferrie");
-                            return;
-                        }
-                    } else {
-                        //si le joueur a pas pu prendre la route
-                        if (desiredRoute.getRoute(desiredRoute.getColor(), model, currentPlayer) == -1) {
-                            currentAction = 0;
-                            choixCity1.setEnabled(true);
-                            choixCity2.setEnabled(true);
-                            choixCity1 = null;
-                            choixCity2 = null;
-                            System.out.println("Le bot n'a pas pu prendre la route");
-                            return;
-                        }
-                    }
-                }
+                tryGetRoute(desiredRoute);
             }
             //sinon on pioche des cartes
             else {
@@ -562,56 +520,14 @@ public class JButtonController implements ActionListener {
 
             //si on a trouvé une route à prendre
             if (desiredRoute != null) {
-                if (desiredRoute.isTunel()) {
-                    //si la route n'a pas de couleur
-                    if (desiredRoute.getColor() == Color.GRAY) {
-
-                        //Color choixColor = chooseColor();
-
-                        desiredRoute.getTunnel(Color.RED, model, currentPlayer);
-                    }
-                    //si la route a une couleur
-                    else {
-                        desiredRoute.getTunnel(desiredRoute.getColor(), model, currentPlayer);
-                    }
-                }
-                //si c'est pas un tunnel
-                else {
-                    //si c'est un ferrie
-                    if (desiredRoute.getColor() == Color.GRAY) {
-
-                        //Color choixColor = chooseColor();
-
-                        //si le joueur a pas pu prendre le ferrie
-                        if (desiredRoute.getFerrie(Color.RED, model, currentPlayer) == -1) {
-                            currentAction = 0;
-                            choixCity1.setEnabled(true);
-                            choixCity2.setEnabled(true);
-                            choixCity1 = null;
-                            choixCity2 = null;
-                            System.out.println("Le bot n'a pas pu prendre le ferrie");
-                            return;
-                        }
-                    } else {
-                        //si le joueur a pas pu prendre la route
-                        if (desiredRoute.getRoute(desiredRoute.getColor(), model, currentPlayer) == -1) {
-                            currentAction = 0;
-                            choixCity1.setEnabled(true);
-                            choixCity2.setEnabled(true);
-                            choixCity1 = null;
-                            choixCity2 = null;
-                            System.out.println("Le bot n'a pas pu prendre la route");
-                            return;
-                        }
-                    }
-                }
+                tryGetRoute(desiredRoute);
             }
             //sinon on pioche des cartes
             else {
                 WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.print("Le bot a pioché les cartes : "+wc.getColor());
+                System.out.print("Le bot a pioché les cartes : " + wc.getColor());
                 wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
-                System.out.println(" et "+wc.getColor());
+                System.out.println(" et " + wc.getColor());
             }
             checkFinPartie();
             currentPlayer = model.nextPlayer();
@@ -619,6 +535,52 @@ public class JButtonController implements ActionListener {
             view.getPlayerView().updateCard(currentPlayer);
             view.repaint();
             playIA();
+        }
+    }
+
+    public void tryGetRoute(Route desiredRoute){
+        if (desiredRoute.isTunel()) {
+            //si la route n'a pas de couleur
+            if (desiredRoute.getColor() == Color.GRAY) {
+
+                //Color choixColor = chooseColor();
+
+                desiredRoute.getTunnel(Color.RED, model, currentPlayer);
+            }
+            //si la route a une couleur
+            else {
+                desiredRoute.getTunnel(desiredRoute.getColor(), model, currentPlayer);
+            }
+        }
+        //si c'est pas un tunnel
+        else {
+            //si c'est un ferrie
+            if (desiredRoute.getColor() == Color.GRAY) {
+
+                //Color choixColor = chooseColor();
+
+                //si le joueur a pas pu prendre le ferrie
+                if (desiredRoute.getFerrie(Color.RED, model, currentPlayer) == -1) {
+                    currentAction = 0;
+                    choixCity1.setEnabled(true);
+                    choixCity2.setEnabled(true);
+                    choixCity1 = null;
+                    choixCity2 = null;
+                    System.out.println("Le bot n'a pas pu prendre le ferrie");
+                    return;
+                }
+            } else {
+                //si le joueur a pas pu prendre la route
+                if (desiredRoute.getRoute(desiredRoute.getColor(), model, currentPlayer) == -1) {
+                    currentAction = 0;
+                    choixCity1.setEnabled(true);
+                    choixCity2.setEnabled(true);
+                    choixCity1 = null;
+                    choixCity2 = null;
+                    System.out.println("Le bot n'a pas pu prendre la route");
+                    return;
+                }
+            }
         }
     }
 }
