@@ -102,7 +102,11 @@ public class Game{
         couleurJoueur.put(2, new java.awt.Color(165,102,12));
         couleurJoueur.put(3, new java.awt.Color(160,189,138));
         for(int i = 0; i < names.size(); i++){
-            players.add(i,new HumanPlayer(names.get(i),couleurJoueur.get(i), drawDestinationCards, drawWagonCards));
+            players.add(i,new HumanPlayer(names.get(i),couleurJoueur.get(i), drawDestinationCards, drawWagonCards, 0));
+        }
+
+        for(int i = names.size(); i < 4; i++){
+            players.add(i,new HumanPlayer("bot "+i, couleurJoueur.get(i), drawDestinationCards,drawWagonCards, 1));
         }
 
         alreadyCalled = 0;

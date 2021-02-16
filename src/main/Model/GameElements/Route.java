@@ -147,8 +147,8 @@ public class Route implements Comparable{
                     currentPlayer.addRoute(this);
                     Route inv = new Route(this.getDest2(),this.getDest1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
                     currentPlayer.addRoute(inv);
-                    JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route "+this,
-                            "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    /*JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route "+this,
+                            "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);*/
                 }
             }
 
@@ -168,9 +168,9 @@ public class Route implements Comparable{
             currentPlayer.addRoute(this);
             Route inv = new Route(this.getDest2(),this.getDest1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
             currentPlayer.addRoute(inv);
-            JOptionPane.showConfirmDialog(null ,"Vous n'avez pas besoin de rajouter de cartes. " +
+            /*JOptionPane.showConfirmDialog(null ,"Vous n'avez pas besoin de rajouter de cartes. " +
                             "Vous possédez désormais la route "+this,"Prendre une route",JOptionPane.OK_OPTION
-                    , JOptionPane.INFORMATION_MESSAGE);
+                    , JOptionPane.INFORMATION_MESSAGE);*/
         }
     }
     /**
@@ -215,8 +215,8 @@ public class Route implements Comparable{
 
                 //on retire le nombre de carte loco qu'on devait avoir pour prendre cette route
                 currentPlayer.removeTrainCards(Color.RAINBOW, this.getLocomotive(), model);
-                JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + this,
-                        "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                /*JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + this,
+                        "Prendre une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);*/
                 currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
                 currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
                 currentPlayer.addRoute(this);
@@ -254,8 +254,8 @@ public class Route implements Comparable{
                 currentPlayer.removeTrainCards(Color.RAINBOW, (this.getRequire()) - nbRemovedCard, model);
             }
             System.out.println();
-            JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + this,
-                    "Prendre une route",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+            /*JOptionPane.showConfirmDialog(null ,"Vous possédez désormais la route " + this,
+                    "Prendre une route",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);*/
             currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
             currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
             currentPlayer.addRoute(this);
@@ -279,6 +279,8 @@ public class Route implements Comparable{
                 return 4;
             case 4:
                 return 7;
+            case 5:
+                return 10;
             case 6:
                 return 15;
             case 8:

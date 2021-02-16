@@ -44,16 +44,19 @@ public class WelcomeButtonController implements ActionListener {
 
         if(src == view.getCjp().getConfirm()) {
             nbJoueurs = (int) view.getCjp().getChoixJoueurs().getSelectedItem();
-
-            view.getCjp().getConsigne1().setVisible(false);
-            view.getCjp().getConsigne2().setVisible(true);
-            view.getCjp().getChoixJoueurs().setVisible(false);
-            view.getCjp().getNom().setVisible(true);
-            view.getCjp().getConfirm().setVisible(false);
-            view.getCjp().getConfirm2().setVisible(true);
-            view.getCjp().getQuit().setVisible(true);
-            view.getRootPane().setDefaultButton(view.getCjp().getConfirm2());
-            view.getCjp().getNom().requestFocus();
+            if(nbJoueurs != 0) {
+                view.getCjp().getConsigne1().setVisible(false);
+                view.getCjp().getConsigne2().setVisible(true);
+                view.getCjp().getChoixJoueurs().setVisible(false);
+                view.getCjp().getNom().setVisible(true);
+                view.getCjp().getConfirm().setVisible(false);
+                view.getCjp().getConfirm2().setVisible(true);
+                view.getCjp().getQuit().setVisible(true);
+                view.getRootPane().setDefaultButton(view.getCjp().getConfirm2());
+                view.getCjp().getNom().requestFocus();
+            }else{
+                status = 1;
+            }
 
         }
         if(src == view.getCjp().getQuit()){

@@ -12,9 +12,14 @@ import static java.lang.System.exit;
 
 public class TicketToRide {
     private static long SEED = System.currentTimeMillis();
+<<<<<<< HEAD
             //1613430743619L;
+=======
+>>>>>>> b0c00cdd9a09c9d69c75622a300fe375dbefadbf
 
     public static void main (String [] args){
+        System.out.println("Seed = "+SEED);
+
         /**
          * première fenetre qui demande de saisir les paramètres
          */
@@ -67,6 +72,5 @@ public class TicketToRide {
         //quand on détecte la fin d'une partie on calcule les points des joueurs suivant leur objectif
         g.determineScore();
         System.out.println(g.scoreToString());*/
-        System.out.println("Seed = "+SEED);
     }
 }

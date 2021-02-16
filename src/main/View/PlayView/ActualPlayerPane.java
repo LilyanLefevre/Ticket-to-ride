@@ -25,7 +25,7 @@ public class ActualPlayerPane extends JPanel {
     }
 
     public ActualPlayerPane(HumanPlayer p) {
-        setLayout(new BorderLayout(0,50));
+        setLayout(new BorderLayout(0,40));
         setBorder(BorderFactory.createLineBorder(Color.black));
 
         occurencesCouleur = new HashMap<>();

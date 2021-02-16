@@ -513,4 +513,8 @@ public class Destinations {
 
         return new Point2D.Double(xi, yi);
     }
+
+    public ArrayList<Route> getRoutes() {
+        return routes;
+    }
 }
