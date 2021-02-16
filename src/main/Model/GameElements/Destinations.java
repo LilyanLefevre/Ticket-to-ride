@@ -278,7 +278,6 @@ public class Destinations {
                 if ((nbtour == 1 && ((City) to.getValue()).getRoutesFrom().size() == 0) || nbtour == 2) {
                     for (int i = 0; i < TabRoutes.size(); i++) {
                         if (l.intersectsLine(TabRoutes.get(i)) && l != TabRoutes.get(i)) {
-                            System.out.println(from);
                             Point2D p = new Point2D.Double(x2, y2);
                             Point2D p1 = new Point2D.Double(x1, y1);
                             Point2D inter = intersection(TabRoutes.get(i), l);
@@ -422,42 +421,42 @@ public class Destinations {
     public int CheckTaille(double distance){
         int nbroutes = destinations.size()*2;
         if(distance<2 || (distance>=2 && distance<=3)) {
-            if(NbRails.get(1)+1<nbroutes*0.1) {
+            if((NbRails.get(1)+1)<(nbroutes*0.1)) {
                 NbRails.set(1, NbRails.get(1) + 1);
                 return 1;
             }
         }
-        if(distance>=3 && distance<=4 || (NbRails.get(1)+1>nbroutes*0.1 && distance<=4)){
+        if(distance>=3 && distance<=4 || (NbRails.get(1)+1>=nbroutes*0.1 && distance<=4)){
             if(NbRails.get(2)+1<nbroutes*0.3){
                 NbRails.set(2, NbRails.get(2)+1);
                 return 2;
             }
         }
-        if(distance>=4 && distance<=5 || (NbRails.get(2)+1>nbroutes*0.3 && distance<=5)){
+        if(distance>=4 && distance<=5 || (NbRails.get(2)+1>=nbroutes*0.3 && distance<=5)){
             if(NbRails.get(3)+1<nbroutes*0.3){
                 NbRails.set(3, NbRails.get(3)+1);
                 return 3;
             }
         }
-        if(distance>=5 && distance<=6 || (NbRails.get(3)+1>nbroutes*0.3 && distance<=6)){
+        if(distance>=5 && distance<=6 || (NbRails.get(3)+1>=nbroutes*0.3 && distance<=6)){
             if(NbRails.get(4)+1<nbroutes*0.2){
                 NbRails.set(4, NbRails.get(4)+1);
                 return 4;
             }
         }
-        if(distance>=6 && distance <=7 || (NbRails.get(4)+1>nbroutes*0.2 && distance<=7)) {
+        if(distance>=6 && distance <=7 || (NbRails.get(4)+1>=nbroutes*0.2 && distance<=7)) {
             if(NbRails.get(5)+1<nbroutes*0.04){
                 NbRails.set(5, NbRails.get(5)+1);
                 return 5;
             }
         }
-        if(distance>=7 && distance<=8 || NbRails.get(5)+1>nbroutes*0.04 && distance<=8){
+        if(distance>=7 && distance<=8 || NbRails.get(5)+1>=nbroutes*0.04 && distance<=8){
             if(NbRails.get(6)+1<nbroutes*0.07){
                 NbRails.set(6, NbRails.get(6)+1);
                 return 6;
             }
         }
-        if(distance>=8 || NbRails.get(6)+1>nbroutes*0.07){
+        if(distance>=8 || NbRails.get(6)+1>=nbroutes*0.07){
             NbRails.set(8, NbRails.get(8)+1);
             return 8;
         }
