@@ -467,7 +467,7 @@ public class JButtonController implements ActionListener {
             }
             //sinon on pioche des cartes
             else {
-                if(model.getDrawWagonCards().size() > 0) {
+                if(model.getDrawWagonCards().size() > 1) {
                     WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
                     System.out.print("Le bot a pioché les cartes : " + wc.getColor());
                     wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
@@ -551,7 +551,7 @@ public class JButtonController implements ActionListener {
             }
             //sinon on pioche des cartes
             else {
-                if(model.getDrawWagonCards().size() > 0) {
+                if(model.getDrawWagonCards().size() > 1) {
                     WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
                     System.out.print("Le bot a pioché les cartes : " + wc.getColor());
                     wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
@@ -638,7 +638,7 @@ public class JButtonController implements ActionListener {
 
             //sinon on pioche des cartes
             else {
-                if(model.getDrawWagonCards().size() > 0) {
+                if(model.getDrawWagonCards().size() > 1) {
                     WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
                     System.out.print("Le bot a pioché les cartes : " + wc.getColor());
                     wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
