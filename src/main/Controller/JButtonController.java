@@ -676,9 +676,9 @@ public class JButtonController implements ActionListener {
             //si la route n'a pas de couleur
             if (desiredRoute.getColor() == Color.GRAY) {
 
-                //Color choixColor = chooseColor();
+                Color choixColor = currentPlayer.getOccurenceMaxColor();
 
-                desiredRoute.getTunnel(Color.RED, model, currentPlayer);
+                desiredRoute.getTunnel(choixColor, model, currentPlayer);
             }
             //si la route a une couleur
             else {
@@ -690,10 +690,10 @@ public class JButtonController implements ActionListener {
             //si c'est un ferrie
             if (desiredRoute.getColor() == Color.GRAY) {
 
-                //Color choixColor = chooseColor();
+                Color choixColor = currentPlayer.getOccurenceMaxColor();
 
                 //si le joueur a pas pu prendre le ferrie
-                if (desiredRoute.getFerrie(Color.RED, model, currentPlayer) == -1) {
+                if (desiredRoute.getFerrie(choixColor, model, currentPlayer) == -1) {
                     currentAction = 0;
                     choixCity1.setEnabled(true);
                     choixCity2.setEnabled(true);

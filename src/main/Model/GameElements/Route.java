@@ -113,12 +113,14 @@ public class Route implements Comparable{
         ArrayList<WagonCard> tctmp = new ArrayList<>();
         int k = 0;
         for( int i = 0; i < 3; i++){
-            WagonCard tmp = model.drawTrainCard();
-            System.out.println(tmp);
-            if(tmp.getColor() == c || tmp.getColor() == Color.RAINBOW){
-                k++;
+            if(model.getDrawWagonCards().size() > 0) {
+                WagonCard tmp = model.drawTrainCard();
+                System.out.println(tmp);
+                if (tmp.getColor() == c || tmp.getColor() == Color.RAINBOW) {
+                    k++;
+                }
+                tctmp.add(tmp);
             }
-            tctmp.add(tmp);
         }
 
         if( k > 0){

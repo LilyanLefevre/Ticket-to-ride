@@ -236,4 +236,14 @@ public class HumanPlayer {
     public int getLevel() {
         return level;
     }
+
+    public Model.Enum.Color getOccurenceMaxColor(){
+        Model.Enum.Color res = this.wCards.get(0).getColor();
+        for(Model.Enum.Color c :Model.Enum.Color.values()){
+            if(countOccurencesOf(res) < countOccurencesOf(c)){
+                res = c;
+            }
+        }
+        return res;
+    }
 }
