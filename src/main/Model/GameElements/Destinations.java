@@ -309,11 +309,27 @@ public class Destinations {
             System.out.println("Distance : "+distance);
             int taille = CheckTaille(distance);
             System.out.println("Taille : "+taille);
-            if(c == Color.GRAY){
-                addRoute(new Route((City)from,destination,taille, c, true, 0));
+
+            //la route a une chance sur 8 d'être un tunnel
+            int aleaTunnel = 0+random.nextInt(7-0);
+            Route newRoute;
+            if(aleaTunnel == 1){
+                newRoute = new Route((City)from,destination,taille, c, true, 0);
             }else{
-                addRoute(new Route((City)from,destination,taille, c, false, 0));
+                newRoute = new Route((City)from,destination,taille, c, false, 0);
             }
+            //la route a une chance sur 11 d'être un ferrie
+            int aleaFerrie = 0+random.nextInt(10-0);
+            if(aleaFerrie == 1){
+                //elle nécessite entre 1 et 2 locomotives
+                int aleaLoco = 0+random.nextInt(9-0);
+                if( aleaLoco < 5){
+                    newRoute.setLocomotive(1);
+                }else{
+                    newRoute.setLocomotive(2);
+                }
+            }
+            addRoute(newRoute);
         }
         else{
             compteur++;

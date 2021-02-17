@@ -24,8 +24,8 @@ public class Route implements Comparable{
     //booleen pour dire si cette route est un tunel
     private final boolean isTunel;
 
-    //booleen pour dire si cette route necessite des locomotives dans le cas des routes ferries
-    private final int locomotive;
+    //entier pour dire si cette route necessite des locomotives dans le cas des routes ferries
+    private int locomotive;
 
     //enregistre le joueur qui a éventuellement posé ses wagons dessus
     private HumanPlayer hasPlayerOn;
@@ -312,5 +312,9 @@ public class Route implements Comparable{
             default:
                 throw new IllegalStateException("Unexpected value: " + nb);
         }
+    }
+
+    public void setLocomotive(int i) {
+        locomotive = i;
     }
 }
