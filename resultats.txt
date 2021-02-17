@@ -1,3 +1,0 @@
-bot 1
-bot 1
-bot 2
