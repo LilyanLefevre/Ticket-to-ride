@@ -3,7 +3,6 @@ import Model.Game;
 import Model.GameElements.DestinationCard;
 import Model.GameElements.Route;
 import Model.GameElements.WagonCard;
-import View.PlayView.GameView;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -172,12 +171,12 @@ public class HumanPlayer {
      * @param c la couleur voulue
      * @return un entier représentant le nombre de carte de la bonne couleur
      */
-    public int countOccurencesOf(Model.Enum.Color c){
+    public int countOccurencesOf(Model.Color c){
         int i = 0;
 
         //compte le nombre de carte de la couleur donnée et locomotives
         for(WagonCard t : wCards){
-            if(t.getColor() == c || t.getColor() == Model.Enum.Color.RAINBOW){
+            if(t.getColor() == c || t.getColor() == Model.Color.RAINBOW){
                 i++;
             }
         }
@@ -189,7 +188,7 @@ public class HumanPlayer {
      * @param c la couleur voulue
      * @return un entier représentant le nombre de carte de la bonne couleur
      */
-    public int countWithoutRainbowOccurencesOf(Model.Enum.Color c ){
+    public int countWithoutRainbowOccurencesOf(Model.Color c ){
         int i = 0;
 
         //compte le nombre de carte de la couleur donnée et locomotives
@@ -209,7 +208,7 @@ public class HumanPlayer {
      * @param nb le nombre de carte a retirer
      * @return le nombre de carte retiré
      */
-    public int removeTrainCards(Model.Enum.Color c, int nb, Game g){
+    public int removeTrainCards(Model.Color c, int nb, Game g){
         int i = 0;
         ArrayList<WagonCard> toRemove = new ArrayList<>();
         for(WagonCard t : wCards){
@@ -237,9 +236,9 @@ public class HumanPlayer {
         return level;
     }
 
-    public Model.Enum.Color getOccurenceMaxColor(){
-        Model.Enum.Color res = this.wCards.get(0).getColor();
-        for(Model.Enum.Color c :Model.Enum.Color.values()){
+    public Model.Color getOccurenceMaxColor(){
+        Model.Color res = this.wCards.get(0).getColor();
+        for(Model.Color c : Model.Color.values()){
             if(countOccurencesOf(res) < countOccurencesOf(c)){
                 res = c;
             }
