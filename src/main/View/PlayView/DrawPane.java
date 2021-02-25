@@ -61,28 +61,28 @@ public class DrawPane extends JPanel {
         //afficher les images des cartes visibles de la pioche
         for(int i = 0; i < g.getDrawVisibleTrainCards().size(); i++){
             switch (g.getDrawVisibleTrainCards().get(i).getColor()){
-                case RED:
-                    CardButtonPane tmp = new CardButtonPane("/wagon-rouge.jpg", i, Model.GameElements.Color.RED);
+                case ROUGE:
+                    CardButtonPane tmp = new CardButtonPane("/wagon-rouge.jpg", i, Model.GameElements.Color.ROUGE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case BLACK:
-                    tmp = new CardButtonPane("/wagon-noir.jpg", i, Model.GameElements.Color.BLACK);
+                case NOIR:
+                    tmp = new CardButtonPane("/wagon-noir.jpg", i, Model.GameElements.Color.NOIR);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case BLUE:
-                    tmp = new CardButtonPane("/wagon-bleu.jpg", i, Model.GameElements.Color.BLUE);
+                case BLEU:
+                    tmp = new CardButtonPane("/wagon-bleu.jpg", i, Model.GameElements.Color.BLEU);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case GREEN:
-                    tmp = new CardButtonPane("/wagon-vert.jpg", i, Model.GameElements.Color.GREEN);
+                case VERT:
+                    tmp = new CardButtonPane("/wagon-vert.jpg", i, Model.GameElements.Color.VERT);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case WHITE:
-                    tmp = new CardButtonPane("/wagon-blanc.jpg", i, Model.GameElements.Color.WHITE);
+                case BLANC:
+                    tmp = new CardButtonPane("/wagon-blanc.jpg", i, Model.GameElements.Color.BLANC);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
@@ -91,18 +91,18 @@ public class DrawPane extends JPanel {
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case PURPLE:
-                    tmp = new CardButtonPane("/wagon-violet.jpg", i, Model.GameElements.Color.PURPLE);
+                case VIOLET:
+                    tmp = new CardButtonPane("/wagon-violet.jpg", i, Model.GameElements.Color.VIOLET);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case YELLOW:
-                    tmp = new CardButtonPane("/wagon-jaune.jpg", i, Model.GameElements.Color.YELLOW);
+                case JAUNE:
+                    tmp = new CardButtonPane("/wagon-jaune.jpg", i, Model.GameElements.Color.JAUNE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case RAINBOW:
-                    tmp = new CardButtonPane("/locomotive.jpg", i,  Model.GameElements.Color.RAINBOW);
+                case LOCOMOTIVE:
+                    tmp = new CardButtonPane("/locomotive.jpg", i,  Model.GameElements.Color.LOCOMOTIVE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
@@ -137,28 +137,28 @@ public class DrawPane extends JPanel {
         //afficher les images des cartes visibles de la pioche
         for(int i = 0; i < g.getDrawVisibleTrainCards().size(); i++){
             switch (g.getDrawVisibleTrainCards().get(i).getColor()){
-                case RED:
-                    CardButtonPane tmp = new CardButtonPane("/wagon-rouge.jpg", i, Model.GameElements.Color.RED);
+                case ROUGE:
+                    CardButtonPane tmp = new CardButtonPane("/wagon-rouge.jpg", i, Model.GameElements.Color.ROUGE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case BLACK:
-                    tmp = new CardButtonPane("/wagon-noir.jpg", i, Model.GameElements.Color.BLACK);
+                case NOIR:
+                    tmp = new CardButtonPane("/wagon-noir.jpg", i, Model.GameElements.Color.NOIR);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case BLUE:
-                    tmp = new CardButtonPane("/wagon-bleu.jpg", i, Model.GameElements.Color.BLUE);
+                case BLEU:
+                    tmp = new CardButtonPane("/wagon-bleu.jpg", i, Model.GameElements.Color.BLEU);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case GREEN:
-                    tmp = new CardButtonPane("/wagon-vert.jpg", i, Model.GameElements.Color.GREEN);
+                case VERT:
+                    tmp = new CardButtonPane("/wagon-vert.jpg", i, Model.GameElements.Color.VERT);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case WHITE:
-                    tmp = new CardButtonPane("/wagon-blanc.jpg", i, Model.GameElements.Color.WHITE);
+                case BLANC:
+                    tmp = new CardButtonPane("/wagon-blanc.jpg", i, Model.GameElements.Color.BLANC);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
@@ -167,18 +167,18 @@ public class DrawPane extends JPanel {
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case PURPLE:
-                    tmp = new CardButtonPane("/wagon-violet.jpg", i, Model.GameElements.Color.PURPLE);
+                case VIOLET:
+                    tmp = new CardButtonPane("/wagon-violet.jpg", i, Model.GameElements.Color.VIOLET);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case YELLOW:
-                    tmp = new CardButtonPane("/wagon-jaune.jpg", i, Model.GameElements.Color.YELLOW);
+                case JAUNE:
+                    tmp = new CardButtonPane("/wagon-jaune.jpg", i, Model.GameElements.Color.JAUNE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;
-                case RAINBOW:
-                    tmp = new CardButtonPane("/locomotive.jpg", i,  Model.GameElements.Color.RAINBOW);
+                case LOCOMOTIVE:
+                    tmp = new CardButtonPane("/locomotive.jpg", i,  Model.GameElements.Color.LOCOMOTIVE);
                     cartesVisibles.add(tmp);
                     piocheVisibleWagon.add(tmp);
                     break;

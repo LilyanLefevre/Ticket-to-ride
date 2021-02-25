@@ -5,16 +5,16 @@ package Model.GameElements;
  * qui composent le jeu
  */
 public enum Color {
-    RED,
-    BLACK,
-    BLUE,
-    GREEN,
-    RAINBOW,
+    ROUGE,
+    NOIR,
+    BLEU,
+    VERT,
+    LOCOMOTIVE,
     ORANGE,
-    PURPLE,
-    WHITE,
-    YELLOW,
-    GRAY;
+    VIOLET,
+    BLANC,
+    JAUNE,
+    GRIS;
 
     /**
      * Returns the name of this enum constant, as contained in the
@@ -26,7 +26,7 @@ public enum Color {
      */
     @Override
     public String toString() {
-        return this.name();
+        return this.name().toLowerCase();
     }
 
 
@@ -42,31 +42,31 @@ public enum Color {
         java.awt.Color c;
         //on met la bonne couleur
         switch (co) {
-            case RED:
+            case ROUGE:
                 c = java.awt.Color.red;
                 break;
-            case BLACK:
+            case NOIR:
                 c = java.awt.Color.black;
                 break;
-            case BLUE:
+            case BLEU:
                 c = java.awt.Color.blue;
                 break;
-            case GREEN:
+            case VERT:
                 c = java.awt.Color.green;
                 break;
-            case WHITE:
+            case BLANC:
                 c = java.awt.Color.white;
                 break;
             case ORANGE:
                 c = java.awt.Color.orange;
                 break;
-            case PURPLE:
+            case VIOLET:
                 c = java.awt.Color.MAGENTA;
                 break;
-            case YELLOW:
+            case JAUNE:
                 c = java.awt.Color.yellow;
                 break;
-            case GRAY:
+            case GRIS:
                 c = java.awt.Color.gray;
                 break;
             default:

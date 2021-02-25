@@ -177,7 +177,7 @@ public class Player {
 
         //compte le nombre de carte de la couleur donnée et locomotives
         for(WagonCard t : wagonCards){
-            if(t.getColor() == c || t.getColor() == Model.GameElements.Color.RAINBOW){
+            if(t.getColor() == c || t.getColor() == Model.GameElements.Color.LOCOMOTIVE){
                 i++;
             }
         }

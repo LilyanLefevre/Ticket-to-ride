@@ -39,7 +39,7 @@ public class DestinationCard implements Comparable{
      */
     @Override
     public String toString() {
-        return "    From "+ city1 +" to "+ city2 +". It worth "+points+" points.\n";
+        return "Relier "+city1 +" et "+ city2 +", "+points+" points.\n";
     }
 
     /**

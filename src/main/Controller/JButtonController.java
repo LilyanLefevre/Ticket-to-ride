@@ -79,7 +79,7 @@ public class JButtonController implements ActionListener {
             CardButtonPane card = (CardButtonPane)src;
             if(currentAction == 1){
                 //s'il tente de prendre une carte loco et qu'il a déjà pris une autre carte -> erreur
-                if(lastIndexTaken != -1 && card.getCouleur() == Color.RAINBOW && nbCardTaken > 0){
+                if(lastIndexTaken != -1 && card.getCouleur() == Color.LOCOMOTIVE && nbCardTaken > 0){
                     if(currentPlayer.getLevel() == 0) {
                         int input = JOptionPane.showConfirmDialog(null, "Si vous prenez une carte " +
                                         "locomotive visible lors d'un tour, vous ne pouvez pas prendre d'autre carte !",
@@ -112,7 +112,7 @@ public class JButtonController implements ActionListener {
                     currentPlayer.addTrainCard(tmp);
 
                     //si il a pris une carte locomotive on arrête
-                    if (tmp.getColor() == Color.RAINBOW) {
+                    if (tmp.getColor() == Color.LOCOMOTIVE) {
                         nbCardTaken = 2;
                     }
                 }
@@ -288,7 +288,7 @@ public class JButtonController implements ActionListener {
 
                         if (routeChoix.isTunel()) {
                             //si la route n'a pas de couleur
-                            if (routeChoix.getColor() == Color.GRAY) {
+                            if (routeChoix.getColor() == Color.GRIS) {
 
                                 Color choixColor = chooseColor();
 
@@ -302,7 +302,7 @@ public class JButtonController implements ActionListener {
                         //si c'est pas un tunnel
                         else {
                             //si c'est un ferrie
-                            if (routeChoix.getColor() == Color.GRAY) {
+                            if (routeChoix.getColor() == Color.GRIS) {
 
                                 Color choixColor = chooseColor();
 
@@ -933,7 +933,7 @@ public class JButtonController implements ActionListener {
     public void tryGetRoute(Route desiredRoute){
         if (desiredRoute.isTunel()) {
             //si la route n'a pas de couleur
-            if (desiredRoute.getColor() == Color.GRAY) {
+            if (desiredRoute.getColor() == Color.GRIS) {
 
                 Color choixColor = currentPlayer.getOccurenceMaxColor();
 
@@ -947,7 +947,7 @@ public class JButtonController implements ActionListener {
         //si c'est pas un tunnel
         else {
             //si c'est un ferrie
-            if (desiredRoute.getColor() == Color.GRAY) {
+            if (desiredRoute.getColor() == Color.GRIS) {
 
                 Color choixColor = currentPlayer.getOccurenceMaxColor();
 

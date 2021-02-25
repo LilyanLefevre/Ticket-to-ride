@@ -68,7 +68,7 @@ public class Game{
         // initialisation des cartes wagons
         wagonCardsDraw = new ArrayList<>(Color.values().length*14);
         for(int i = 0; i < Color.values().length; i++){
-            if(Color.values()[i] != Color.GRAY) {
+            if(Color.values()[i] != Color.GRIS) {
                 for (int j = 0; j < 14; j++) {
                     wagonCardsDraw.add(new WagonCard(Color.values()[i]));
                 }

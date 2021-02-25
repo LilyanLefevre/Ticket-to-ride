@@ -54,23 +54,23 @@ public class ActualPlayerPane extends JPanel {
         cardWagonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.GameElements.Color)couleur.getKey()){
-                case RED:
+                case ROUGE:
                     CardImagePane im = new CardImagePane("/wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case BLACK:
+                case NOIR:
                     im = new CardImagePane("/wagon-noir.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case BLUE:
+                case BLEU:
                     im = new CardImagePane("/wagon-bleu.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case GREEN:
+                case VERT:
                     im = new CardImagePane("/wagon-vert.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case WHITE:
+                case BLANC:
                     im = new CardImagePane("/wagon-blanc.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
@@ -78,15 +78,15 @@ public class ActualPlayerPane extends JPanel {
                     im = new CardImagePane("/wagon-orange.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case PURPLE:
+                case VIOLET:
                     im = new CardImagePane("/wagon-violet.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case YELLOW:
+                case JAUNE:
                     im = new CardImagePane("/wagon-jaune.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case RAINBOW:
+                case LOCOMOTIVE:
                     im = new CardImagePane("/locomotive.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
@@ -137,23 +137,23 @@ public class ActualPlayerPane extends JPanel {
         cardWagonPanel.removeAll();
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
             switch ((Model.GameElements.Color)couleur.getKey()){
-                case RED:
+                case ROUGE:
                     CardImagePane im = new CardImagePane("/wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case BLACK:
+                case NOIR:
                     im = new CardImagePane("/wagon-noir.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case BLUE:
+                case BLEU:
                     im = new CardImagePane("/wagon-bleu.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case GREEN:
+                case VERT:
                     im = new CardImagePane("/wagon-vert.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case WHITE:
+                case BLANC:
                     im = new CardImagePane("/wagon-blanc.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
@@ -161,15 +161,15 @@ public class ActualPlayerPane extends JPanel {
                     im = new CardImagePane("/wagon-orange.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case PURPLE:
+                case VIOLET:
                     im = new CardImagePane("/wagon-violet.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case YELLOW:
+                case JAUNE:
                     im = new CardImagePane("/wagon-jaune.jpg", ((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;
-                case RAINBOW:
+                case LOCOMOTIVE:
                     im = new CardImagePane("/locomotive.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
                     break;

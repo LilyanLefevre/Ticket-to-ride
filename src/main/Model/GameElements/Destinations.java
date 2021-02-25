@@ -141,15 +141,15 @@ public class Destinations {
         //leur nombre d'utilisation
         ArrayList<Line2D>TabRoutes = new ArrayList<>();
         HashMap<Integer, Color> randomColor = new HashMap<>();
-        randomColor.put(0,Color.WHITE);
-        randomColor.put(1,Color.RED);
-        randomColor.put(2,Color.BLACK);
-        randomColor.put(3,Color.BLUE);
-        randomColor.put(4,Color.GREEN);
+        randomColor.put(0,Color.BLANC);
+        randomColor.put(1,Color.ROUGE);
+        randomColor.put(2,Color.NOIR);
+        randomColor.put(3,Color.BLEU);
+        randomColor.put(4,Color.VERT);
         randomColor.put(5,Color.ORANGE);
-        randomColor.put(6,Color.PURPLE);
-        randomColor.put(7,Color.YELLOW);
-        randomColor.put(8,Color.GRAY);
+        randomColor.put(6,Color.VIOLET);
+        randomColor.put(7,Color.JAUNE);
+        randomColor.put(8,Color.GRIS);
 
         ArrayList<Integer>CountColor = new ArrayList<>();
         for (int i=0;i<9;i++){
@@ -220,15 +220,15 @@ public class Destinations {
         Collections.sort(routes);
 
         HashMap<Integer, Color> randomColor = new HashMap<>();
-        randomColor.put(0,Color.WHITE);
-        randomColor.put(1,Color.RED);
-        randomColor.put(2,Color.BLACK);
-        randomColor.put(3,Color.BLUE);
-        randomColor.put(4,Color.GREEN);
+        randomColor.put(0,Color.BLANC);
+        randomColor.put(1,Color.ROUGE);
+        randomColor.put(2,Color.NOIR);
+        randomColor.put(3,Color.BLEU);
+        randomColor.put(4,Color.VERT);
         randomColor.put(5,Color.ORANGE);
-        randomColor.put(6,Color.PURPLE);
-        randomColor.put(7,Color.YELLOW);
-        randomColor.put(8,Color.GRAY);
+        randomColor.put(6,Color.VIOLET);
+        randomColor.put(7,Color.JAUNE);
+        randomColor.put(8,Color.GRIS);
 
         int k = 0;
         //on complete les routes pour avoir deux fois plus de routes que de villes
@@ -306,10 +306,12 @@ public class Destinations {
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
             int taille = checkLength(distance);
-            if(c == Color.GRAY){
-                addRoute(new Route((City)from,destination,taille, c, true, 0));
-            }else{
-                addRoute(new Route((City)from,destination,taille, c, false, 0));
+            if(taille != 0) {
+                if (c == Color.GRIS) {
+                    addRoute(new Route((City) from, destination, taille, c, true, 0));
+                } else {
+                    addRoute(new Route((City) from, destination, taille, c, false, 0));
+                }
             }
         }
         else{
@@ -377,41 +379,17 @@ public class Destinations {
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
             int taille = checkLength(distance);
-            if(c == Color.GRAY){
-                addRoute(new Route((City)from,destination,taille, c, true, 0));
-            }else{
-                addRoute(new Route((City)from,destination,taille, c, false, 0));
+            if(taille != 0) {
+                if (c == Color.GRIS) {
+                    addRoute(new Route((City) from, destination, taille, c, true, 0));
+                } else {
+                    addRoute(new Route((City) from, destination, taille, c, false, 0));
+                }
             }
             return true;
         }
         return false;
     }
-
-
-    /**
-     * fonction qui créer un chemin entre deux villes
-     *
-     //* @param v1 City une ville
-     //* @param v2 City l'autre ville
-     */
-    private void construireChemin(City v1, City v2) {
-        if(!names.contains(v1.getName())){
-            names.add(v1.getName());
-        }
-        for (Route r : routes){
-            if(r.getCity1() == v1) {
-                if(r.getCity2() == v2) {
-                    rEmpruntees.add(r);
-                }
-                else{
-                    if(!names.contains(r.getCity2().toString())) {
-                        construireChemin(r.getCity2(), v2);
-                    }
-                }
-            }
-        }
-    }
-
 
     private int checkLength(double distance){
         int nbroutes = destinations.size()*2;
@@ -452,8 +430,11 @@ public class Destinations {
             }
         }
         if(distance>=8 || NbRails.get(6)+1>=nbroutes*0.07){
-            NbRails.set(8, NbRails.get(8)+1);
-            return 8;
+            //une route à 8 max
+            if(NbRails.get(8) == 0) {
+                NbRails.set(8, NbRails.get(8) + 1);
+                return 8;
+            }
         }
         return 0;
     }

@@ -114,7 +114,7 @@ public class Route implements Comparable{
             if(model.getWagonCardsDraw().size() > 0) {
                 WagonCard tmp = model.drawTrainCard();
                 System.out.print(tmp);
-                if (tmp.getColor() == c || tmp.getColor() == Color.RAINBOW) {
+                if (tmp.getColor() == c || tmp.getColor() == Color.LOCOMOTIVE) {
                     k++;
                 }
                 tctmp.add(tmp);
@@ -146,7 +146,7 @@ public class Route implements Comparable{
                     //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
                     int nbRemovedCard = currentPlayer.removeWagonCards(c, this.getRequire()+k, model);
                     if(nbRemovedCard < this.getRequire()+k){
-                        currentPlayer.removeWagonCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, model);
+                        currentPlayer.removeWagonCards(Color.LOCOMOTIVE, (this.getRequire()+k) - nbRemovedCard, model);
                     }
 
                     currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
@@ -171,7 +171,7 @@ public class Route implements Comparable{
             //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
             int nbRemovedCard = currentPlayer.removeWagonCards(c, this.getRequire()+k, model);
             if(nbRemovedCard < this.getRequire()+k){
-                currentPlayer.removeWagonCards(Color.RAINBOW, (this.getRequire()+k) - nbRemovedCard, model);
+                currentPlayer.removeWagonCards(Color.LOCOMOTIVE, (this.getRequire()+k) - nbRemovedCard, model);
             }
 
             //on change les stats du joueur
@@ -197,7 +197,7 @@ public class Route implements Comparable{
     public int takeFerrie(Color c, Game model, Player currentPlayer){
 
         //on verifie qu'on a assez de locomotives
-        int nbLocos = currentPlayer.countOccurencesOf(Color.RAINBOW);
+        int nbLocos = currentPlayer.countOccurencesOf(Color.LOCOMOTIVE);
         if(this.getLocomotive() > 0) {
             if (nbLocos < this.getLocomotive()) {
                 if(currentPlayer.getLevel() == 0) {
@@ -231,11 +231,11 @@ public class Route implements Comparable{
                 //on retire les cartes de couleur c et les eventuelles cartes loco. qui ont completé le nombre de carte a avoir
                 int nbRemovedCard = currentPlayer.removeWagonCards(c, this.getRequire() - this.getLocomotive(), model);
                 if (nbRemovedCard < this.getRequire() - this.getLocomotive()) {
-                    currentPlayer.removeWagonCards(Color.RAINBOW, (this.getRequire() - this.getLocomotive()) - nbRemovedCard, model);
+                    currentPlayer.removeWagonCards(Color.LOCOMOTIVE, (this.getRequire() - this.getLocomotive()) - nbRemovedCard, model);
                 }
 
                 //on retire le nombre de carte loco qu'on devait avoir pour prendre cette route
-                currentPlayer.removeWagonCards(Color.RAINBOW, this.getLocomotive(), model);
+                currentPlayer.removeWagonCards(Color.LOCOMOTIVE, this.getLocomotive(), model);
                 if(currentPlayer.getLevel() == 0) {
                     JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
                             "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -281,7 +281,7 @@ public class Route implements Comparable{
             //on retire les cartes de couleur jouées ainsi que les éventuelles locos qui ont été jouées
             int nbRemovedCard = currentPlayer.removeWagonCards(c, this.getRequire(), model);
             if (nbRemovedCard < this.getRequire()) {
-                currentPlayer.removeWagonCards(Color.RAINBOW, (this.getRequire()) - nbRemovedCard, model);
+                currentPlayer.removeWagonCards(Color.LOCOMOTIVE, (this.getRequire()) - nbRemovedCard, model);
             }
             if(currentPlayer.getLevel() == 0) {
                 JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
