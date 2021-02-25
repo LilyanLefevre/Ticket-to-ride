@@ -110,7 +110,7 @@ public class Game{
         }
 
         for(int i = names.size(); i < 4; i++){
-            players.add(i,new Player("bot "+i, couleurJoueur.get(i), destinationCardsDraw, wagonCardsDraw, i+2));
+            players.add(i,new Player("bot "+i, couleurJoueur.get(i), destinationCardsDraw, wagonCardsDraw, i+1));
         }
 
         currentPlayer = players.get(0);
@@ -186,19 +186,6 @@ public class Game{
         destinationCardsDraw.remove(nCard);
 
         return tmp;
-    }
-
-    /**
-     * fonction qui retourne une chaine affichant l'identité de chaque joueurs
-     *
-     * @return String
-     */
-    public String scoreToString(){
-        String res = "";
-        for(Player p : players){
-            res += p.toString();
-        }
-        return res;
     }
 
     public Player getWinner(){

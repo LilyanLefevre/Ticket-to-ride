@@ -11,7 +11,7 @@ import java.util.Random;
 import static java.lang.System.exit;
 
 public class TicketToRide {
-    private static long SEED = System.currentTimeMillis();
+    private static long SEED = /*System.currentTimeMillis()*/1614264029934l;
 
     public static void main (String [] args){
         System.out.println("Seed = "+SEED);

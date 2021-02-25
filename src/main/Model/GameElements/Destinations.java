@@ -306,13 +306,26 @@ public class Destinations {
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
             int taille = checkLength(distance);
-            if(taille != 0) {
-                if (c == Color.GRIS) {
-                    addRoute(new Route((City) from, destination, taille, c, true, 0));
-                } else {
-                    addRoute(new Route((City) from, destination, taille, c, false, 0));
+            //la route a une chance sur 8 d'être un tunnel
+            int aleaTunnel = 0+random.nextInt(7-0);
+            Route newRoute;
+            if(aleaTunnel == 1){
+                newRoute = new Route((City)from,destination,taille, c, true, 0);
+            }else{
+                newRoute = new Route((City)from,destination,taille, c, false, 0);
+            }
+            //la route a une chance sur 11 d'être un ferrie
+            int aleaFerrie = 0+random.nextInt(10-0);
+            if(aleaFerrie == 1){
+                //elle nécessite entre 1 et 2 locomotives
+                int aleaLoco = 0+random.nextInt(9-0);
+                if( aleaLoco < 5){
+                    newRoute.setLocomotive(1);
+                }else{
+                    newRoute.setLocomotive(2);
                 }
             }
+            addRoute(newRoute);
         }
         else{
             compteur++;
@@ -379,13 +392,26 @@ public class Destinations {
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
             int taille = checkLength(distance);
-            if(taille != 0) {
-                if (c == Color.GRIS) {
-                    addRoute(new Route((City) from, destination, taille, c, true, 0));
-                } else {
-                    addRoute(new Route((City) from, destination, taille, c, false, 0));
+            //la route a une chance sur 8 d'être un tunnel
+            int aleaTunnel = 0+random.nextInt(7-0);
+            Route newRoute;
+            if(aleaTunnel == 1){
+                newRoute = new Route((City)from,destination,taille, c, true, 0);
+            }else{
+                newRoute = new Route((City)from,destination,taille, c, false, 0);
+            }
+            //la route a une chance sur 11 d'être un ferrie
+            int aleaFerrie = 0+random.nextInt(10-0);
+            if(aleaFerrie == 1){
+                //elle nécessite entre 1 et 2 locomotives
+                int aleaLoco = 0+random.nextInt(9-0);
+                if( aleaLoco < 5){
+                    newRoute.setLocomotive(1);
+                }else{
+                    newRoute.setLocomotive(2);
                 }
             }
+            addRoute(newRoute);
             return true;
         }
         return false;
@@ -430,11 +456,8 @@ public class Destinations {
             }
         }
         if(distance>=8 || NbRails.get(6)+1>=nbroutes*0.07){
-            //une route à 8 max
-            if(NbRails.get(8) == 0) {
-                NbRails.set(8, NbRails.get(8) + 1);
-                return 8;
-            }
+            NbRails.set(8, NbRails.get(8) + 1);
+            return 8;
         }
         return 0;
     }

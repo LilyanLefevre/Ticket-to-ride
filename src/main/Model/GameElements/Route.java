@@ -22,7 +22,7 @@ public class Route implements Comparable{
     private final boolean isTunel;
 
     //booleen pour dire si cette route necessite des locomotives dans le cas des routes ferries
-    private final int locomotive;
+    private int locomotive;
 
     //enregistre le joueur qui a éventuellement posé ses wagons dessus
     private Player playerOn;
@@ -70,6 +70,10 @@ public class Route implements Comparable{
     }
     public void setFrequencyOfUse(int frequencyOfUse) {
         this.frequencyOfUse = frequencyOfUse;
+    }
+
+    public void setLocomotive(int i) {
+        this.locomotive = i;
     }
 
 
@@ -326,4 +330,5 @@ public class Route implements Comparable{
                 throw new IllegalStateException("Unexpected value: " + nb);
         }
     }
+
 }
