@@ -121,8 +121,6 @@ public class DrawPane extends JPanel {
     public void setActionListener(JButtonController gc){
         if(piocheWagon.getActionListeners().length == 0) {
             piocheWagon.addActionListener(gc);
-            System.out.println("foutu l'action listener");
-
         }
         for(CardButtonPane c : cartesVisibles){
             c.addActionListener(gc);

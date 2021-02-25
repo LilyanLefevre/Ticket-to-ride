@@ -60,16 +60,10 @@ public class JButtonController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
-        if(src == view.getDraw().getPiocheWagon()){
-            System.out.println("appuie sur bouton carte aleatoire");
-
-        }
-
 
 
         //si on appuie sur le bouton piocher une carte wagon
         if(src == view.getButtons().getPiocherW()){
-            System.out.println("Vous avez cliqué sur piocher un wagon");
             view.getButtons().getPiocherW().setEnabled(false);
             view.getButtons().getPiocherD().setEnabled(false);
             view.getButtons().getPrendreR().setEnabled(false);
@@ -155,7 +149,7 @@ public class JButtonController implements ActionListener {
         if(src == view.getButtons().getPiocherD()){
             //s'il reste au moins une carte destination
             if(model.getDestinationCardsDraw().size() > 0) {
-                System.out.println("Vous avez pioché les trois cartes Destination suivantes: ");
+                System.out.println(currentPlayer.getName()+" a pioché les trois cartes Destination suivantes: ");
                 ArrayList<DestinationCard> dctmp = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
                     if (model.getDestinationCardsDraw().size() > 0) {
@@ -166,7 +160,7 @@ public class JButtonController implements ActionListener {
                 }
 
 
-                String message = "Vous avez pioché les cartes suivantes, sélectionner celle(s) que vous voulez garder.";
+                String message = currentPlayer.getName()+" a pioché les cartes suivantes, sélectionner celle(s) que vous voulez garder.";
                 Object[] params = new Object[4];
                 params[0] = message;
                 JCheckBox cb1 = new JCheckBox(dctmp.get(0).toString());
@@ -188,7 +182,7 @@ public class JButtonController implements ActionListener {
                 }
 
                 //on met les cartes dans le jeu du joueur
-                System.out.println("Vous avez conservé les cartes suivantes :");
+                System.out.println(currentPlayer.getName()+" a conservé les cartes suivantes :");
                 if(cb1.isSelected()){
                     System.out.print(dctmp.get(0).toString());
                     currentPlayer.addDestinationCard(dctmp.get(0));
@@ -494,12 +488,12 @@ public class JButtonController implements ActionListener {
             else {
                 if(model.getWagonCardsDraw().size() > 1) {
                     WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
-                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes : " + wc.getColor());
                     wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.println(" et " + wc.getColor());
                 }else{
                     if(model.getDestinationCardsDraw().size() > 0) {
-                        System.out.print("Le bot a pioché les cartes destination : " );
+                        System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes destination : " );
                         for (int i = 0; i < 3; i++) {
                             if (model.getDestinationCardsDraw().size() > 0) {
                                 DestinationCard tmpd = model.drawDestinationCard();
@@ -588,15 +582,17 @@ public class JButtonController implements ActionListener {
             else {
                 if(model.getDestinationCardsDraw().size() > 1) {
                     WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
-                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    System.out.print("Le joueur "+currentPlayer.getName()+"  pioché les cartes : " + wc.getColor());
                     wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.println(" et " + wc.getColor());
                 }else{
                     if(model.getDestinationCardsDraw().size() > 0) {
+                        System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes destination : " );
                         for (int i = 0; i < 3; i++) {
                             if (model.getDestinationCardsDraw().size() > 0) {
                                 DestinationCard tmpd = model.drawDestinationCard();
                                 currentPlayer.addDestinationCard(tmpd);
+                                System.out.print(tmpd+"  ");
                             }
                         }
                     }
@@ -684,15 +680,112 @@ public class JButtonController implements ActionListener {
             else {
                 if(model.getDestinationCardsDraw().size() > 1) {
                     WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
-                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes : " + wc.getColor());
                     wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.println(" et " + wc.getColor());
                 }else{
                     if(model.getDestinationCardsDraw().size() > 0) {
+                        System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes destination : " );
                         for (int i = 0; i < 3; i++) {
                             if (model.getDestinationCardsDraw().size() > 0) {
                                 DestinationCard tmpd = model.drawDestinationCard();
                                 currentPlayer.addDestinationCard(tmpd);
+                                System.out.print(tmpd+"  ");
+                            }
+                        }
+                    }
+                }
+            }
+            checkFinPartie();
+            currentPlayer = model.nextPlayer();
+            view.updateView(model, this);
+            view.getPlayerView().updateCard(currentPlayer);
+            view.repaint();
+            playIA();
+        }
+    }
+
+    private void playIALevel4() {
+        if(currentPlayer.getLevel() != 0) {
+            ArrayList<Route> routes = model.getDestinations().getRoutes();
+            ArrayList<DestinationCard> objectifs = currentPlayer.getDestinationCards();
+            Collections.sort(objectifs);
+            Route desiredRoute = null;
+
+            Graph<City, DefaultEdge> g1 = new DefaultDirectedGraph<>(DefaultEdge.class);
+            for (Map.Entry city : model.getDestinations().getDestinations().entrySet()) {
+                City c1 = (City)city.getValue();
+                g1.addVertex(c1);
+            }
+            for (Route r : routes){
+                g1.addEdge(r.getCity1(), r.getCity2());
+            }
+            AllDirectedPaths<City, DefaultEdge> pathFindingAlg = new AllDirectedPaths(g1);
+            int count = 0;
+            for(DestinationCard dc : objectifs) {
+                count++;
+                if (desiredRoute == null) {
+                    List<GraphPath<City, DefaultEdge>> graphPath = pathFindingAlg.getAllPaths(dc.getCity1(), dc.getCity2(), true, null);
+                    graphPath = sortGraph(graphPath);
+                    for (int k=0;k<graphPath.size();k++){
+                        GraphPath<City,DefaultEdge> path = graphPath.get(k);
+                        if (path != null) {
+                            List<City> listCities = path.getVertexList();
+                            if (!listCities.isEmpty()) {
+                                boolean alreadytaken = false;
+                                for (int i = 0; i < listCities.size() - 1; i++) {
+                                    City v1 = listCities.get(i);
+                                    City v2 = listCities.get(i + 1);
+                                    Route r = model.getDestinations().getRouteFromString(v1.getName() + " - " + v2.getName());
+                                    if (r == null) {
+                                        r = model.getDestinations().getRouteFromString(v2.getName() + " - " + v1.getName());
+                                    }
+                                    Color color = r.getColor();
+                                    int nbCard = r.getRequire();
+                                    if (r.isAlreadyTakenRoute() && !r.getPlayer().getName().equals(currentPlayer.getName())){
+                                        alreadytaken = true;
+                                        desiredRoute=null;
+                                    }
+                                    if (alreadytaken == false && currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                                        desiredRoute = r;
+                                        k=graphPath.size();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (desiredRoute == null && count == objectifs.size()) {
+                for (Route r : routes) {
+                    Color color = r.getColor();
+                    int nbCard = r.getRequire();
+                    if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                        desiredRoute = r;
+                    }
+                }
+            }
+
+            if(desiredRoute!=null){
+                tryGetRoute(desiredRoute);
+            }
+
+            //sinon on pioche des cartes
+            else {
+                if(model.getDestinationCardsDraw().size() > 1) {
+                    WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
+                    System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes : " + wc.getColor());
+                    wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
+                    System.out.println(" et " + wc.getColor());
+                }else{
+                    if(model.getDestinationCardsDraw().size() > 0) {
+                        System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes destination : " );
+                        for (int i = 0; i < 3; i++) {
+                            if (model.getDestinationCardsDraw().size() > 0) {
+                                DestinationCard tmpd = model.drawDestinationCard();
+                                currentPlayer.addDestinationCard(tmpd);
+                                System.out.print(tmpd+"  ");
                             }
                         }
                     }
@@ -781,15 +874,17 @@ public class JButtonController implements ActionListener {
             else {
                 if(model.getDestinationCardsDraw().size() > 1) {
                     WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
-                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes : " + wc.getColor());
                     wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.println(" et " + wc.getColor());
                 }else{
                     if(model.getDestinationCardsDraw().size() > 0) {
+                        System.out.print("Le joueur "+currentPlayer.getName()+" a pioché les cartes destination : " );
                         for (int i = 0; i < 3; i++) {
                             if (model.getDestinationCardsDraw().size() > 0) {
                                 DestinationCard tmpd = model.drawDestinationCard();
                                 currentPlayer.addDestinationCard(tmpd);
+                                System.out.print(tmpd+"  ");
                             }
                         }
                     }
@@ -797,99 +892,6 @@ public class JButtonController implements ActionListener {
             }
             //si on a trouvé une route à prendre
             //sinon on pioche des cartes
-            checkFinPartie();
-            currentPlayer = model.nextPlayer();
-            view.updateView(model, this);
-            view.getPlayerView().updateCard(currentPlayer);
-            view.repaint();
-            playIA();
-        }
-    }
-
-    private void playIALevel4() {
-        if(currentPlayer.getLevel() != 0) {
-            ArrayList<Route> routes = model.getDestinations().getRoutes();
-            ArrayList<DestinationCard> objectifs = currentPlayer.getDestinationCards();
-            Collections.sort(objectifs);
-            Route desiredRoute = null;
-
-            Graph<City, DefaultEdge> g1 = new DefaultDirectedGraph<>(DefaultEdge.class);
-            for (Map.Entry city : model.getDestinations().getDestinations().entrySet()) {
-                City c1 = (City)city.getValue();
-                g1.addVertex(c1);
-            }
-            for (Route r : routes){
-                g1.addEdge(r.getCity1(), r.getCity2());
-            }
-            AllDirectedPaths<City, DefaultEdge> pathFindingAlg = new AllDirectedPaths(g1);
-            int count = 0;
-            for(DestinationCard dc : objectifs) {
-                count++;
-                if (desiredRoute == null) {
-                    List<GraphPath<City, DefaultEdge>> graphPath = pathFindingAlg.getAllPaths(dc.getCity1(), dc.getCity2(), true, null);
-                    graphPath = sortGraph(graphPath);
-                    for (int k=0;k<graphPath.size();k++){
-                        GraphPath<City,DefaultEdge> path = graphPath.get(k);
-                        if (path != null) {
-                            List<City> listCities = path.getVertexList();
-                            if (!listCities.isEmpty()) {
-                                boolean alreadytaken = false;
-                                for (int i = 0; i < listCities.size() - 1; i++) {
-                                    City v1 = listCities.get(i);
-                                    City v2 = listCities.get(i + 1);
-                                    Route r = model.getDestinations().getRouteFromString(v1.getName() + " - " + v2.getName());
-                                    if (r == null) {
-                                        r = model.getDestinations().getRouteFromString(v2.getName() + " - " + v1.getName());
-                                    }
-                                    Color color = r.getColor();
-                                    int nbCard = r.getRequire();
-                                    if (r.isAlreadyTakenRoute() && !r.getPlayer().getName().equals(currentPlayer.getName())){
-                                        alreadytaken = true;
-                                        desiredRoute=null;
-                                    }
-                                    if (alreadytaken == false && currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
-                                        desiredRoute = r;
-                                        k=graphPath.size();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (desiredRoute == null && count == objectifs.size()) {
-                for (Route r : routes) {
-                    Color color = r.getColor();
-                    int nbCard = r.getRequire();
-                    if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
-                        desiredRoute = r;
-                    }
-                }
-            }
-
-            if(desiredRoute!=null){
-                tryGetRoute(desiredRoute);
-            }
-
-            //sinon on pioche des cartes
-            else {
-                if(model.getDestinationCardsDraw().size() > 1) {
-                    WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
-                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
-                    wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
-                    System.out.println(" et " + wc.getColor());
-                }else{
-                    if(model.getDestinationCardsDraw().size() > 0) {
-                        for (int i = 0; i < 3; i++) {
-                            if (model.getDestinationCardsDraw().size() > 0) {
-                                DestinationCard tmpd = model.drawDestinationCard();
-                                currentPlayer.addDestinationCard(tmpd);
-                            }
-                        }
-                    }
-                }
-            }
             checkFinPartie();
             currentPlayer = model.nextPlayer();
             view.updateView(model, this);
@@ -956,7 +958,7 @@ public class JButtonController implements ActionListener {
                     choixCity2.setEnabled(true);
                     choixCity1 = null;
                     choixCity2 = null;
-                    System.out.println("Le bot n'a pas pu prendre le ferrie");
+                    System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas pu prendre le ferrie");
                     return;
                 }
             } else {
@@ -967,7 +969,7 @@ public class JButtonController implements ActionListener {
                     choixCity2.setEnabled(true);
                     choixCity1 = null;
                     choixCity2 = null;
-                    System.out.println("Le bot n'a pas pu prendre la route");
+                    System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas pu prendre la route");
                     return;
                 }
             }

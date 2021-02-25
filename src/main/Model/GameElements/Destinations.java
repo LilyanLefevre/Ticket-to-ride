@@ -305,9 +305,7 @@ public class Destinations {
             //A MODIFIER
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
-            System.out.println("Distance : "+distance);
             int taille = checkLength(distance);
-            System.out.println("Taille : "+taille);
             if(c == Color.GRAY){
                 addRoute(new Route((City)from,destination,taille, c, true, 0));
             }else{
@@ -378,9 +376,7 @@ public class Destinations {
             //A MODIFIER
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
-            System.out.println("Distance : "+distance);
             int taille = checkLength(distance);
-            System.out.println("Taille : "+taille);
             if(c == Color.GRAY){
                 addRoute(new Route((City)from,destination,taille, c, true, 0));
             }else{

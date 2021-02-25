@@ -109,10 +109,11 @@ public class Route implements Comparable{
         //on tire trois cartes de la pioche
         ArrayList<WagonCard> tctmp = new ArrayList<>();
         int k = 0;
+        System.out.println("Le joueur "+currentPlayer.getName()+" veut prendre un tunnel et tire les cartes suivantes : " );
         for( int i = 0; i < 3; i++){
             if(model.getWagonCardsDraw().size() > 0) {
                 WagonCard tmp = model.drawTrainCard();
-                System.out.println(tmp);
+                System.out.print(tmp);
                 if (tmp.getColor() == c || tmp.getColor() == Color.RAINBOW) {
                     k++;
                 }
@@ -128,6 +129,7 @@ public class Route implements Comparable{
                                     + c + ", il en fallait " + (this.getRequire() + k), "Prendre une route",
                             JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 }
+                System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas pu prendre le tunnel de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             }else{
 
                 int accept = JOptionPane.YES_OPTION;
@@ -156,6 +158,9 @@ public class Route implements Comparable{
                         JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
                                 "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     }
+                    System.out.println("Le joueur "+currentPlayer.getName()+" a rajouté des cartes pour prendre le tunnel de "+this.getCity1().getName()+" à "+this.getCity2().getName());
+                }else{
+                    System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas voulu rajouter des cartes pour prendre le tunnel de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 }
             }
 
@@ -180,6 +185,7 @@ public class Route implements Comparable{
                                 "Vous possédez désormais la route " + this, "Prendre une route", JOptionPane.OK_OPTION
                         , JOptionPane.INFORMATION_MESSAGE);
             }
+            System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas eu besoin de rajouter des cartes pour prendre le tunnel de "+this.getCity1().getName()+" à "+this.getCity2().getName());
         }
     }
     /**
@@ -199,6 +205,7 @@ public class Route implements Comparable{
                                     "posséder ce ferrie." + this, "Prendre une route", JOptionPane.OK_OPTION,
                             JOptionPane.INFORMATION_MESSAGE);
                 }
+                System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de carte pour prendre le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 return -1;
             }
         }
@@ -209,6 +216,7 @@ public class Route implements Comparable{
                                 "  pour posséder ce ferrie.", "Prendre une route", JOptionPane.OK_OPTION,
                         JOptionPane.INFORMATION_MESSAGE);
             }
+            System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de carte de couleur pour prendre le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             return -1;
         }else {
             //on vérifie si les locos a poser obligatoirement ne font pas partie des cartes pour
@@ -232,6 +240,7 @@ public class Route implements Comparable{
                     JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
                             "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 }
+                System.out.println("Le joueur "+currentPlayer.getName()+" a pris le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
                 currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
                 currentPlayer.addRoute(this);
@@ -244,6 +253,7 @@ public class Route implements Comparable{
                                     "prendre cette route.", "Prendre une route", JOptionPane.OK_OPTION,
                             JOptionPane.INFORMATION_MESSAGE);
                 }
+                System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de Locomotives pour prendre le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 return -1;
             }
         }
@@ -262,6 +272,7 @@ public class Route implements Comparable{
                 JOptionPane.showConfirmDialog(null, "Vous n'avez pas assez de cartes pour posséder " +
                         "cette route.", "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
             }
+            System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de carte pour prendre la route de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             return -1;
         }else {
             //on enregistre le joueur sur la route
@@ -272,11 +283,11 @@ public class Route implements Comparable{
             if (nbRemovedCard < this.getRequire()) {
                 currentPlayer.removeWagonCards(Color.RAINBOW, (this.getRequire()) - nbRemovedCard, model);
             }
-            System.out.println();
             if(currentPlayer.getLevel() == 0) {
                 JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
                         "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
             }
+            System.out.println("Le joueur "+currentPlayer.getName()+" a pris la route de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
             currentPlayer.setPoints(currentPlayer.getPoints()+this.howManyPointsFor(this.getRequire()));
             currentPlayer.addRoute(this);
