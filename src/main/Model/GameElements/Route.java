@@ -91,7 +91,10 @@ public class Route implements Comparable{
      */
     @Override
     public String toString() {
-        return "with "+locomotive+" locomotive and isTunel = "+isTunel+". It requires "+require+" "+color.toString()+" wagons.\n";
+        if(isTunel) {
+            return "avec " + locomotive + " locomotive(s). C'est un tunnel. Elle nécessite " + require + " carte(s) wagon " + color.toString() + ".\n";
+        }
+        return "avec " + locomotive + " locomotive(s). Elle nécessite " + require + " carte(s) wagon " + color.toString() + ".\n";
     }
 
 
@@ -105,9 +108,15 @@ public class Route implements Comparable{
      * @param c Color la couleur désirée
      *
      */
-    public void takeTunnel(Color c, Game model, Player currentPlayer){
+    public int takeTunnel(Color c, Game model, Player currentPlayer){
         //on tire trois cartes de la pioche
         ArrayList<WagonCard> tctmp = new ArrayList<>();
+
+        //si le joueur n'a pas assez de carte de couleur sans rajout on s'arrete la
+        if(currentPlayer.countOccurencesOf(c) < this.getRequire()){
+            int input = JOptionPane.showOptionDialog(null, "Vous n'avez pas assez de carte "+c+".", "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
+            return -1;
+        }
         int k = 0;
         System.out.println("Le joueur "+currentPlayer.getName()+" veut prendre un tunnel et tire les cartes suivantes : " );
         for( int i = 0; i < 3; i++){
@@ -125,9 +134,8 @@ public class Route implements Comparable{
             //si le joueur n'a pas assez de cartes on s'arrete la
             if(currentPlayer.countOccurencesOf(c) < this.getRequire()+k){
                 if(currentPlayer.getLevel() == 0) {
-                    int input = JOptionPane.showConfirmDialog(null, "Vous n'avez pas assez de carte "
-                                    + c + ", il en fallait " + (this.getRequire() + k), "Prendre une route",
-                            JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    int input = JOptionPane.showOptionDialog(null, "Vous n'avez pas assez de carte "
+                                    + c + ", il en fallait " + (this.getRequire() + k), "Prendre une route",JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
                 System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas pu prendre le tunnel de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             }else{
@@ -155,8 +163,8 @@ public class Route implements Comparable{
                     Route inv = new Route(this.getCity2(),this.getCity1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
                     currentPlayer.addRoute(inv);
                     if(currentPlayer.getLevel() == 0) {
-                        JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
-                                "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showOptionDialog(null, "Vous possédez désormais la route " + this,
+                                "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                     }
                     System.out.println("Le joueur "+currentPlayer.getName()+" a rajouté des cartes pour prendre le tunnel de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 }else{
@@ -181,12 +189,12 @@ public class Route implements Comparable{
             Route inv = new Route(this.getCity2(),this.getCity1(), this.getRequire(), this.getColor(),this.isTunel(),this.getLocomotive());
             currentPlayer.addRoute(inv);
             if(currentPlayer.getLevel() == 0) {
-                JOptionPane.showConfirmDialog(null, "Vous n'avez pas besoin de rajouter de cartes. " +
-                                "Vous possédez désormais la route " + this, "Prendre une route", JOptionPane.OK_OPTION
-                        , JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showOptionDialog(null, "Vous n'avez pas besoin de rajouter de cartes. " +
+                                "Vous possédez désormais la route " + this, "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
             }
             System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas eu besoin de rajouter des cartes pour prendre le tunnel de "+this.getCity1().getName()+" à "+this.getCity2().getName());
         }
+        return 0;
     }
     /**
      * fonction qui permet de prendre un ferrie graphiquement
@@ -201,9 +209,8 @@ public class Route implements Comparable{
         if(this.getLocomotive() > 0) {
             if (nbLocos < this.getLocomotive()) {
                 if(currentPlayer.getLevel() == 0) {
-                    JOptionPane.showConfirmDialog(null, "Vous n'avez pas assez de locomotive pour " +
-                                    "posséder ce ferrie." + this, "Prendre une route", JOptionPane.OK_OPTION,
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showOptionDialog(null, "Vous n'avez pas assez de locomotive pour " +
+                                    "posséder ce ferrie." + this, "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
                 System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de carte pour prendre le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 return -1;
@@ -212,9 +219,8 @@ public class Route implements Comparable{
         //on verifie qu'on peut poser assez de cartes autres que les locos obligatoires
         if(currentPlayer.countOccurencesOf(c) < this.getRequire()-this.getLocomotive()){
             if(currentPlayer.getLevel() == 0) {
-                JOptionPane.showConfirmDialog(null, "Vous n'avez pas assez de cartes de couleur " + c +
-                                "  pour posséder ce ferrie.", "Prendre une route", JOptionPane.OK_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showOptionDialog(null, "Vous n'avez pas assez de cartes de couleur " + c +
+                                "  pour posséder ce ferrie.", "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
             }
             System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de carte de couleur pour prendre le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             return -1;
@@ -237,8 +243,8 @@ public class Route implements Comparable{
                 //on retire le nombre de carte loco qu'on devait avoir pour prendre cette route
                 currentPlayer.removeWagonCards(Color.LOCOMOTIVE, this.getLocomotive(), model);
                 if(currentPlayer.getLevel() == 0) {
-                    JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
-                            "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showOptionDialog(null, "Vous possédez désormais la route " + this,
+                            "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
                 System.out.println("Le joueur "+currentPlayer.getName()+" a pris le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());
@@ -249,9 +255,8 @@ public class Route implements Comparable{
                 return 0;
             } else {
                 if(currentPlayer.getLevel() == 0) {
-                    JOptionPane.showConfirmDialog(null, "Vous n'avez pas assez de Locomotives pour " +
-                                    "prendre cette route.", "Prendre une route", JOptionPane.OK_OPTION,
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showOptionDialog(null, "Vous n'avez pas assez de Locomotives pour " +
+                                    "prendre cette route.", "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
                 System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de Locomotives pour prendre le ferrie de "+this.getCity1().getName()+" à "+this.getCity2().getName());
                 return -1;
@@ -269,8 +274,8 @@ public class Route implements Comparable{
         //si le joueur n'a pas assez de cartes on s'arrete la
         if(currentPlayer.countOccurencesOf(c) < this.getRequire()){
             if(currentPlayer.getLevel() == 0) {
-                JOptionPane.showConfirmDialog(null, "Vous n'avez pas assez de cartes pour posséder " +
-                        "cette route.", "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showOptionDialog(null, "Vous n'avez pas assez de cartes pour posséder " +
+                        "cette route.", "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
             }
             System.out.println("Le joueur "+currentPlayer.getName()+" n'a pas assez de carte pour prendre la route de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             return -1;
@@ -284,8 +289,8 @@ public class Route implements Comparable{
                 currentPlayer.removeWagonCards(Color.LOCOMOTIVE, (this.getRequire()) - nbRemovedCard, model);
             }
             if(currentPlayer.getLevel() == 0) {
-                JOptionPane.showConfirmDialog(null, "Vous possédez désormais la route " + this,
-                        "Prendre une route", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showOptionDialog(null, "Vous possédez désormais la route " + this,
+                        "Prendre une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
             }
             System.out.println("Le joueur "+currentPlayer.getName()+" a pris la route de "+this.getCity1().getName()+" à "+this.getCity2().getName());
             currentPlayer.setWagons(currentPlayer.getWagons()-this.getRequire());

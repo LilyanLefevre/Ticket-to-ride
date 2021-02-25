@@ -81,9 +81,9 @@ public class JButtonController implements ActionListener {
                 //s'il tente de prendre une carte loco et qu'il a déjà pris une autre carte -> erreur
                 if(lastIndexTaken != -1 && card.getCouleur() == Color.LOCOMOTIVE && nbCardTaken > 0){
                     if(currentPlayer.getLevel() == 0) {
-                        int input = JOptionPane.showConfirmDialog(null, "Si vous prenez une carte " +
+                        int input = JOptionPane.showOptionDialog(null, "Si vous prenez une carte " +
                                         "locomotive visible lors d'un tour, vous ne pouvez pas prendre d'autre carte !",
-                                "Erreur", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                                "Erreur", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                     }
                     return;
                 }
@@ -93,8 +93,8 @@ public class JButtonController implements ActionListener {
 
                     WagonCard tmp = model.getDrawVisibleTrainCards().get(card.getIndex());
                     if(currentPlayer.getLevel() == 0) {
-                        int input = JOptionPane.showConfirmDialog(null, "Vous avez pioché une carte "
-                                + tmp.getColor(), "Prendre une carte", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        int input = JOptionPane.showOptionDialog(null, "Vous avez pioché une carte "
+                                + tmp.getColor(), "Prendre une carte",  JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                         if (input == 2) {
                             return;
                         }
@@ -122,8 +122,8 @@ public class JButtonController implements ActionListener {
 
                     WagonCard newCard = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     if(currentPlayer.getLevel() == 0) {
-                        int input = JOptionPane.showConfirmDialog(null, "Vous avez pioché une carte "
-                                + newCard.getColor(), "Prendre une carte", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        int input = JOptionPane.showOptionDialog(null, "Vous avez pioché une carte "
+                                + newCard.getColor(), "Prendre une carte", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                     }
                 }
                 view.updateView(model,this);
@@ -131,8 +131,8 @@ public class JButtonController implements ActionListener {
                 view.repaint();
                 if(nbCardTaken > 1){
                     if(currentPlayer.getLevel() == 0) {
-                        int input = JOptionPane.showConfirmDialog(null, "Fin de votre tour",
-                                "Fin du tour", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        int input = JOptionPane.showOptionDialog(null, "Fin de votre tour",
+                                "Fin du tour",  JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                     }
                     currentPlayer = model.nextPlayer();
                     currentAction = 0;
@@ -177,8 +177,8 @@ public class JButtonController implements ActionListener {
 
                 }
                 if(currentPlayer.getLevel() == 0) {
-                    int input = JOptionPane.showConfirmDialog(null, params,
-                            "Piocher des cartes destinations", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    int input = JOptionPane.showOptionDialog(null, params,
+                            "Piocher des cartes destinations",  JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
 
                 //on met les cartes dans le jeu du joueur
@@ -196,8 +196,8 @@ public class JButtonController implements ActionListener {
                     currentPlayer.addDestinationCard(dctmp.get(2));
                 }
                 if(currentPlayer.getLevel() == 0) {
-                    int input = JOptionPane.showConfirmDialog(null, "Fin de votre tour",
-                            "Fin du tour", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    int input = JOptionPane.showOptionDialog(null, "Fin de votre tour",
+                            "Fin du tour",  JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
                 currentPlayer = model.nextPlayer();
                 currentAction = 0;
@@ -207,8 +207,8 @@ public class JButtonController implements ActionListener {
 
             }else{
                 if(currentPlayer.getLevel() == 0) {
-                    int input = JOptionPane.showConfirmDialog(null, "Il n'y a plus de carte detination disponible.",
-                            "Piocher des cartes destinations", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    int input = JOptionPane.showOptionDialog(null, "Il n'y a plus de carte detination disponible.",
+                            "Piocher des cartes destinations",  JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
             }
         }
@@ -257,32 +257,45 @@ public class JButtonController implements ActionListener {
 
                         //si elle n'existe toujours pas c'est qu'il n'y a pas de route entre ces villes
                         if(routeChoix == null){
-                            int input = JOptionPane.showConfirmDialog(null ,"Il n'y a pas de route entre ces deux villes.",
-                                    "Erreur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            int input = JOptionPane.showOptionDialog(null ,"Il n'y a pas de route entre ces deux villes.",
+                                    "Erreur", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                             choixCity1.setEnabled(true);
                             choixCity2.setEnabled(true);
                             choixCity1 = null;
                             choixCity2 = null;
+                            view.getButtons().getPiocherW().setEnabled(true);
+                            view.getButtons().getPiocherD().setEnabled(true);
+                            view.getButtons().getPrendreR().setEnabled(true);
+                            view.getDraw().getPiocheWagon().setEnabled(false);
                             return;
                         }
                         int input;
                         if(routeChoix.isAlreadyTakenRoute()){
-                            input = JOptionPane.showConfirmDialog(null ,"La route est déjà prise.",
-                                    "Erreur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            input = JOptionPane.showOptionDialog(null ,"La route est déjà prise.",
+                                    "Erreur", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                             choixCity1.setEnabled(true);
                             choixCity2.setEnabled(true);
                             choixCity1 = null;
                             choixCity2 = null;
+                            view.getButtons().getPiocherW().setEnabled(true);
+                            view.getButtons().getPiocherD().setEnabled(true);
+                            view.getButtons().getPrendreR().setEnabled(true);
+                            view.getDraw().getPiocheWagon().setEnabled(false);
+
                             return;
                         }
 
                         if(currentPlayer.getWagons() < routeChoix.getRequire()){
-                            input = JOptionPane.showConfirmDialog(null ,"Vous n'avez pas assez de wagon.",
-                                    "Erreur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            input = JOptionPane.showOptionDialog(null ,"Vous n'avez pas assez de wagon.",
+                                    "Erreur", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
                             choixCity1.setEnabled(true);
                             choixCity2.setEnabled(true);
                             choixCity1 = null;
                             choixCity2 = null;
+                            view.getButtons().getPiocherW().setEnabled(true);
+                            view.getButtons().getPiocherD().setEnabled(true);
+                            view.getButtons().getPrendreR().setEnabled(true);
+                            view.getDraw().getPiocheWagon().setEnabled(false);
                             return;
                         }
 
@@ -292,11 +305,33 @@ public class JButtonController implements ActionListener {
 
                                 Color choixColor = chooseColor();
 
-                                routeChoix.takeTunnel(choixColor, model,currentPlayer);
+                                if (routeChoix.takeTunnel(choixColor, model, currentPlayer) == -1) {
+                                    currentAction = 0;
+                                    choixCity1.setEnabled(true);
+                                    choixCity2.setEnabled(true);
+                                    choixCity1 = null;
+                                    choixCity2 = null;
+                                    view.getButtons().getPiocherW().setEnabled(true);
+                                    view.getButtons().getPiocherD().setEnabled(true);
+                                    view.getButtons().getPrendreR().setEnabled(true);
+                                    view.getDraw().getPiocheWagon().setEnabled(false);
+                                    return;
+                                }
                             }
                             //si la route a une couleur
                             else {
-                                routeChoix.takeTunnel(routeChoix.getColor(), model,currentPlayer);
+                                if (routeChoix.takeTunnel(routeChoix.getColor(), model, currentPlayer) == -1) {
+                                    currentAction = 0;
+                                    choixCity1.setEnabled(true);
+                                    choixCity2.setEnabled(true);
+                                    choixCity1 = null;
+                                    choixCity2 = null;
+                                    view.getButtons().getPiocherW().setEnabled(true);
+                                    view.getButtons().getPiocherD().setEnabled(true);
+                                    view.getButtons().getPrendreR().setEnabled(true);
+                                    view.getDraw().getPiocheWagon().setEnabled(false);
+                                    return;
+                                }
                             }
                         }
                         //si c'est pas un tunnel
@@ -313,6 +348,10 @@ public class JButtonController implements ActionListener {
                                     choixCity2.setEnabled(true);
                                     choixCity1 = null;
                                     choixCity2 = null;
+                                    view.getButtons().getPiocherW().setEnabled(true);
+                                    view.getButtons().getPiocherD().setEnabled(true);
+                                    view.getButtons().getPrendreR().setEnabled(true);
+                                    view.getDraw().getPiocheWagon().setEnabled(false);
                                     return;
                                 }
                             } else {
@@ -323,6 +362,10 @@ public class JButtonController implements ActionListener {
                                     choixCity2.setEnabled(true);
                                     choixCity1 = null;
                                     choixCity2 = null;
+                                    view.getButtons().getPiocherW().setEnabled(true);
+                                    view.getButtons().getPiocherD().setEnabled(true);
+                                    view.getButtons().getPrendreR().setEnabled(true);
+                                    view.getDraw().getPiocheWagon().setEnabled(false);
                                     return;
                                 }
                             }
@@ -363,8 +406,8 @@ public class JButtonController implements ActionListener {
                 JLabel jb = new JLabel(currentPlayer.getDestinationCards().get(i).toString(),SwingConstants.CENTER);
                 params[i] = jb;
             }
-            int input = JOptionPane.showConfirmDialog(null ,params,
-                    "Mes cartes destination",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            int input = JOptionPane.showOptionDialog(null ,params,
+                    "Mes cartes destination", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
         }
 
         //fin d'un tour
@@ -389,8 +432,8 @@ public class JButtonController implements ActionListener {
         JComboBox colorList = new JComboBox<>(Color.values());
         colorList.setSelectedIndex(0);
         params[1] = colorList;
-        int input = JOptionPane.showConfirmDialog(null ,params,
-                "Choix d'une couleur",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        int input = JOptionPane.showOptionDialog(null ,params,
+                "Choix d'une couleur", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
         return (Color) colorList.getSelectedItem();
     }
 
@@ -408,8 +451,8 @@ public class JButtonController implements ActionListener {
         JComboBox routeList = new JComboBox<>(r);
         routeList.setSelectedIndex(0);
         params[1] = routeList;
-        int input = JOptionPane.showConfirmDialog(null ,params,
-                "Choix d'une route",JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        int input = JOptionPane.showOptionDialog(null ,params,
+                "Choix d'une route", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
         return (Route) routeList.getSelectedItem();
     }
 
@@ -435,7 +478,7 @@ public class JButtonController implements ActionListener {
                 scoresWithNames += pl.getName()+" : "+pl.getPoints()+" points lvl = "+pl.getLevel()+"\n";
             }
             if(endMessage) {
-                Object[] options1 = {"Jouer une autre partie", "Quitter"};
+                Object[] options1 = {"Quitter"};
                 int input = JOptionPane.showOptionDialog(null, scoresWithNames, "Fin de partie",
                         JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, options1[0]);
                 if (input == JOptionPane.NO_OPTION) {

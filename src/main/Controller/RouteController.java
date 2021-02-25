@@ -27,10 +27,8 @@ public class RouteController implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         Route r = view.getBoard().getRouteClicked(e);
         if(r != null){
-            int input = JOptionPane.showConfirmDialog(null ,"Cette route relie "+r.getCity1()+
-                    " à "+r.getCity2()+". Elle est de couleur "+r.getColor()+" " +"et il faut "+r.getRequire()+
-                    " wagons pour la prendre.", r.getCity1()+" à "+r.getCity2()
-                    ,JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            int input = JOptionPane.showOptionDialog(null ,"Vous avez cliqué sur la route "+r, r.getCity1()+" à "+r.getCity2()
+                    ,JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
         }
     }
 

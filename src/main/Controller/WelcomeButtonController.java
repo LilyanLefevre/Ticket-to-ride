@@ -74,10 +74,9 @@ public class WelcomeButtonController implements ActionListener {
         }
         if(src == view.getCjp().getConfirm2()){
             String n = view.getCjp().getNom().getText();
-            if(n.isEmpty()){
+            if(n.isEmpty()) {
                 JOptionPane.showOptionDialog(null, "Vous ne pouvez pas saisir un nom vide",
-                        "Erreur", JOptionPane.OK_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                        "Erreur", JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, "OK");
             }else{
                 nomJoueurs.add(n);
             }
