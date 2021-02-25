@@ -4,7 +4,7 @@ import Controller.JButtonController;
 import Controller.RouteController;
 import Model.Game;
 import Model.GameElements.City;
-import Model.GameElements.Coordonnees;
+import Model.GameElements.Coordinates;
 import Model.GameElements.Destinations;
 import Model.GameElements.Route;
 
@@ -54,7 +54,7 @@ public class BoardPane extends JPanel {
 
                 //on regarde s'il existe une ville qui a ces coordonnées là
                 for (Map.Entry city : d.getDestinations().entrySet()) {
-                    Coordonnees tmp = ((City) city.getValue()).getCoordonnees();
+                    Coordinates tmp = ((City) city.getValue()).getCoordinates();
 
                     //s'il y a une ville avec ces coordonnées on entre le nom dans le label
                     if (tmp.getX() == x && tmp.getY() == y) {
@@ -65,7 +65,7 @@ public class BoardPane extends JPanel {
 
                 //si il y a une ville
                 if (name != "") {
-                    CityTile c = new CityTile(g.getD().getCity(name));
+                    CityTile c = new CityTile(g.getDestinations().getCity(name));
                     c.setMargin(new Insets(2,1,1,2));
                     add(c, gbc);
                     cityTileHashMap.put(name,c);
@@ -84,11 +84,11 @@ public class BoardPane extends JPanel {
             //on enregistre la position des villes
             CityTile c1 = cityTileHashMap.get(city.getKey());
             Point p1 = c1.getLocation();
-            City ct1 = game.getD().getCity((String) city.getKey());
+            City ct1 = game.getDestinations().getCity((String) city.getKey());
 
             //on parcoure les villes reliées à ct1
             for (Map.Entry route : ct1.getRoutesFrom().entrySet()) {
-                City ct2 = game.getD().getCity(((City) route.getKey()).getName());
+                City ct2 = game.getDestinations().getCity(((City) route.getKey()).getName());
                 CityTile c2 = cityTileHashMap.get(ct2.getName());
                 Point p2 = c2.getLocation();
 
@@ -97,11 +97,11 @@ public class BoardPane extends JPanel {
                 if(((Route)route.getValue()).isAlreadyTakenRoute()){
                     c = ((Route)route.getValue()).getPlayer().getColor();
                 }else{
-                    c = Model.Enum.Color.getAwtColor(((Route)route.getValue()).getColor());
+                    c = Model.GameElements.Color.getAwtColor(((Route)route.getValue()).getColor());
                 }
                 g.setColor(c);
-                Coordonnees cooCt1 = new Coordonnees(c1.getX(),c1.getY());
-                Coordonnees cooCt2 = new Coordonnees(c2.getX(),c2.getY());
+                Coordinates cooCt1 = new Coordinates(c1.getX(),c1.getY());
+                Coordinates cooCt2 = new Coordinates(c2.getX(),c2.getY());
                 double dist = cooCt1.distance(cooCt2);
                 double tailleTrait = dist/((Route)route.getValue()).getRequire();
                 float[] dash1 = { (float)tailleTrait, 3f};
@@ -134,7 +134,7 @@ public class BoardPane extends JPanel {
                 if(ct2.getRoutesFrom().containsKey(ct1)){
                     boolean dejaFirstDouble = false;
                     for(Map.Entry r : routePath.entrySet()){
-                        if(((Route) r.getValue()).getDest1() == ct2 && ((Route) r.getValue()).getDest2() == ct1){
+                        if(((Route) r.getValue()).getCity1() == ct2 && ((Route) r.getValue()).getCity2() == ct1){
                             dejaFirstDouble = true;
                         }
                     }
@@ -143,8 +143,8 @@ public class BoardPane extends JPanel {
                         larg2 = (c2.getWidth())/2+4;
                         hau1 = (c1.getHeight())/2+4;
                         hau2 = (c2.getHeight())/2+4;
-                        if(ct1.getCoordonnees().getX() > ct2.getCoordonnees().getX()
-                                && ct1.getCoordonnees().getY() > ct2.getCoordonnees().getY() ){
+                        if(ct1.getCoordinates().getX() > ct2.getCoordinates().getX()
+                                && ct1.getCoordinates().getY() > ct2.getCoordinates().getY() ){
                             larg1 = (c1.getWidth())/2+10;
                             larg2 = (c2.getWidth())/2+10;
                             hau1 = (c1.getHeight())/2+10;
@@ -157,8 +157,8 @@ public class BoardPane extends JPanel {
                         hau1 = (c1.getHeight())/2-4;
                         hau2 = (c2.getHeight())/2-4;
 
-                        if(ct1.getCoordonnees().getX() < ct2.getCoordonnees().getX()
-                                && ct1.getCoordonnees().getY() < ct2.getCoordonnees().getY() ){
+                        if(ct1.getCoordinates().getX() < ct2.getCoordinates().getX()
+                                && ct1.getCoordinates().getY() < ct2.getCoordinates().getY() ){
                             larg1 = (c1.getWidth())/2-10;
                             larg2 = (c2.getWidth())/2-10;
                             hau1 = (c1.getHeight())/2-10;

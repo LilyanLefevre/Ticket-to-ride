@@ -3,8 +3,6 @@ package Model;
 import java.util.*;
 
 import Model.GameElements.*;
-import Model.Enum.*;
-import Model.Player.HumanPlayer;
 
 /**
  * classe qui représente le moteur du jeu
@@ -12,53 +10,52 @@ import Model.Player.HumanPlayer;
 public class Game{
     private Random random;
     // l'ensemble des joueurs
-    private final ArrayList<HumanPlayer> players;
+    private final ArrayList<Player> players;
 
     //joueur actuel
-    private HumanPlayer currentPlayer;
+    private Player currentPlayer;
     private int indexCurrentPlayer;
 
     // pioche de cartes de couleurs
-    private ArrayList<WagonCard> drawWagonCards;
+    private ArrayList<WagonCard> wagonCardsDraw;
 
     // 5 cartes de couleurs retournées
-    private ArrayList<WagonCard> drawVisibleWagonCards;
+    private ArrayList<WagonCard> visibleWagonCardsDraw;
 
     // pioche de cartes destination
-    private ArrayList<DestinationCard> drawDestinationCards;
-
-    //variable qui sert dans le cas où on annule une action
-    private int alreadyCalled;
+    private ArrayList<DestinationCard> destinationCardsDraw;
 
     //variable qui représente l'ensemble des destinations du jeu
-    private Destinations d;
+    private Destinations destinations;
 
+    //variable qui sert à enregistrer les villes déjà visitées pour la fonction finDest
     private ArrayList<String> names;
 
+    //variable qui enregistre si la partie contient uniquement des ias ou pas
     private boolean onlyIA;
 
-    public HumanPlayer getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public ArrayList<WagonCard> getDrawWagonCards() {
-        return drawWagonCards;
+    public ArrayList<WagonCard> getWagonCardsDraw() {
+        return wagonCardsDraw;
     }
 
-    public ArrayList<HumanPlayer> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
     public ArrayList<WagonCard> getDrawVisibleTrainCards() {
-        return drawVisibleWagonCards;
+        return visibleWagonCardsDraw;
     }
 
-    public ArrayList<DestinationCard> getDrawDestinationCards() {
-        return drawDestinationCards;
+    public ArrayList<DestinationCard> getDestinationCardsDraw() {
+        return destinationCardsDraw;
     }
 
-    public Destinations getD() {
-        return d;
+    public Destinations getDestinations() {
+        return destinations;
     }
 
     public boolean isOnlyIA() {
@@ -69,32 +66,32 @@ public class Game{
         this.random = r;
 
         // initialisation des cartes wagons
-        drawWagonCards = new ArrayList<>(Color.values().length*14);
+        wagonCardsDraw = new ArrayList<>(Color.values().length*14);
         for(int i = 0; i < Color.values().length; i++){
             if(Color.values()[i] != Color.GRAY) {
                 for (int j = 0; j < 14; j++) {
-                    drawWagonCards.add(new WagonCard(Color.values()[i]));
+                    wagonCardsDraw.add(new WagonCard(Color.values()[i]));
                 }
             }
         }
 
         //initialisation des cartes wagons visibles
-        drawVisibleWagonCards = new ArrayList<>(5);
+        visibleWagonCardsDraw = new ArrayList<>(5);
         for(int i = 0; i < 5; i++){
-            int nCard = (int)(Math.random() * (drawWagonCards.size()));
+            int nCard = (int)(Math.random() * (wagonCardsDraw.size()));
 
             // on ajoute la carte tirée dans le jeu du joueur
-            drawVisibleWagonCards.add(drawWagonCards.get(nCard));
+            visibleWagonCardsDraw.add(wagonCardsDraw.get(nCard));
 
             // et on la retire de la pioche
-            drawWagonCards.remove(nCard);
+            wagonCardsDraw.remove(nCard);
         }
 
         //initialisation des destinations et des routes
-        d = new Destinations(random);
+        destinations = new Destinations(random);
 
         //initialisation des cartes destination
-        drawDestinationCards = DestinationCard.genererCarteDestination(d);
+        destinationCardsDraw = DestinationCard.generateDestinationCard(destinations);
 
         // initialisation des joueurs
         players = new ArrayList<>();
@@ -109,14 +106,13 @@ public class Game{
         couleurJoueur.put(2, new java.awt.Color(165,102,12));
         couleurJoueur.put(3, new java.awt.Color(160,189,138));
         for(int i = 0; i < names.size(); i++){
-            players.add(i,new HumanPlayer(names.get(i),couleurJoueur.get(i), drawDestinationCards, drawWagonCards, 0));
+            players.add(i,new Player(names.get(i),couleurJoueur.get(i), destinationCardsDraw, wagonCardsDraw, 0));
         }
 
         for(int i = names.size(); i < 4; i++){
-            players.add(i,new HumanPlayer("bot "+i, couleurJoueur.get(i), drawDestinationCards,drawWagonCards, i+1));
+            players.add(i,new Player("bot "+i, couleurJoueur.get(i), destinationCardsDraw, wagonCardsDraw, i+2));
         }
 
-        alreadyCalled = 0;
         currentPlayer = players.get(0);
         indexCurrentPlayer = 0;
     }
@@ -131,14 +127,14 @@ public class Game{
     public String toString() {
         //on affiche les cartes retournées
         StringBuilder str = new StringBuilder("DRAW VISIBLE TRAIN CARDS : \n");
-        for (WagonCard drawVisibleTrainCard : drawVisibleWagonCards) {
+        for (WagonCard drawVisibleTrainCard : visibleWagonCardsDraw) {
             str.append(drawVisibleTrainCard.toString());
         }
 
 
         //on affiche les joueurs
         str.append("PLAYERS :\n");
-        for (HumanPlayer player : players) {
+        for (Player player : players) {
             str.append(player.toString());
         }
         return str.toString();
@@ -151,7 +147,7 @@ public class Game{
      * @return true if a player has less than 3 wagons, false otherwise
      */
     public boolean gameIsOver(){
-        for (HumanPlayer p : players) {
+        for (Player p : players) {
             if( p.getWagons() < 3 ) {
                 return true;
             }
@@ -166,12 +162,12 @@ public class Game{
      * @return TrainCard la carte pioché
      */
     public WagonCard drawTrainCard(){
-        int nCard = (int)(Math.random() * (drawWagonCards.size()));
+        int nCard = (int)(Math.random() * (wagonCardsDraw.size()));
 
-        WagonCard tmp = drawWagonCards.get(nCard);
+        WagonCard tmp = wagonCardsDraw.get(nCard);
 
         // et on la retire de la pioche
-        drawWagonCards.remove(nCard);
+        wagonCardsDraw.remove(nCard);
 
         return tmp;
     }
@@ -182,12 +178,12 @@ public class Game{
      * @return DestinationCard la carte pioché
      */
     public DestinationCard drawDestinationCard(){
-        int nCard = (int)(Math.random() * (drawDestinationCards.size()));
+        int nCard = (int)(Math.random() * (destinationCardsDraw.size()));
 
-        DestinationCard tmp = drawDestinationCards.get(nCard);
+        DestinationCard tmp = destinationCardsDraw.get(nCard);
 
         // et on la retire de la pioche
-        drawDestinationCards.remove(nCard);
+        destinationCardsDraw.remove(nCard);
 
         return tmp;
     }
@@ -199,14 +195,14 @@ public class Game{
      */
     public String scoreToString(){
         String res = "";
-        for(HumanPlayer p : players){
+        for(Player p : players){
             res += p.toString();
         }
         return res;
     }
 
-    public HumanPlayer getWinner(){
-        HumanPlayer max = players.get(0);
+    public Player getWinner(){
+        Player max = players.get(0);
         for(int i = 1; i < players.size(); i++){
             if(players.get(i).getPoints() > max.getPoints()){
                 max = players.get(i);
@@ -221,24 +217,24 @@ public class Game{
      */
     public void determineScore(){
         //on parcoure les joueurs
-        for (HumanPlayer p : players){
+        for (Player p : players){
             //tableau qui va servir à enregistrer les noms des villes déjà visitées
             names = new ArrayList<>();
 
             //on parcoure les objectifs du joueur courant
-            for(DestinationCard d : p.getdCards()){
+            for(DestinationCard d : p.getDestinationCards()){
                 //on enregistre le couple de villes à relier
-                City from = d.getDest1();
+                City from = d.getCity1();
                 names.add(from.getName());
-                City to = d.getDest2();
+                City to = d.getCity2();
 
                 boolean result = false;
                 //pour chaque route empruntée par le joueur
-                for(Route r : p.getRoutesEmpruntes()){
+                for(Route r : p.getOwnedRoute()){
                     //on regarde si elle part de la premiere ville de l'objectif
-                    if(r.getDest1()==from){
+                    if(r.getCity1()==from){
                         //et on essaie de construire le chemin vers la deuxieme ville
-                        result = findDest(r.getDest2(),to,p);
+                        result = findDest(r.getCity2(),to,p);
 
                         //si il existe un chemin on ajoute les points
                         if(result) {
@@ -263,18 +259,18 @@ public class Game{
      *
      * @return boolean true si le joueur a relié les deux villes, false sinon
      */
-    public boolean findDest(City dest, City destFinal, HumanPlayer p){
+    public boolean findDest(City dest, City destFinal, Player p){
         if(!names.contains(dest.getName())){
             names.add(dest.getName());
         }
         boolean result = false;
-        for (Route r : p.getRoutesEmpruntes()){
-            if(r.getDest1() == dest) {
-                if(r.getDest2() == destFinal) {
+        for (Route r : p.getOwnedRoute()){
+            if(r.getCity1() == dest) {
+                if(r.getCity2() == destFinal) {
                     result = true;
                 }else {
-                    if(!names.contains(r.getDest2().toString())) {
-                        result = findDest(r.getDest2(), destFinal, p);
+                    if(!names.contains(r.getCity2().toString())) {
+                        result = findDest(r.getCity2(), destFinal, p);
                     }
                 }
             }
@@ -287,7 +283,7 @@ public class Game{
      *
      * @return Player le prochain joueur à jouer
      */
-    public HumanPlayer nextPlayer(){
+    public Player nextPlayer(){
         //si on est actuellement sur le dernier joueur
         if(indexCurrentPlayer == players.size()-1){
             //on retourne le premier

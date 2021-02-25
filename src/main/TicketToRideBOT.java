@@ -30,7 +30,7 @@ public class TicketToRideBOT {
         //on ajoute les controlleurs
         RouteController mc = new RouteController(gv);
         gv.setRouteListener(mc);
-        JButtonController gc = new JButtonController(g,gv);
+        JButtonController gc = new JButtonController(g,gv,false);
         gv.setActionListener(gc);
     }
 }

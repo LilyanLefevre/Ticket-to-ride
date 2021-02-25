@@ -9,22 +9,22 @@ import java.util.Random;
  * classe qui représente une carte destination
  */
 public class DestinationCard implements Comparable{
-    private final City dest1;
-    private final City dest2;
+    private final City city1;
+    private final City city2;
     private final int points;
 
     public DestinationCard(City from, City to, int points) {
-        this.dest1 = from;
-        this.dest2 = to;
+        this.city1 = from;
+        this.city2 = to;
         this.points = points;
     }
 
-    public City getDest1() {
-        return dest1;
+    public City getCity1() {
+        return city1;
     }
 
-    public City getDest2() {
-        return dest2;
+    public City getCity2() {
+        return city2;
     }
 
     public int getPoints() {
@@ -39,7 +39,7 @@ public class DestinationCard implements Comparable{
      */
     @Override
     public String toString() {
-        return "    From "+ dest1 +" to "+ dest2 +". It worth "+points+" points.\n";
+        return "    From "+ city1 +" to "+ city2 +". It worth "+points+" points.\n";
     }
 
     /**
@@ -49,7 +49,7 @@ public class DestinationCard implements Comparable{
      *
      * @return un tableau de DestinationCard
      */
-    public static ArrayList genererCarteDestination(Destinations d){
+    public static ArrayList generateDestinationCard(Destinations d){
         ArrayList<DestinationCard> ret = new ArrayList<>();
 
         //on créer une carte objectif pour chaque ville
@@ -73,8 +73,8 @@ public class DestinationCard implements Comparable{
             }
 
             //on va calculer la distance entre les deux villes trouvées
-            Coordonnees v1 = ((City) from.getValue()).getCoordonnees();
-            Coordonnees v2 = to.getCoordonnees();
+            Coordinates v1 = ((City) from.getValue()).getCoordinates();
+            Coordinates v2 = to.getCoordinates();
             double distance1 = v1.distance(v2);
 
             //on met un nb de point selon la distance entre les deux villes

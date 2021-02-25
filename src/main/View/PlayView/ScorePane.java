@@ -1,6 +1,6 @@
 package View.PlayView;
 
-import Model.Player.HumanPlayer;
+import Model.GameElements.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +11,10 @@ import java.util.HashMap;
  * classe qui représente le panel qui affiche les scores des joueurs
  */
 public class ScorePane extends JPanel {
-    HashMap<HumanPlayer,JLabel> scoreLabels; //ensemble de labels qui contiennet les infos des joueurs
+    HashMap<Player,JLabel> scoreLabels; //ensemble de labels qui contiennet les infos des joueurs
     JPanel container;
 
-    public ScorePane(ArrayList<HumanPlayer> pl) {
+    public ScorePane(ArrayList<Player> pl) {
         scoreLabels = new HashMap<>();
 
         //setBackground(new Color(0.0f, 0.0f, 0.0f, 0.3f));
@@ -52,7 +52,7 @@ public class ScorePane extends JPanel {
      *
      * @param players ensemble des joueurs du jeu
      */
-    public void updateScore(ArrayList<HumanPlayer> players){
+    public void updateScore(ArrayList<Player> players){
         //on affiche chaque joueur
         for(int i = 0; i < players.size(); i++){
             scoreLabels.get(players.get(i)).setText("<html> <body style='text-align: center'>"+players.get(i).getName()+" "+players.get(i).getPoints()+" points, "

@@ -2,7 +2,6 @@ import Controller.JButtonController;
 import Controller.RouteController;
 import Controller.WelcomeButtonController;
 import Model.Game;
-import Model.Player.HumanPlayer;
 import View.MenuView.WelcomeFrame;
 import View.PlayView.GameView;
 
@@ -27,7 +26,7 @@ public class TicketToRide {
         WelcomeButtonController welcomeController = new WelcomeButtonController(view1);
         view1.setActionListener(welcomeController);
 
-        while(welcomeController.getStatus() == 0 && view1.getStatus() == 0){
+        while(welcomeController.getStatus() == 0 && view1.getStatus() == 0) {
             System.out.print("");
         }
         if(view1.getStatus() == -1){
@@ -52,7 +51,7 @@ public class TicketToRide {
         //on ajoute les controlleurs
         RouteController mc = new RouteController(gv);
         gv.setRouteListener(mc);
-        JButtonController gc = new JButtonController(g,gv);
+        JButtonController gc = new JButtonController(g,gv,true);
         gv.setActionListener(gc);
     }
 }

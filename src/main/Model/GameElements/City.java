@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class City {
     private String name;
-    private Coordonnees c;
+    private Coordinates coordinates;
     private Random random;
 
     /**
@@ -21,15 +21,15 @@ public class City {
         this.name = name;
         this.routesFrom = new HashMap<>();
         this.random = r;
-        c = new Coordonnees(r);
+        coordinates = new Coordinates(r);
     }
 
     public String getName() {
         return name;
     }
 
-    public Coordonnees getCoordonnees() {
-        return c;
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
     public HashMap<City, Route> getRoutesFrom() {

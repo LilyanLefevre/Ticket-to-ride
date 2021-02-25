@@ -1,6 +1,6 @@
 package View.PlayView;
 
-import Model.Enum.Color;
+import Model.GameElements.Color;
 
 import javax.swing.*;
 import java.awt.*;

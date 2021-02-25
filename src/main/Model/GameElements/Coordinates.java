@@ -6,13 +6,13 @@ import java.util.Random;
 /**
  * classe qui représente des coordonnées (x,y)
  */
-public class Coordonnees {
+public class Coordinates {
     final private int x;
     final private int y;
     private Random random;
 
 
-    public Coordonnees(int x, int y) {
+    public Coordinates(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -20,8 +20,8 @@ public class Coordonnees {
     /**
      * constructeur qui génère des coordonnées aléatoire entre 0 et 19
      */
-    public Coordonnees(Random r){
-        Coordonnees tmp = genererCoordonnees(0,19, r);
+    public Coordinates(Random r){
+        Coordinates tmp = generateCoordinates(0,19, r);
         this.x = tmp.getX();
         this.y = tmp.getY();
         this.random = r;
@@ -44,7 +44,7 @@ public class Coordonnees {
             return false;
         }
 
-        Coordonnees that = (Coordonnees) o;
+        Coordinates that = (Coordinates) o;
         return (x == that.x && y == that.y);
     }
 
@@ -61,11 +61,11 @@ public class Coordonnees {
      *
      * @return Coordonnees les coordonnées générées
      */
-    public Coordonnees genererCoordonnees(int borneInf, int borneSup, Random random){
+    public Coordinates generateCoordinates(int borneInf, int borneSup, Random random){
         int cx,cy;
         cx = borneInf+random.nextInt(borneSup-borneInf);
         cy = borneInf+random.nextInt(borneSup-borneInf);
-        return new Coordonnees(cx,cy);
+        return new Coordinates(cx,cy);
     }
 
     /**
@@ -75,7 +75,7 @@ public class Coordonnees {
      *
      * @return double la distance entre les deux
      */
-    public double distance(Coordonnees x) {
+    public double distance(Coordinates x) {
         return Math.sqrt(Math.pow((x.getY() - getY()),2) + Math.pow((x.getX() - getX()),2));
     }
 }

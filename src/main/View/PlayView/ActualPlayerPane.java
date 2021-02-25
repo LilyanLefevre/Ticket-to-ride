@@ -1,7 +1,7 @@
 package View.PlayView;
 
 import Controller.JButtonController;
-import Model.Player.HumanPlayer;
+import Model.GameElements.Player;
 import Model.GameElements.WagonCard;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.util.Map;
  * classe qui représente le panel qui affiche les cartes du joueur actuel
  */
 public class ActualPlayerPane extends JPanel {
-    private HashMap<Model.Enum.Color, Integer> occurencesCouleur; //map ou ono enregistre les occurences des cartes du joueur
+    private HashMap<Model.GameElements.Color, Integer> occurencesCouleur; //map ou ono enregistre les occurences des cartes du joueur
     private JLabel name;
     private JPanel cardWagonPanel;
     private JPanel cardDestinationPanel;
@@ -24,12 +24,12 @@ public class ActualPlayerPane extends JPanel {
         return objButton;
     }
 
-    public ActualPlayerPane(HumanPlayer p) {
+    public ActualPlayerPane(Player p) {
         setLayout(new BorderLayout(0,40));
         setBorder(BorderFactory.createLineBorder(Color.black));
 
         occurencesCouleur = new HashMap<>();
-        ArrayList<WagonCard> wCards = p.getwCards();
+        ArrayList<WagonCard> wCards = p.getWagonCards();
 
         //on compte les occurences des couleurs
         for(int i = 0; i < wCards.size(); i++){
@@ -53,7 +53,7 @@ public class ActualPlayerPane extends JPanel {
         cardWagonPanel.setBackground(new Color(0,0,0,0));
         cardWagonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
-            switch ((Model.Enum.Color)couleur.getKey()){
+            switch ((Model.GameElements.Color)couleur.getKey()){
                 case RED:
                     CardImagePane im = new CardImagePane("/wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
@@ -91,7 +91,7 @@ public class ActualPlayerPane extends JPanel {
                     cardWagonPanel.add(im);
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected color: "+(Model.Enum.Color)couleur.getKey());
+                    throw new IllegalStateException("Unexpected color: "+(Model.GameElements.Color)couleur.getKey());
             }
             add(cardWagonPanel,BorderLayout.CENTER);
         }
@@ -120,11 +120,11 @@ public class ActualPlayerPane extends JPanel {
      *
      * @param p le joueur à actualiser
      */
-    public void updateCard(HumanPlayer p){
+    public void updateCard(Player p){
         name.setText("<html><u>Tour de "+p.getName()+"</u></html>");
 
         occurencesCouleur = new HashMap<>();
-        ArrayList<WagonCard> wCards = p.getwCards();
+        ArrayList<WagonCard> wCards = p.getWagonCards();
 
         //on compte les occurences des couleurs
         for(int i = 0; i < wCards.size(); i++){
@@ -136,7 +136,7 @@ public class ActualPlayerPane extends JPanel {
         }
         cardWagonPanel.removeAll();
         for(Map.Entry couleur : occurencesCouleur.entrySet()){
-            switch ((Model.Enum.Color)couleur.getKey()){
+            switch ((Model.GameElements.Color)couleur.getKey()){
                 case RED:
                     CardImagePane im = new CardImagePane("/wagon-rouge.jpg",((Integer)couleur.getValue()));
                     cardWagonPanel.add(im);
@@ -174,7 +174,7 @@ public class ActualPlayerPane extends JPanel {
                     cardWagonPanel.add(im);
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected color: "+(Model.Enum.Color)couleur.getKey());
+                    throw new IllegalStateException("Unexpected color: "+(Model.GameElements.Color)couleur.getKey());
             }
             add(cardWagonPanel,BorderLayout.CENTER);
         }

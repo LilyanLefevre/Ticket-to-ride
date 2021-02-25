@@ -72,7 +72,7 @@ public class GameView extends JFrame{
                 gbc.gridy = 0;
                 gbc.gridheight = 2;
                 gbc.insets = new Insets(0, 0, 0, 0);
-                board = new BoardPane(g.getD(), g);
+                board = new BoardPane(g.getDestinations(), g);
                 container.add(board, gbc);
 
                 //score

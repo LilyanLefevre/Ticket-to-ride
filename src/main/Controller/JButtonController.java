@@ -1,16 +1,18 @@
 package Controller;
 
-import Model.Enum.Color;
+import Model.GameElements.Color;
 import Model.Game;
 import Model.GameElements.*;
-import Model.Player.HumanPlayer;
+import Model.GameElements.Player;
 import View.PlayView.CardButtonPane;
 import View.PlayView.CityTile;
 import View.PlayView.GameView;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
@@ -33,17 +35,19 @@ public class JButtonController implements ActionListener {
     private Game model;
     private GameView view;
 
-    private HumanPlayer currentPlayer;
+    private Player currentPlayer;
     private int currentAction = 0;
     private int nbCardTaken = 0;
     private int lastIndexTaken = -3;
+    private boolean endMessage;
 
     private CityTile choixCity1 = null;
     private CityTile choixCity2 = null;
 
-    public JButtonController(Game g, GameView gv) {
+    public JButtonController(Game g, GameView gv, boolean endMessage) {
         model = g;
         view = gv;
+        this.endMessage = endMessage;
         currentPlayer = g.getPlayers().get(0);
         playIA();
     }
@@ -106,9 +110,9 @@ public class JButtonController implements ActionListener {
                     model.getDrawVisibleTrainCards().remove(tmp);
 
                     //on remet une nouvelle carte tiree au hasard dans la pioche
-                    int nCard = (int) (Math.random() * (model.getDrawWagonCards().size()));
-                    model.getDrawVisibleTrainCards().add(model.getDrawWagonCards().get(nCard));
-                    model.getDrawWagonCards().remove(nCard);
+                    int nCard = (int) (Math.random() * (model.getWagonCardsDraw().size()));
+                    model.getDrawVisibleTrainCards().add(model.getWagonCardsDraw().get(nCard));
+                    model.getWagonCardsDraw().remove(nCard);
 
                     //on l'ajoute dans les cartes du joueur
                     currentPlayer.addTrainCard(tmp);
@@ -122,7 +126,7 @@ public class JButtonController implements ActionListener {
                 else{
                     nbCardTaken++;
 
-                    WagonCard newCard = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    WagonCard newCard = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     if(currentPlayer.getLevel() == 0) {
                         int input = JOptionPane.showConfirmDialog(null, "Vous avez pioché une carte "
                                 + newCard.getColor(), "Prendre une carte", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -150,11 +154,11 @@ public class JButtonController implements ActionListener {
         // si on souhaite piocher des cartes destination
         if(src == view.getButtons().getPiocherD()){
             //s'il reste au moins une carte destination
-            if(model.getDrawDestinationCards().size() > 0) {
+            if(model.getDestinationCardsDraw().size() > 0) {
                 System.out.println("Vous avez pioché les trois cartes Destination suivantes: ");
                 ArrayList<DestinationCard> dctmp = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
-                    if (model.getDrawDestinationCards().size() > 0) {
+                    if (model.getDestinationCardsDraw().size() > 0) {
                         DestinationCard tmpd = model.drawDestinationCard();
                         System.out.print("  " + (i + 1) + " - " + tmpd);
                         dctmp.add(tmpd);
@@ -243,8 +247,8 @@ public class JButtonController implements ActionListener {
                         choixCity2 = (CityTile)src;
                         choixCity2.setEnabled(false);
 
-                        Route route1 = model.getD().getRouteFromString(choixCity1.getCity().getName() +" - "+choixCity2.getCity().getName());
-                        Route route2 = model.getD().getRouteFromString(choixCity2.getCity().getName() +" - "+choixCity1.getCity().getName());
+                        Route route1 = model.getDestinations().getRouteFromString(choixCity1.getCity().getName() +" - "+choixCity2.getCity().getName());
+                        Route route2 = model.getDestinations().getRouteFromString(choixCity2.getCity().getName() +" - "+choixCity1.getCity().getName());
                         Route routeChoix = null;
                         if(route1 != null && route2 != null){
                             routeChoix = chooseDoubleRoute(route1,route2);
@@ -294,11 +298,11 @@ public class JButtonController implements ActionListener {
 
                                 Color choixColor = chooseColor();
 
-                                routeChoix.getTunnel(choixColor, model,currentPlayer);
+                                routeChoix.takeTunnel(choixColor, model,currentPlayer);
                             }
                             //si la route a une couleur
                             else {
-                                routeChoix.getTunnel(routeChoix.getColor(), model,currentPlayer);
+                                routeChoix.takeTunnel(routeChoix.getColor(), model,currentPlayer);
                             }
                         }
                         //si c'est pas un tunnel
@@ -309,7 +313,7 @@ public class JButtonController implements ActionListener {
                                 Color choixColor = chooseColor();
 
                                 //si le joueur a pas pu prendre le ferrie
-                                if (routeChoix.getFerrie( choixColor, model, currentPlayer) == -1) {
+                                if (routeChoix.takeFerrie( choixColor, model, currentPlayer) == -1) {
                                     currentAction = 0;
                                     choixCity1.setEnabled(true);
                                     choixCity2.setEnabled(true);
@@ -319,7 +323,7 @@ public class JButtonController implements ActionListener {
                                 }
                             } else {
                                 //si le joueur a pas pu prendre la route
-                                if (routeChoix.getRoute(routeChoix.getColor(), model, currentPlayer) == -1) {
+                                if (routeChoix.takeRoute(routeChoix.getColor(), model, currentPlayer) == -1) {
                                     currentAction = 0;
                                     choixCity1.setEnabled(true);
                                     choixCity2.setEnabled(true);
@@ -358,11 +362,11 @@ public class JButtonController implements ActionListener {
 
         //bouton pour voir ses objectifs
         if(src == view.getPlayerView().getObjButton()){
-            int taille = currentPlayer.getdCards().size();
+            int taille = currentPlayer.getDestinationCards().size();
 
             Object[] params = new Object[taille];
             for(int i = 0; i < taille; i++){
-                JLabel jb = new JLabel(currentPlayer.getdCards().get(i).toString(),SwingConstants.CENTER);
+                JLabel jb = new JLabel(currentPlayer.getDestinationCards().get(i).toString(),SwingConstants.CENTER);
                 params[i] = jb;
             }
             int input = JOptionPane.showConfirmDialog(null ,params,
@@ -422,7 +426,7 @@ public class JButtonController implements ActionListener {
             model.determineScore();
 
             //on récupère le vainqueur
-            HumanPlayer p = model.getWinner();
+            Player p = model.getWinner();
             FileWriter writer = null;
             try {
                 writer = new FileWriter("./resultats.txt",true);
@@ -433,10 +437,10 @@ public class JButtonController implements ActionListener {
             }
 
             String scoresWithNames = p.getName()+" a gagné\n";
-            for(HumanPlayer pl : model.getPlayers()){
-                scoresWithNames += pl.getName()+" - "+pl.getPoints()+" lvl = "+pl.getLevel()+"\n";
+            for(Player pl : model.getPlayers()){
+                scoresWithNames += pl.getName()+" : "+pl.getPoints()+" points lvl = "+pl.getLevel()+"\n";
             }
-            if(!model.isOnlyIA()) {
+            if(endMessage) {
                 Object[] options1 = {"Jouer une autre partie", "Quitter"};
                 int input = JOptionPane.showOptionDialog(null, scoresWithNames, "Fin de partie",
                         JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, options1[0]);
@@ -449,11 +453,17 @@ public class JButtonController implements ActionListener {
     }
 
     private void playIA(){
-        if(currentPlayer.getLevel() == 2){
+        if(currentPlayer.getLevel() == 1){
             playIALevel2();
         }
-        if(currentPlayer.getLevel() == 3){
+        if(currentPlayer.getLevel() == 2){
             playIALevel3();
+        }
+        if(currentPlayer.getLevel() == 3){
+            playIALevel4();
+        }
+        if(currentPlayer.getLevel() == 4){
+            playIALevel5();
         }
         if(currentPlayer.getLevel() != 0){
             playIALevel1();
@@ -466,10 +476,10 @@ public class JButtonController implements ActionListener {
      */
     private void playIALevel1(){
         if(currentPlayer.getLevel() != 0) {
-            ArrayList<Route> routes = model.getD().getRoutes();
+            ArrayList<Route> routes = model.getDestinations().getRoutes();
             Route desiredRoute = null;
             for (Route r : routes) {
-                Model.Enum.Color color = r.getColor();
+                Color color = r.getColor();
                 int nbCard = r.getRequire();
                 if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
                     desiredRoute = r;
@@ -482,16 +492,16 @@ public class JButtonController implements ActionListener {
             }
             //sinon on pioche des cartes
             else {
-                if(model.getDrawWagonCards().size() > 1) {
-                    WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                if(model.getWagonCardsDraw().size() > 1) {
+                    WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.print("Le bot a pioché les cartes : " + wc.getColor());
-                    wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.println(" et " + wc.getColor());
                 }else{
-                    if(model.getDrawDestinationCards().size() > 0) {
+                    if(model.getDestinationCardsDraw().size() > 0) {
                         System.out.print("Le bot a pioché les cartes destination : " );
                         for (int i = 0; i < 3; i++) {
-                            if (model.getDrawDestinationCards().size() > 0) {
+                            if (model.getDestinationCardsDraw().size() > 0) {
                                 DestinationCard tmpd = model.drawDestinationCard();
                                 currentPlayer.addDestinationCard(tmpd);
                                 System.out.print(tmpd+"  ");
@@ -514,43 +524,44 @@ public class JButtonController implements ActionListener {
      */
     private void playIALevel2() {
         if(currentPlayer.getLevel() != 0) {
-            ArrayList<Route> routes = model.getD().getRoutes();
-            ArrayList<DestinationCard> objectifs = currentPlayer.getdCards();
+            ArrayList<Route> routes = model.getDestinations().getRoutes();
+            ArrayList<DestinationCard> objectifs = currentPlayer.getDestinationCards();
             Collections.sort(objectifs);
             Route desiredRoute = null;
 
             Graph<City, DefaultEdge> g = new DefaultUndirectedGraph<>(DefaultEdge.class);
 
             //on ajoute toutes les villes au graph
-            for (Map.Entry city : model.getD().getDestinations().entrySet()) {
+            for (Map.Entry city : model.getDestinations().getDestinations().entrySet()) {
                 City c1 = (City)city.getValue();
                 g.addVertex(c1);
             }
 
             //on ajoute tous les arcs entre les villes
             for (Route r : routes){
-                g.addEdge(r.getDest1(), r.getDest2());
+                g.addEdge(r.getCity1(), r.getCity2());
             }
             BellmanFordShortestPath<City, DefaultEdge> belmanFordAlg = new BellmanFordShortestPath<>(g);
-
+            int count = 0;
             for(DestinationCard dc : objectifs) {
+                count++;
                 if (desiredRoute == null) {
                     //on cherche le chemin le plus court qui relie les deux villes
-                    ShortestPathAlgorithm.SingleSourcePaths<City, DefaultEdge> iPaths = belmanFordAlg.getPaths(dc.getDest1());
+                    ShortestPathAlgorithm.SingleSourcePaths<City, DefaultEdge> iPaths = belmanFordAlg.getPaths(dc.getCity1());
 
                     //on récupère les villes parcourues par le chemin (il y en a forcément un)
-                    GraphPath<City, DefaultEdge> path = iPaths.getPath(dc.getDest2());
+                    GraphPath<City, DefaultEdge> path = iPaths.getPath(dc.getCity2());
                     if (path != null) {
                         List<City> listCities = path.getVertexList();
                         if (!listCities.isEmpty()) {
                             for (int i = 0; i < listCities.size() - 1; i++) {
                                 City v1 = listCities.get(i);
                                 City v2 = listCities.get(i + 1);
-                                Route r = model.getD().getRouteFromString(v1.getName() + " - " + v2.getName());
+                                Route r = model.getDestinations().getRouteFromString(v1.getName() + " - " + v2.getName());
                                 if (r == null) {
-                                    r = model.getD().getRouteFromString(v2.getName() + " - " + v1.getName());
+                                    r = model.getDestinations().getRouteFromString(v2.getName() + " - " + v1.getName());
                                 }
-                                Model.Enum.Color color = r.getColor();
+                                Color color = r.getColor();
                                 int nbCard = r.getRequire();
                                 if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
                                     desiredRoute = r;
@@ -560,21 +571,30 @@ public class JButtonController implements ActionListener {
                     }
                 }
             }
+            if(desiredRoute == null && count==objectifs.size()){
+                for (Route r : routes) {
+                    Color color = r.getColor();
+                    int nbCard = r.getRequire();
+                    if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                        desiredRoute = r;
+                    }
+                }
+            }
             //si on a trouvé une route à prendre
             if (desiredRoute != null) {
                 tryGetRoute(desiredRoute);
             }
             //sinon on pioche des cartes
             else {
-                if(model.getDrawWagonCards().size() > 1) {
-                    WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                if(model.getDestinationCardsDraw().size() > 1) {
+                    WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.print("Le bot a pioché les cartes : " + wc.getColor());
-                    wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.println(" et " + wc.getColor());
                 }else{
-                    if(model.getDrawDestinationCards().size() > 0) {
+                    if(model.getDestinationCardsDraw().size() > 0) {
                         for (int i = 0; i < 3; i++) {
-                            if (model.getDrawDestinationCards().size() > 0) {
+                            if (model.getDestinationCardsDraw().size() > 0) {
                                 DestinationCard tmpd = model.drawDestinationCard();
                                 currentPlayer.addDestinationCard(tmpd);
                             }
@@ -597,8 +617,8 @@ public class JButtonController implements ActionListener {
      */
     private void playIALevel3() {
         if(currentPlayer.getLevel() != 0) {
-            ArrayList<Route> routes = model.getD().getRoutes();
-            ArrayList<DestinationCard> objectifs = currentPlayer.getdCards();
+            ArrayList<Route> routes = model.getDestinations().getRoutes();
+            ArrayList<DestinationCard> objectifs = currentPlayer.getDestinationCards();
             Collections.sort(objectifs);
             Collections.reverse(objectifs);
             Route desiredRoute = null;
@@ -606,35 +626,36 @@ public class JButtonController implements ActionListener {
             Graph<City, DefaultEdge> g = new DefaultUndirectedGraph<>(DefaultEdge.class);
 
             //on ajoute toutes les villes au graph
-            for (Map.Entry city : model.getD().getDestinations().entrySet()) {
+            for (Map.Entry city : model.getDestinations().getDestinations().entrySet()) {
                 City c1 = (City)city.getValue();
                 g.addVertex(c1);
             }
 
             //on ajoute tous les arcs entre les villes
             for (Route r : routes){
-                g.addEdge(r.getDest1(), r.getDest2());
+                g.addEdge(r.getCity1(), r.getCity2());
             }
             BellmanFordShortestPath<City, DefaultEdge> belmanFordAlg = new BellmanFordShortestPath<>(g);
-
+            int count = 0;
             for(DestinationCard dc : objectifs) {
+                count++;
                 if (desiredRoute == null) {
                     //on cherche le chemin le plus court qui relie les deux villes
-                    ShortestPathAlgorithm.SingleSourcePaths<City, DefaultEdge> iPaths = belmanFordAlg.getPaths(dc.getDest1());
+                    ShortestPathAlgorithm.SingleSourcePaths<City, DefaultEdge> iPaths = belmanFordAlg.getPaths(dc.getCity1());
 
                     //on récupère les villes parcourues par le chemin (il y en a forcément un)
-                    GraphPath<City, DefaultEdge> path = iPaths.getPath(dc.getDest2());
+                    GraphPath<City, DefaultEdge> path = iPaths.getPath(dc.getCity2());
                     if (path != null) {
                         List<City> listCities = path.getVertexList();
                         if (!listCities.isEmpty()) {
                             for (int i = 0; i < listCities.size() - 1; i++) {
                                 City v1 = listCities.get(i);
                                 City v2 = listCities.get(i + 1);
-                                Route r = model.getD().getRouteFromString(v1.getName() + " - " + v2.getName());
+                                Route r = model.getDestinations().getRouteFromString(v1.getName() + " - " + v2.getName());
                                 if (r == null) {
-                                    r = model.getD().getRouteFromString(v2.getName() + " - " + v1.getName());
+                                    r = model.getDestinations().getRouteFromString(v2.getName() + " - " + v1.getName());
                                 }
-                                Model.Enum.Color color = r.getColor();
+                                Color color = r.getColor();
                                 int nbCard = r.getRequire();
                                 if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
                                     desiredRoute = r;
@@ -645,7 +666,15 @@ public class JButtonController implements ActionListener {
                 }
             }
 
-
+            if(desiredRoute == null && count==objectifs.size()){
+                for (Route r : routes) {
+                    Color color = r.getColor();
+                    int nbCard = r.getRequire();
+                    if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                        desiredRoute = r;
+                    }
+                }
+            }
             //si on a trouvé une route à prendre
             if (desiredRoute != null) {
                 tryGetRoute(desiredRoute);
@@ -653,19 +682,17 @@ public class JButtonController implements ActionListener {
 
             //sinon on pioche des cartes
             else {
-                if(model.getDrawWagonCards().size() > 1) {
-                    WagonCard wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                if(model.getDestinationCardsDraw().size() > 1) {
+                    WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.print("Le bot a pioché les cartes : " + wc.getColor());
-                    wc = currentPlayer.drawTrainCard(model.getDrawWagonCards());
+                    wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
                     System.out.println(" et " + wc.getColor());
                 }else{
-                    if(model.getDrawDestinationCards().size() > 0) {
-                        System.out.print("Le bot a pioché les cartes destination : " );
+                    if(model.getDestinationCardsDraw().size() > 0) {
                         for (int i = 0; i < 3; i++) {
-                            if (model.getDrawDestinationCards().size() > 0) {
+                            if (model.getDestinationCardsDraw().size() > 0) {
                                 DestinationCard tmpd = model.drawDestinationCard();
                                 currentPlayer.addDestinationCard(tmpd);
-                                System.out.print(tmpd+"  ");
                             }
                         }
                     }
@@ -680,6 +707,221 @@ public class JButtonController implements ActionListener {
         }
     }
 
+    private void playIALevel5() {
+        if(currentPlayer.getLevel() != 0) {
+            ArrayList<Route> routes = model.getDestinations().getRoutes();
+            ArrayList<DestinationCard> objectifs = currentPlayer.getDestinationCards();
+            Collections.sort(objectifs);
+            Collections.reverse(objectifs);
+            Route desiredRoute = null;
+
+            Graph<City, DefaultEdge> g = new DefaultUndirectedGraph<>(DefaultEdge.class);
+
+            //on ajoute toutes les villes au graph
+            for (Map.Entry city : model.getDestinations().getDestinations().entrySet()) {
+                City c1 = (City)city.getValue();
+                g.addVertex(c1);
+            }
+
+            //on ajoute tous les arcs entre les villes
+            for (Route r : routes){
+                g.addEdge(r.getCity1(), r.getCity2());
+            }
+            BellmanFordShortestPath<City, DefaultEdge> belmanFordAlg = new BellmanFordShortestPath<>(g);
+            int count = 0;
+            for(DestinationCard dc : objectifs) {
+                count++;
+                if (desiredRoute == null) {
+                    boolean alreadyt = false;
+                    //on cherche le chemin le plus court qui relie les deux villes
+                    ShortestPathAlgorithm.SingleSourcePaths<City, DefaultEdge> iPaths = belmanFordAlg.getPaths(dc.getCity1());
+
+                    //on récupère les villes parcourues par le chemin (il y en a forcément un)
+                    GraphPath<City, DefaultEdge> path = iPaths.getPath(dc.getCity2());
+                    if (path != null) {
+                        List<City> listCities = path.getVertexList();
+                        if (!listCities.isEmpty()) {
+                            for (int i = 0; i < listCities.size() - 1; i++) {
+                                City v1 = listCities.get(i);
+                                City v2 = listCities.get(i + 1);
+                                Route r = model.getDestinations().getRouteFromString(v1.getName() + " - " + v2.getName());
+                                if (r == null) {
+                                    r = model.getDestinations().getRouteFromString(v2.getName() + " - " + v1.getName());
+                                }
+                                Color color = r.getColor();
+                                int nbCard = r.getRequire();
+                                if (r.isAlreadyTakenRoute() && !r.getPlayer().getName().equals(currentPlayer.getName())){
+                                    alreadyt = true;
+                                    desiredRoute=null;
+                                }
+                                if (alreadyt==false && currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                                    desiredRoute = r;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (desiredRoute == null && count == objectifs.size()) {
+                for (Route r : routes) {
+                    Color color = r.getColor();
+                    int nbCard = r.getRequire();
+                    if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                        desiredRoute = r;
+                    }
+                }
+            }
+
+            if(desiredRoute!=null){
+                tryGetRoute(desiredRoute);
+            }
+
+            //sinon on pioche des cartes
+            else {
+                if(model.getDestinationCardsDraw().size() > 1) {
+                    WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
+                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
+                    System.out.println(" et " + wc.getColor());
+                }else{
+                    if(model.getDestinationCardsDraw().size() > 0) {
+                        for (int i = 0; i < 3; i++) {
+                            if (model.getDestinationCardsDraw().size() > 0) {
+                                DestinationCard tmpd = model.drawDestinationCard();
+                                currentPlayer.addDestinationCard(tmpd);
+                            }
+                        }
+                    }
+                }
+            }
+            //si on a trouvé une route à prendre
+            //sinon on pioche des cartes
+            checkFinPartie();
+            currentPlayer = model.nextPlayer();
+            view.updateView(model, this);
+            view.getPlayerView().updateCard(currentPlayer);
+            view.repaint();
+            playIA();
+        }
+    }
+
+    private void playIALevel4() {
+        if(currentPlayer.getLevel() != 0) {
+            ArrayList<Route> routes = model.getDestinations().getRoutes();
+            ArrayList<DestinationCard> objectifs = currentPlayer.getDestinationCards();
+            Collections.sort(objectifs);
+            Route desiredRoute = null;
+
+            Graph<City, DefaultEdge> g1 = new DefaultDirectedGraph<>(DefaultEdge.class);
+            for (Map.Entry city : model.getDestinations().getDestinations().entrySet()) {
+                City c1 = (City)city.getValue();
+                g1.addVertex(c1);
+            }
+            for (Route r : routes){
+                g1.addEdge(r.getCity1(), r.getCity2());
+            }
+            AllDirectedPaths<City, DefaultEdge> pathFindingAlg = new AllDirectedPaths(g1);
+            int count = 0;
+            for(DestinationCard dc : objectifs) {
+                count++;
+                if (desiredRoute == null) {
+                    List<GraphPath<City, DefaultEdge>> graphPath = pathFindingAlg.getAllPaths(dc.getCity1(), dc.getCity2(), true, null);
+                    graphPath = sortGraph(graphPath);
+                    for (int k=0;k<graphPath.size();k++){
+                        GraphPath<City,DefaultEdge> path = graphPath.get(k);
+                        if (path != null) {
+                            List<City> listCities = path.getVertexList();
+                            if (!listCities.isEmpty()) {
+                                boolean alreadytaken = false;
+                                for (int i = 0; i < listCities.size() - 1; i++) {
+                                    City v1 = listCities.get(i);
+                                    City v2 = listCities.get(i + 1);
+                                    Route r = model.getDestinations().getRouteFromString(v1.getName() + " - " + v2.getName());
+                                    if (r == null) {
+                                        r = model.getDestinations().getRouteFromString(v2.getName() + " - " + v1.getName());
+                                    }
+                                    Color color = r.getColor();
+                                    int nbCard = r.getRequire();
+                                    if (r.isAlreadyTakenRoute() && !r.getPlayer().getName().equals(currentPlayer.getName())){
+                                        alreadytaken = true;
+                                        desiredRoute=null;
+                                    }
+                                    if (alreadytaken == false && currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                                        desiredRoute = r;
+                                        k=graphPath.size();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (desiredRoute == null && count == objectifs.size()) {
+                for (Route r : routes) {
+                    Color color = r.getColor();
+                    int nbCard = r.getRequire();
+                    if (currentPlayer.countOccurencesOf(color) >= nbCard && !r.isAlreadyTakenRoute() && currentPlayer.getWagons() >= nbCard) {
+                        desiredRoute = r;
+                    }
+                }
+            }
+
+            if(desiredRoute!=null){
+                tryGetRoute(desiredRoute);
+            }
+
+            //sinon on pioche des cartes
+            else {
+                if(model.getDestinationCardsDraw().size() > 1) {
+                    WagonCard wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
+                    System.out.print("Le bot a pioché les cartes : " + wc.getColor());
+                    wc = currentPlayer.drawWagonCard(model.getWagonCardsDraw());
+                    System.out.println(" et " + wc.getColor());
+                }else{
+                    if(model.getDestinationCardsDraw().size() > 0) {
+                        for (int i = 0; i < 3; i++) {
+                            if (model.getDestinationCardsDraw().size() > 0) {
+                                DestinationCard tmpd = model.drawDestinationCard();
+                                currentPlayer.addDestinationCard(tmpd);
+                            }
+                        }
+                    }
+                }
+            }
+            checkFinPartie();
+            currentPlayer = model.nextPlayer();
+            view.updateView(model, this);
+            view.getPlayerView().updateCard(currentPlayer);
+            view.repaint();
+            playIA();
+        }
+    }
+
+    public List<GraphPath<City, DefaultEdge>> sortGraph (List<GraphPath<City, DefaultEdge>> g){
+        List<GraphPath<City, DefaultEdge>> nList = new ArrayList<>();
+        int max = 10000;
+        int indice = 0;
+        int count = 0;
+        int taille = g.size();
+        while (count != taille) {
+            for (int i = 0; i < g.size(); i++) {
+                GraphPath<City, DefaultEdge> path = g.get(i);
+                List<City> listCities = path.getVertexList();
+                if (max > listCities.size()) {
+                    max = listCities.size();
+                    indice = i;
+                }
+            }
+            max = 10000;
+            nList.add(g.get(indice));
+            g.remove(indice);
+            indice = 0;
+            count++;
+        }
+        return nList;
+    }
 
     /**
      * try to get a given route
@@ -693,11 +935,11 @@ public class JButtonController implements ActionListener {
 
                 Color choixColor = currentPlayer.getOccurenceMaxColor();
 
-                desiredRoute.getTunnel(choixColor, model, currentPlayer);
+                desiredRoute.takeTunnel(choixColor, model, currentPlayer);
             }
             //si la route a une couleur
             else {
-                desiredRoute.getTunnel(desiredRoute.getColor(), model, currentPlayer);
+                desiredRoute.takeTunnel(desiredRoute.getColor(), model, currentPlayer);
             }
         }
         //si c'est pas un tunnel
@@ -708,7 +950,7 @@ public class JButtonController implements ActionListener {
                 Color choixColor = currentPlayer.getOccurenceMaxColor();
 
                 //si le joueur a pas pu prendre le ferrie
-                if (desiredRoute.getFerrie(choixColor, model, currentPlayer) == -1) {
+                if (desiredRoute.takeFerrie(choixColor, model, currentPlayer) == -1) {
                     currentAction = 0;
                     choixCity1.setEnabled(true);
                     choixCity2.setEnabled(true);
@@ -719,7 +961,7 @@ public class JButtonController implements ActionListener {
                 }
             } else {
                 //si le joueur a pas pu prendre la route
-                if (desiredRoute.getRoute(desiredRoute.getColor(), model, currentPlayer) == -1) {
+                if (desiredRoute.takeRoute(desiredRoute.getColor(), model, currentPlayer) == -1) {
                     currentAction = 0;
                     choixCity1.setEnabled(true);
                     choixCity2.setEnabled(true);

@@ -1,6 +1,5 @@
 package Model.GameElements;
 
-import Model.Enum.Color;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
@@ -34,8 +33,8 @@ public class Destinations {
         routes = new ArrayList<>();
         rEmpruntees = new ArrayList<>();
         this.random = random;
-        genererDestination();
-        genererRoutes();
+        generateDestination();
+        generateRoutes();
     }
 
     public City getCity(String name){
@@ -61,7 +60,7 @@ public class Destinations {
      * @param r Route la route à ajouter
      */
     public void addRoute(Route r) {
-        this.destinations.get(r.getDest1().getName()).addRoute(r, r.getDest2());
+        this.destinations.get(r.getCity1().getName()).addRoute(r, r.getCity2());
         routes.add(r);
     }
 
@@ -71,7 +70,7 @@ public class Destinations {
      * et qui construit leur nom en piochant dans un dictionnaire de prefixes et
      * de suffixes
      */
-    private void genererDestination() {
+    private void generateDestination() {
         /* fichier où se trouvent les prefixes et les suffixes */
         String prefixe = "/prefixes.txt";
         String suffixe = "/suffixes.txt";
@@ -116,15 +115,15 @@ public class Destinations {
             City c1 = new City(name, random);
 
             //on récupère toutes les positions générées
-            ArrayList<Coordonnees> cvilles = new ArrayList<>();
+            ArrayList<Coordinates> cvilles = new ArrayList<>();
             for (Map.Entry ville : destinations.entrySet()) {
-                cvilles.add(((City) ville.getValue()).getCoordonnees());
+                cvilles.add(((City) ville.getValue()).getCoordinates());
             }
 
             //on change les positions si deux villes se collent/superposent
             //il faut mini une case libre entre chaque ville
             for(int y=0;y<cvilles.size();y++){
-                if(cvilles.get(y).distance(c1.getCoordonnees()) < 2){
+                if(cvilles.get(y).distance(c1.getCoordinates()) < 2){
                     c1 = new City(name, random);
                     y=0;
                 }
@@ -137,7 +136,7 @@ public class Destinations {
      * fonction qui génère en moyenne 2 fois plus de routes qu'il n'y a de villes
      * en évitant les croisements de villes/routes
      */
-    private void genererRoutes(){
+    private void generateRoutes(){
         //on enregistre les couleurs dans un tableau pour pouvoir compter
         //leur nombre d'utilisation
         ArrayList<Line2D>TabRoutes = new ArrayList<>();
@@ -160,22 +159,22 @@ public class Destinations {
 
         int compteur = 0;
         for (Map.Entry from : destinations.entrySet()){
-            GenererFirstRoute((City)from.getValue(),TabRoutes,CountColor,randomColor,1, compteur);
+            generateFirstRoute((City)from.getValue(),TabRoutes,CountColor,randomColor,1, compteur);
         }
 
         int count = 0;
 
         for (Map.Entry from : destinations.entrySet()){
-            if(count<(destinations.size()*2)/3&&GenererLastRoute((City)from.getValue(),TabRoutes,CountColor,randomColor)==true)
+            if(count<(destinations.size()*2)/3&& generateLastRoute((City)from.getValue(),TabRoutes,CountColor,randomColor)==true)
                 count++;
         }
         genererDoubleRoute();
     }
 
     /**
-     * double 10 routes suivant leur fréquence d'utilisation
+     * double 1/3 des routes suivant leur fréquence d'utilisation
      */
-    public void genererDoubleRoute(){
+    private void genererDoubleRoute(){
         Graph<City, DefaultEdge> g = new DefaultUndirectedGraph<>(DefaultEdge.class);
 
         //on ajoute toutes les villes au graph
@@ -186,7 +185,7 @@ public class Destinations {
 
         //on ajoute tous les arcs entre les villes
         for (Route r : routes){
-            g.addEdge(r.getDest1(), r.getDest2());
+            g.addEdge(r.getCity1(), r.getCity2());
         }
         BellmanFordShortestPath<City, DefaultEdge> belmanFordAlg = new BellmanFordShortestPath<>(g);
 
@@ -209,7 +208,7 @@ public class Destinations {
                                 if(r == null){
                                     r = getRouteFromString(v2.getName()+" - "+v1.getName());
                                 }
-                                r.setFreqUtilisation(r.getFreqUtilisation()+1);
+                                r.setFrequencyOfUse(r.getFrequencyOfUse()+1);
 
                             }
                         }
@@ -242,7 +241,7 @@ public class Destinations {
                 r = 0+random.nextInt(9-0);
             }
             //on ajoute la double route
-            Route tmp = new Route(cur.getDest2(), cur.getDest1(), cur.getRequire(), randomColor.get(r), cur.isTunel(), cur.getLocomotive());
+            Route tmp = new Route(cur.getCity2(), cur.getCity1(), cur.getRequire(), randomColor.get(r), cur.isTunel(), cur.getLocomotive());
             addRoute(tmp);
             k++;
         }
@@ -257,9 +256,9 @@ public class Destinations {
      * @param nbtour
      * @param compteur
      */
-    public void GenererFirstRoute(City from, ArrayList<Line2D>TabRoutes,ArrayList<Integer>CountColor,HashMap<Integer, Color> randomColor, int nbtour, int compteur){
-        int x1 = from.getCoordonnees().getX();
-        int y1 = from.getCoordonnees().getY();
+    private void generateFirstRoute(City from, ArrayList<Line2D>TabRoutes, ArrayList<Integer>CountColor, HashMap<Integer, Color> randomColor, int nbtour, int compteur){
+        int x1 = from.getCoordinates().getX();
+        int y1 = from.getCoordinates().getY();
         boolean enter = false;
         Line2D lenreg = null;
         City destination = from;
@@ -267,12 +266,12 @@ public class Destinations {
 
         for (Map.Entry to : destinations.entrySet()){
             boolean intersect = false;
-            int x2 = ((City)to.getValue()).getCoordonnees().getX();
-            int y2 = ((City)to.getValue()).getCoordonnees().getY();
+            int x2 = ((City)to.getValue()).getCoordinates().getX();
+            int y2 = ((City)to.getValue()).getCoordinates().getY();
             double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
             Line2D l = new Line2D.Double(x1,y1,x2,y2);
 
-            if(!(from.getCoordonnees().equals(((City)to.getValue()).getCoordonnees()))
+            if(!(from.getCoordinates().equals(((City)to.getValue()).getCoordinates()))
                     && distance1<distance
                     && !((City)to.getValue()).getRoutesFrom().containsKey(from.getName())) {
                 if ((nbtour == 1 && ((City) to.getValue()).getRoutesFrom().size() == 0) || nbtour == 2) {
@@ -307,7 +306,7 @@ public class Destinations {
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
             System.out.println("Distance : "+distance);
-            int taille = CheckTaille(distance);
+            int taille = checkLength(distance);
             System.out.println("Taille : "+taille);
             if(c == Color.GRAY){
                 addRoute(new Route((City)from,destination,taille, c, true, 0));
@@ -318,7 +317,7 @@ public class Destinations {
         else{
             compteur++;
             if(compteur!=1000)
-                GenererFirstRoute(from, TabRoutes, CountColor, randomColor, 2, compteur);
+                generateFirstRoute(from, TabRoutes, CountColor, randomColor, 2, compteur);
         }
     }
 
@@ -329,22 +328,22 @@ public class Destinations {
      * @param CountColor
      * @param randomColor
      */
-    public boolean GenererLastRoute(City from, ArrayList<Line2D>TabRoutes,ArrayList<Integer>CountColor,HashMap<Integer, Color> randomColor){
+    private boolean generateLastRoute(City from, ArrayList<Line2D>TabRoutes, ArrayList<Integer>CountColor, HashMap<Integer, Color> randomColor){
         boolean enter = false;
         Line2D lenreg = null;
         Line2D l = null;
         double distance = 10000;
         City destination=from;
-        int x1 = from.getCoordonnees().getX();
-        int y1 = from.getCoordonnees().getY();
+        int x1 = from.getCoordinates().getX();
+        int y1 = from.getCoordinates().getY();
         for (Map.Entry to : destinations.entrySet()) {
             boolean intersect = false;
-            int x2 = ((City) to.getValue()).getCoordonnees().getX();
-            int y2 = ((City) to.getValue()).getCoordonnees().getY();
+            int x2 = ((City) to.getValue()).getCoordinates().getX();
+            int y2 = ((City) to.getValue()).getCoordinates().getY();
             l = new Line2D.Double(x1, y1, x2, y2);
             double distance1 = Math.sqrt(Math.pow((y2 - y1),2) + Math.pow((x2 - x1),2));
             if (distance1<distance
-                    &&!(from.getCoordonnees().equals(((City)to.getValue()).getCoordonnees()))
+                    &&!(from.getCoordinates().equals(((City)to.getValue()).getCoordinates()))
                     && !(from.getRoutesFrom().containsKey((to.getValue())))
                     && !(((City) to.getValue()).getRoutesFrom().containsKey(from))){
                 for (int i = 0; i < TabRoutes.size(); i++) {
@@ -380,7 +379,7 @@ public class Destinations {
             if(lenreg!=null)
                 TabRoutes.add(lenreg);
             System.out.println("Distance : "+distance);
-            int taille = CheckTaille(distance);
+            int taille = checkLength(distance);
             System.out.println("Taille : "+taille);
             if(c == Color.GRAY){
                 addRoute(new Route((City)from,destination,taille, c, true, 0));
@@ -404,13 +403,13 @@ public class Destinations {
             names.add(v1.getName());
         }
         for (Route r : routes){
-            if(r.getDest1() == v1) {
-                if(r.getDest2() == v2) {
+            if(r.getCity1() == v1) {
+                if(r.getCity2() == v2) {
                     rEmpruntees.add(r);
                 }
                 else{
-                    if(!names.contains(r.getDest2().toString())) {
-                        construireChemin(r.getDest2(), v2);
+                    if(!names.contains(r.getCity2().toString())) {
+                        construireChemin(r.getCity2(), v2);
                     }
                 }
             }
@@ -418,7 +417,7 @@ public class Destinations {
     }
 
 
-    public int CheckTaille(double distance){
+    private int checkLength(double distance){
         int nbroutes = destinations.size()*2;
         if(distance<2 || (distance>=2 && distance<=3)) {
             if((NbRails.get(1)+1)<(nbroutes*0.1)) {
