@@ -54,7 +54,7 @@ public class GameView extends JFrame{
                 Toolkit kit = Toolkit.getDefaultToolkit();
                 Image img = kit.getImage(Thread.currentThread().getContextClassLoader().getResource("icon.jpg").getPath());
                 setIconImage(img);
-                setTitle("Ticket to ride");
+                setTitle("Les aventuriers du rail !");
                 g = ga;
                 gbc.fill = GridBagConstraints.BOTH;
 

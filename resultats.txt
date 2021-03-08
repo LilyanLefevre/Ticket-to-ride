@@ -5,3 +5,7 @@ bot 3
 bot 1
 bot 1
 bot 1
+bot 1
+bot 3
+bot 0
+bot 1
